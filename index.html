@@ -2,14 +2,116 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Chat Flow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriTrack IA</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="chat">
-        <div class="messages" id="messages"></div>
-        <button id="nextButton">Próxima Mensagem</button>
-    </div>
+    <main class="container">
+        <header class="hero">
+            <h1>NutriTrack IA</h1>
+            <p>Registre refeições por foto com IA, peso e ingestão de água em uma única planilha digital.</p>
+        </header>
+
+        <section class="card grid-two">
+            <div>
+                <h2>Configuração de IA</h2>
+                <label for="apiKey">OpenAI API Key (opcional para usar análise por foto)</label>
+                <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off">
+                <small>Guardada apenas no navegador (localStorage) e usada para estimar calorias a partir da imagem.</small>
+            </div>
+            <div>
+                <h2>Registro de Refeição</h2>
+                <form id="mealForm" class="stack">
+                    <label for="mealDate">Data e hora</label>
+                    <input id="mealDate" type="datetime-local" required>
+
+                    <label for="mealPhoto">Foto da refeição</label>
+                    <input id="mealPhoto" type="file" accept="image/*">
+
+                    <label for="manualCalories">Calorias (manual, opcional)</label>
+                    <input id="manualCalories" type="number" min="0" step="1" placeholder="Ex.: 520">
+
+                    <button type="button" id="analyzeButton">Analisar foto com IA</button>
+                    <button type="submit">Salvar refeição</button>
+                </form>
+                <p id="analysisResult" class="info"></p>
+            </div>
+        </section>
+
+        <section class="card grid-two">
+            <div>
+                <h2>Registro de Peso</h2>
+                <form id="weightForm" class="stack">
+                    <label for="weightDate">Data e hora</label>
+                    <input id="weightDate" type="datetime-local" required>
+
+                    <label for="weightValue">Peso (kg)</label>
+                    <input id="weightValue" type="number" min="1" step="0.1" placeholder="Ex.: 78.4" required>
+
+                    <button type="submit">Salvar peso</button>
+                </form>
+            </div>
+            <div>
+                <h2>Registro de Água</h2>
+                <form id="waterForm" class="stack">
+                    <label for="waterDate">Data e hora</label>
+                    <input id="waterDate" type="datetime-local" required>
+
+                    <label for="waterAmount">Quantidade (ml)</label>
+                    <input id="waterAmount" type="number" min="1" step="10" placeholder="Ex.: 300" required>
+
+                    <button type="submit">Salvar água</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Relatórios</h2>
+            <div class="stats" id="stats"></div>
+            <div class="reports grid-three">
+                <article>
+                    <h3>Calorias por dia (últimos 7 dias)</h3>
+                    <div id="dailyCalories" class="bars"></div>
+                </article>
+                <article>
+                    <h3>Calorias por semana (últimas 8 semanas)</h3>
+                    <div id="weeklyCalories" class="bars"></div>
+                </article>
+                <article>
+                    <h3>Calorias por mês (últimos 6 meses)</h3>
+                    <div id="monthlyCalories" class="bars"></div>
+                </article>
+            </div>
+
+            <article>
+                <h3>Progresso de peso</h3>
+                <div id="weightProgress" class="bars"></div>
+            </article>
+        </section>
+
+        <section class="card">
+            <h2>Planilha Única (Banco de dados local)</h2>
+            <p class="muted">Todos os registros ficam nesta tabela única e são persistidos no navegador.</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Tipo</th>
+                            <th>Calorias</th>
+                            <th>Peso (kg)</th>
+                            <th>Água (ml)</th>
+                            <th>Observação</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTable"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
     <script src="script.js"></script>
 </body>
 </html>
