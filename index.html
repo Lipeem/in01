@@ -1,15 +1,809 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!doctype html>
+<html lang="pt-BR" class="no-js">
 <head>
-    <meta charset="UTF-8">
-    <title>Chat Flow</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exposul — Manequins, cabides, araras e expositores | Curitiba</title>
+<meta name="description" content="Fábrica de manequins, cabides, araras e expositores para lojas. Mais de 700 itens em linha, preço de lojista já na segunda peça e entrega para todo o Brasil. Showroom em Curitiba.">
+<meta name="theme-color" content="#08090a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Exposul — A forma que vende">
+<meta property="og:description" content="Manequins, cabides, araras e expositores para quem vive de vitrine. Fábrica própria em Curitiba.">
+<meta property="og:locale" content="pt_BR">
+
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2308090a'/%3E%3Cellipse cx='16' cy='8' rx='4' ry='5' fill='%23f0c08a'/%3E%3Cpath d='M12 13h8l-2 16h-4z' fill='%23f0c08a'/%3E%3C/svg%3E">
+
+<script>document.documentElement.classList.remove('no-js');</script>
 </head>
 <body>
-    <div class="chat">
-        <div class="messages" id="messages"></div>
-        <button id="nextButton">Próxima Mensagem</button>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- Preloader: sai por timeout mesmo se um asset falhar (ver site.js) -->
+<div class="preloader" id="preloader" role="status" aria-live="polite">
+  <div class="preloader__mark">EXPOSUL</div>
+  <div class="preloader__bar"><i class="preloader__fill" id="preloaderFill"></i></div>
+  <div class="preloader__pct" id="preloaderPct">00</div>
+  <span class="sr-only">Carregando o site</span>
+</div>
+
+<script>
+// Rede de segurança independente de js/site.js. Se o script principal falhar
+// por qualquer motivo, o preloader (position:fixed; inset:0) tapava a página
+// para sempre — tela preta permanente. Este timeout roda de todo jeito.
+setTimeout(function () {
+  var pl = document.getElementById('preloader');
+  if (pl) { pl.style.display = 'none'; }
+  document.body.classList.remove('is-locked');
+}, 7000);
+</script>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label" id="cursorLabel">Ver</span></div>
+
+<!-- ====================================================== NAV -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="brand" href="#topo" aria-label="Exposul, ir para o topo">EXPOSUL<sup>CWB</sup></a>
+
+    <nav class="nav__links" aria-label="Navegação principal">
+      <a class="nav__link" href="#catalogo">Catálogo</a>
+      <a class="nav__link" href="#manifesto">A fábrica</a>
+      <a class="nav__link" href="#showroom">Showroom</a>
+      <a class="nav__link" href="#atacado">Atacado</a>
+      <a class="nav__link" href="#condicoes">Condições</a>
+    </nav>
+
+    <div class="nav__actions">
+      <button class="cart-btn" id="cartOpen" aria-haspopup="dialog" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.55L21 8H6"/>
+          <circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/>
+        </svg>
+        <span>Pedido</span>
+        <span class="cart-btn__count" id="cartCount" data-empty="true">0</span>
+      </button>
+      <button class="nav__menu" id="menuToggle" aria-expanded="false" aria-controls="mobilenav" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    <script src="script.js"></script>
+  </div>
+</header>
+
+<div class="mobilenav" id="mobilenav">
+  <ul class="mobilenav__list">
+    <li><a href="#catalogo" class="display">Catálogo</a></li>
+    <li><a href="#manifesto" class="display">A fábrica</a></li>
+    <li><a href="#showroom" class="display">Showroom</a></li>
+    <li><a href="#atacado" class="display">Atacado</a></li>
+    <li><a href="#condicoes" class="display">Condições</a></li>
+  </ul>
+  <div class="mobilenav__foot">
+    <span>Rua 24 de Maio, 1423 — Rebouças, Curitiba/PR</span>
+    <a href="tel:+554130294456">(41) 3029-4456</a>
+    <a href="tel:+5541996910019">(41) 99691-0019</a>
+  </div>
+</div>
+
+<main id="conteudo">
+
+<!-- ====================================================== HERO -->
+<section class="hero" id="topo">
+  <div class="hero__key" aria-hidden="true" data-parallax="0.12"></div>
+  <div class="hero__rim" aria-hidden="true" data-parallax="0.2"></div>
+  <div class="hero__floor" aria-hidden="true"></div>
+
+  <div class="hero__stage">
+    <h1 class="hero__h1">
+      <span class="hero__line hero__line--back" aria-hidden="true" data-split>A forma</span>
+      <span class="hero__line hero__line--front" aria-hidden="true" data-split>que <em>vende</em></span>
+      <span class="sr-only">A forma que vende — manequins, cabides, araras e expositores para lojas</span>
+    </h1>
+
+    <svg class="hero__piece art" viewBox="0 0 200 560" role="img" aria-label="Manequim feminino de corpo inteiro iluminado">
+      <use href="#art-mannequin-f"></use>
+    </svg>
+  </div>
+
+  <div class="hero__aside">
+    <div class="hero__blurb">
+      <span class="eyebrow">Fábrica própria · Curitiba</span>
+      <p>Manequins, cabides, araras e expositores para quem vive de vitrine. Mais de 700 itens em linha, preço de lojista já na segunda peça e entrega para todo o Brasil.</p>
+      <div class="hero__ctas">
+        <a class="btn btn--solid" href="#catalogo" data-magnetic>Ver o catálogo</a>
+        <a class="btn btn--wa" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic data-magnetic>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.38a9.86 9.86 0 0 0 4.73 1.2h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.13-2.9-7C17.17 3.03 14.68 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.81.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.09-.16.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.49-.4-.42-.55-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.85.84-.85 2.04s.87 2.37 1 2.53c.12.17 1.72 2.62 4.16 3.67.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
+          Falar com o comercial
+        </a>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">Role<i></i></div>
+  </div>
+</section>
+
+<!-- ====================================================== MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track" id="marqueeTrack"></div>
+</div>
+
+<!-- ====================================================== MANIFESTO -->
+<section class="manifesto section" id="manifesto">
+  <div class="shell manifesto__pin" id="manifestoPin">
+    <p class="manifesto__text" id="manifestoText" data-words>
+      Vitrine não é decoração. É o vendedor que trabalha vinte e quatro horas por dia, sem folga e sem comissão. A gente fabrica esse vendedor.
+    </p>
+    <div class="manifesto__meta stagger">
+      <div>
+        <h3>Fábrica própria</h3>
+        <p>Manequim, arara e balcão saem da nossa produção em Curitiba. Sem intermediário entre a linha de montagem e a sua loja.</p>
+      </div>
+      <div>
+        <h3>Preço de lojista</h3>
+        <p>A escada de atacado começa na segunda peça — no quinto pacote, em cabides e ganchos — e está aberta no site. Você vê o desconto antes de pedir, não depois de negociar.</p>
+      </div>
+      <div>
+        <h3>Peça avulsa também</h3>
+        <p>Comprou uma unidade? Vendemos igual. Uma loja que abre hoje precisa de dois manequins, não de duzentos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== CATÁLOGO -->
+<section class="catalog section" id="catalogo">
+  <div class="shell">
+    <div class="section-head">
+      <div class="reveal">
+        <span class="eyebrow">Linha 2026</span>
+        <h2 class="display">Tudo que sustenta uma peça de roupa em pé.</h2>
+      </div>
+      <p class="lead reveal">Preço à vista por unidade. A partir da segunda peça o valor de lojista entra sozinho — sem cadastro, sem pedir orçamento, sem esperar retorno.</p>
+    </div>
+
+    <div class="catalog__tools">
+      <div class="filters" id="filters" role="group" aria-label="Filtrar por categoria"></div>
+      <label class="search" for="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-4.3-4.3"/>
+        </svg>
+        <input type="search" id="search" placeholder="Buscar por nome ou referência (MQ-1140)" aria-label="Buscar no catálogo" autocomplete="off">
+      </label>
+    </div>
+
+    <noscript>
+      <div class="noscript-note">
+        <p><b>O catálogo interativo precisa de JavaScript.</b> Se ele estiver desativado, fale direto com o comercial — respondemos com a lista completa, medidas e preços.</p>
+        <p>
+          WhatsApp <a href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial.">(41) 99691-0019</a> ·
+          Telefone <a href="tel:+554130294456">(41) 3029-4456</a><br>
+          Rua 24 de Maio, 1423 — Rebouças, Curitiba/PR
+        </p>
+      </div>
+    </noscript>
+
+    <p class="sr-only" id="gridStatus" role="status" aria-live="polite"></p>
+    <div class="grid" id="grid"></div>
+
+    <p class="catalog__note">
+      <span>Preços à vista, sujeitos a alteração.</span>
+      <span>Frete calculado no fechamento do pedido.</span>
+      <span>Produção sob medida para balcões e painéis.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ====================================================== NÚMEROS -->
+<section class="stats" id="atacado">
+  <div class="shell">
+    <div class="stats__grid">
+      <!-- PLACEHOLDER: confirmar números reais com a Exposul antes de publicar -->
+      <div class="stat reveal"><div class="stat__num" data-count="700" data-suffix="+"></div><p class="stat__label">Itens em linha, entre manequins, aramados, cabides e mobiliário de loja.</p></div>
+      <div class="stat reveal"><div class="stat__num" data-count="48" data-suffix="h"></div><p class="stat__label">Prazo de expedição para itens de pronta entrega no estoque de Curitiba.</p></div>
+      <div class="stat reveal"><div class="stat__num" data-count="5000"></div><p class="stat__label">Lojas atendidas de norte a sul do país, do quiosque à rede de shopping.</p></div>
+      <div class="stat reveal"><div class="stat__num" data-count="12" data-suffix="×"></div><p class="stat__label">Parcelamento sem juros no cartão para pedidos acima de mil reais.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== SHOWROOM -->
+<section class="section" id="showroom">
+  <div class="shell">
+    <div class="section-head">
+      <div class="reveal">
+        <span class="eyebrow">Rebouças, Curitiba</span>
+        <h2 class="display">Venha ver de perto antes de encher a loja.</h2>
+      </div>
+      <p class="lead reveal">O showroom fica na fábrica. Dá para pegar no manequim, testar a trava do rodízio da arara e conferir o acabamento antes de decidir — que é o que nenhuma foto resolve.</p>
+    </div>
+
+    <div class="showroom__grid">
+      <div class="window reveal" aria-hidden="true">
+        <div class="window__row">
+          <svg class="art" viewBox="0 0 200 560" data-parallax="0.06"><use href="#art-mannequin-child"></use></svg>
+          <svg class="art" viewBox="0 0 200 560" data-parallax="0.14"><use href="#art-mannequin-f"></use></svg>
+          <svg class="art" viewBox="0 0 200 560" data-parallax="0.09"><use href="#art-bust"></use></svg>
+        </div>
+        <div class="window__floor"></div>
+      </div>
+
+      <div>
+        <dl class="infolist stagger">
+          <div>
+            <dt>Endereço</dt>
+            <dd>Rua 24 de Maio, 1423 — Rebouças<br>Curitiba / PR</dd>
+          </div>
+          <div>
+            <dt>Telefone</dt>
+            <dd><a href="tel:+554130294456">(41) 3029-4456</a></dd>
+          </div>
+          <div>
+            <dt>WhatsApp</dt>
+            <dd><a href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic>(41) 99691-0019</a></dd>
+          </div>
+          <div>
+            <!-- PLACEHOLDER: confirmar horário real -->
+            <dt>Atendimento</dt>
+            <dd>Segunda a sexta, 8h30 às 18h<br>Sábado, 9h às 13h</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== FAQ
+     PLACEHOLDER: todo valor entre colchetes precisa ser confirmado com a
+     Exposul antes de publicar. Publicar prazo ou condição errada gera
+     problema comercial e exposição no Código de Defesa do Consumidor. -->
+<section class="section faq" id="condicoes">
+  <div class="shell">
+    <div class="section-head">
+      <div class="reveal">
+        <span class="eyebrow">Antes de perguntar</span>
+        <h2 class="display">Condições, sem precisar abrir o WhatsApp.</h2>
+      </div>
+      <p class="lead reveal">O que trava um pedido quase sempre é a mesma coisa: frete, prazo, pedido mínimo e nota. Está tudo aqui.</p>
+    </div>
+
+    <dl class="faq__grid stagger">
+      <div>
+        <dt>Pedido mínimo</dt>
+        <dd>Não há. Vendemos uma peça avulsa e vendemos carga fechada. O preço de lojista entra pelo volume do pedido inteiro, não item por item.</dd>
+      </div>
+      <div>
+        <dt>Frete e prazo</dt>
+        <dd>Frete calculado por CEP no fechamento. Item de pronta entrega sai de Curitiba em até <b>[confirmar]</b> dias úteis; item sob medida leva <b>[confirmar]</b> dias úteis de produção após a aprovação da medida.</dd>
+      </div>
+      <div>
+        <dt>Pagamento</dt>
+        <dd>Pix, boleto para CNPJ com cadastro aprovado, ou cartão por link de pagamento. <b>[confirmar parcelamento e desconto à vista]</b></dd>
+      </div>
+      <div>
+        <dt>Nota fiscal</dt>
+        <dd>Toda venda sai com NF-e. Para CNPJ, informe a inscrição estadual no fechamento. Entregamos em todo o Brasil; impostos de destino, quando houver, entram no orçamento antes de você aprovar.</dd>
+      </div>
+      <div>
+        <dt>Garantia</dt>
+        <dd><b>[confirmar prazo]</b> contra defeito de fabricação, contado da data da nota.</dd>
+      </div>
+      <div>
+        <dt>Troca e devolução</dt>
+        <dd>Peça de linha pode ser devolvida em até 7 dias corridos do recebimento, conforme o Código de Defesa do Consumidor. Item produzido sob medida não tem devolução por arrependimento.</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ====================================================== CTA -->
+<section class="cta section">
+  <div class="cta__glow" aria-hidden="true" data-parallax="0.1"></div>
+  <div class="shell cta__inner">
+    <span class="eyebrow reveal">Abrindo, reformando ou repondo</span>
+    <h2 class="display reveal">Monte a loja com quem fabrica.</h2>
+    <p class="lead reveal" style="text-align:center">Manda a planta, a foto do espaço ou só a dúvida. A gente responde com a lista do que resolve e quanto custa.</p>
+    <div class="cta__actions reveal">
+      <a class="btn btn--wa" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic data-magnetic>Falar no WhatsApp</a>
+      <a class="btn" href="#catalogo" data-magnetic>Voltar ao catálogo</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ====================================================== RODAPÉ -->
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="brand">EXPOSUL<sup>CWB</sup></span>
+        <p>Fábrica de manequins, cabides, araras e expositores. Rua 24 de Maio, 1423 — Rebouças, Curitiba/PR.</p>
+      </div>
+      <div>
+        <h3>Linha</h3>
+        <ul id="footerCats"></ul>
+      </div>
+      <div>
+        <h3>A empresa</h3>
+        <ul>
+          <li><a href="#manifesto">A fábrica</a></li>
+          <li><a href="#showroom">Showroom</a></li>
+          <li><a href="#atacado">Condição de atacado</a></li>
+          <li><a href="#condicoes">Frete, prazo e pagamento</a></li>
+          <li><a href="#catalogo">Catálogo completo</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contato</h3>
+        <ul>
+          <li><a href="tel:+554130294456">(41) 3029-4456</a></li>
+          <li><a href="tel:+5541996910019">(41) 99691-0019</a></li>
+          <li><a href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic>WhatsApp comercial</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© <span id="year">2026</span> Exposul Expositores · CNPJ <b>[confirmar]</b></span>
+      <span>Protótipo de demonstração — preços e prazos ilustrativos</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ====================================================== MODAL DE PRODUTO -->
+<div class="scrim" id="scrim"></div>
+
+<div class="panel product" id="product" role="dialog" aria-modal="true" aria-labelledby="pName">
+  <button class="panel__close" id="productClose" aria-label="Fechar ficha do produto">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <div class="product__grid">
+    <div class="product__media">
+      <svg class="product__art art" id="pArt" viewBox="0 0 200 560" aria-hidden="true"><use id="pArtUse" href="#art-mannequin-f"></use></svg>
+    </div>
+    <div class="product__info">
+      <span class="product__cat" id="pCat"></span>
+      <h2 class="product__name" id="pName"></h2>
+      <p class="product__desc" id="pDesc"></p>
+
+      <div class="tiers">
+        <div class="tiers__head"><span>Escada de atacado</span><span id="pUnit"></span></div>
+        <div id="pTiers"></div>
+      </div>
+
+      <dl class="specs" id="pSpecs"></dl>
+
+      <div class="buybar">
+        <div class="buybar__row">
+          <div class="stepper">
+            <button type="button" id="pMinus" aria-label="Diminuir quantidade">−</button>
+            <input type="number" id="pQty" value="1" min="1" max="999" inputmode="numeric" aria-label="Quantidade">
+            <button type="button" id="pPlus" aria-label="Aumentar quantidade">+</button>
+          </div>
+          <div class="buybar__total">
+            <span class="buybar__label">Total</span>
+            <span class="buybar__value" id="pTotal">R$ 0,00</span>
+            <span class="buybar__unit" id="pUnitPrice"></span>
+            <span class="buybar__saved" id="pSaved"></span>
+            <span class="buybar__note" id="pCartNote"></span>
+          </div>
+        </div>
+        <div class="buybar__actions">
+          <button class="btn btn--solid" id="pAdd">Adicionar ao pedido</button>
+          <button class="btn btn--wa" id="pBuy">Comprar no WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================== CARRINHO -->
+<aside class="panel cart" id="cart" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <button class="panel__close" id="cartClose" aria-label="Fechar pedido">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <div class="cart__head">
+    <h2 id="cartTitle">Seu pedido</h2>
+    <span class="cart__count" id="cartQty">vazio</span>
+  </div>
+  <div class="cart__items" id="cartItems"></div>
+  <div class="cart__foot" id="cartFoot" hidden>
+    <p class="cart__nudge" id="cartNudge" hidden></p>
+    <div class="cart__line"><span>Subtotal no varejo</span><span id="cartRetail"></span></div>
+    <div class="cart__line cart__saved" id="cartSavedRow"><span>Desconto de lojista</span><span id="cartSaved"></span></div>
+    <div class="cart__line cart__line--total"><span>Total</span><b id="cartTotal"></b></div>
+    <button class="btn btn--wa btn--block" id="cartCheckout">Fechar pedido no WhatsApp</button>
+    <p class="cart__legal">O pedido segue para o comercial com itens, quantidades e valores. Atendemos de segunda a sexta, 8h30 às 18h, e sábado até 13h — fora do horário, deixe a mensagem que retornamos na abertura.</p>
+  </div>
+</aside>
+
+<a class="wa-float" id="waFloat" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.38a9.86 9.86 0 0 0 4.73 1.2h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.13-2.9-7C17.17 3.03 14.68 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.81.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.09-.16.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.49-.4-.42-.55-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.85.84-.85 2.04s.87 2.37 1 2.53c.12.17 1.72 2.62 4.16 3.67.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
+</a>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12.5 9 17.5 20 6.5"/></svg>
+  <span id="toastText"></span>
+</div>
+
+<!-- ====================================================== SPRITE -->
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true" focusable="false"><defs>
+
+  <!-- ============ LUZ ============ -->
+  <!-- Porcelana: chave quente na esquerda-alta, queda para sombra fria -->
+  <linearGradient id="gPorc" x1="12%" y1="0%" x2="88%" y2="100%">
+    <stop offset="0"    stop-color="#fbf7f0"/>
+    <stop offset=".22"  stop-color="#ece5da"/>
+    <stop offset=".48"  stop-color="#b8b0a4"/>
+    <stop offset=".74"  stop-color="#6b6660"/>
+    <stop offset="1"    stop-color="#2e2c29"/>
+  </linearGradient>
+  <linearGradient id="gPorcL" x1="12%" y1="0%" x2="88%" y2="100%">
+    <stop offset="0"    stop-color="#fdfaf5"/>
+    <stop offset=".3"   stop-color="#e4ddd2"/>
+    <stop offset=".7"   stop-color="#8d877f"/>
+    <stop offset="1"    stop-color="#3a3835"/>
+  </linearGradient>
+  <linearGradient id="gVelvet" x1="12%" y1="0%" x2="88%" y2="100%">
+    <stop offset="0"    stop-color="#6a6b73"/>
+    <stop offset=".3"   stop-color="#4a4b53"/>
+    <stop offset=".7"   stop-color="#2a2b31"/>
+    <stop offset="1"    stop-color="#16171b"/>
+  </linearGradient>
+  <linearGradient id="gChrome" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0"    stop-color="#5e666f"/>
+    <stop offset=".18"  stop-color="#e8edf3"/>
+    <stop offset=".38"  stop-color="#9aa2ac"/>
+    <stop offset=".58"  stop-color="#f2f5f9"/>
+    <stop offset=".8"   stop-color="#79808a"/>
+    <stop offset="1"    stop-color="#4a5158"/>
+  </linearGradient>
+  <linearGradient id="gSteel" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0"    stop-color="#31363c"/>
+    <stop offset=".22"  stop-color="#767e88"/>
+    <stop offset=".5"   stop-color="#4a5057"/>
+    <stop offset=".82"  stop-color="#666d76"/>
+    <stop offset="1"    stop-color="#2a2e33"/>
+  </linearGradient>
+  <linearGradient id="gAcryl" x1="10%" y1="0%" x2="90%" y2="100%">
+    <stop offset="0"    stop-color="#dfeaf2" stop-opacity=".92"/>
+    <stop offset=".45"  stop-color="#9fb4c4" stop-opacity=".5"/>
+    <stop offset="1"    stop-color="#5d6f7e" stop-opacity=".72"/>
+  </linearGradient>
+  <linearGradient id="gWood" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0"    stop-color="#c39a67"/>
+    <stop offset=".5"   stop-color="#9a7448"/>
+    <stop offset="1"    stop-color="#6b4f2f"/>
+  </linearGradient>
+  <linearGradient id="gGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0"    stop-color="#cfe2ee" stop-opacity=".30"/>
+    <stop offset=".5"   stop-color="#8fa8ba" stop-opacity=".12"/>
+    <stop offset="1"    stop-color="#cfe2ee" stop-opacity=".26"/>
+  </linearGradient>
+  <linearGradient id="gPanel" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0"    stop-color="#31353a"/>
+    <stop offset=".5"   stop-color="#434850"/>
+    <stop offset="1"    stop-color="#282c31"/>
+  </linearGradient>
+
+  <!-- Luz única sobre a figura inteira (userSpaceOnUse no espaço 200x560),
+       para que torso, braços e pernas compartilhem a mesma rampa. -->
+  <linearGradient id="gBody" gradientUnits="userSpaceOnUse" x1="40" y1="16" x2="168" y2="620">
+    <stop offset="0"   stop-color="#fdfaf5"/>
+    <stop offset=".22" stop-color="#ece5da"/>
+    <stop offset=".5"  stop-color="#cac2b6"/>
+    <stop offset=".76" stop-color="#8f897f"/>
+    <stop offset="1"   stop-color="#514c46"/>
+  </linearGradient>
+  <linearGradient id="gBodyVelvet" gradientUnits="userSpaceOnUse" x1="40" y1="16" x2="168" y2="620">
+    <stop offset="0"   stop-color="#8d8e97"/>
+    <stop offset=".22" stop-color="#6b6c76"/>
+    <stop offset=".5"  stop-color="#4c4d56"/>
+    <stop offset=".76" stop-color="#34353c"/>
+    <stop offset="1"   stop-color="#232429"/>
+  </linearGradient>
+
+  <!-- ============ MANEQUIM FEMININO ============ -->
+  <symbol id="art-mannequin-f" viewBox="0 0 200 560">
+    <g>
+      <ellipse cx="100" cy="534" rx="54" ry="9.5" fill="#000" opacity=".7"/>
+      <ellipse cx="100" cy="530" rx="54" ry="9.5" fill="url(#gPorcL)" opacity=".5"/>
+      <rect x="95.5" y="466" width="9" height="64" fill="url(#gChrome)" opacity=".85"/>
+      <!-- pernas -->
+      <path d="M67 284C63 314 61 348 62 376C63 404 66 434 68 460C69 476 70 490 70 502L88 502C88 490 88 476 89 460C90 434 92 404 92 376C92 348 91 322 89 300Z"/>
+      <path d="M133 284C137 314 139 348 138 376C137 404 134 434 132 460C131 476 130 490 130 502L112 502C112 490 112 476 111 460C110 434 108 404 108 376C108 348 109 322 111 300Z"/>
+      <!-- torso: ombro > busto > CINTURA estreita > quadril mais largo -->
+      <path d="M92 58L92 92C92 98 86 101 78 104C68 108 62 116 61 130C60 140 62 146 63 154C64 166 68 172 70 182C73 192 77 197 77 208C77 224 67 238 60 250C55 260 55 274 58 286C62 296 65 302 67 308L133 308C135 302 138 296 140 284C142 272 142 258 138 248C132 236 123 222 123 208C123 197 127 192 130 182C132 172 136 166 137 154C138 146 140 140 139 130C138 116 132 108 122 104C114 101 108 98 108 92L108 58Z"/>
+      <!-- braços destacados: vão abre da axila para baixo -->
+      <path d="M62 112C54 120 49 134 47 152C44 176 43 202 44 226C45 242 46 254 48 264L61 264C59 254 58 242 57 226C56 202 57 177 60 154C61 140 63 126 66 116Z"/>
+      <path d="M138 112C146 120 151 134 153 152C156 176 157 202 156 226C155 242 154 254 152 264L139 264C141 254 142 242 143 226C144 202 143 177 140 154C139 140 137 126 134 116Z"/>
+      <ellipse cx="100" cy="36" rx="18" ry="24"/>
+    </g>
+  </symbol>
+
+  <!-- ============ MANEQUIM MASCULINO ============ -->
+  <symbol id="art-mannequin-m" viewBox="0 0 200 560">
+    <g>
+      <ellipse cx="100" cy="534" rx="56" ry="9.5" fill="#000" opacity=".7"/>
+      <ellipse cx="100" cy="530" rx="56" ry="9.5" fill="url(#gPorcL)" opacity=".5"/>
+      <rect x="95" y="464" width="10" height="66" fill="url(#gChrome)" opacity=".85"/>
+      <path d="M65 288C61 320 59 352 60 380C61 408 64 436 66 462C67 478 68 490 68 502L89 502C89 490 89 478 90 462C91 436 93 408 93 380C93 352 92 328 90 306Z"/>
+      <path d="M135 288C139 320 141 352 140 380C139 408 136 436 134 462C133 478 132 490 132 502L111 502C111 490 111 478 110 462C109 436 107 408 107 380C107 352 108 328 110 306Z"/>
+      <!-- V invertido: ombro 46, peito 43, cintura 31, quadril 34 -->
+      <path d="M90 52L90 86C90 93 82 97 72 101C60 106 55 114 54 128C53 142 56 156 58 168C60 180 62 190 64 200C66 206 69 210 69 216C69 230 67 240 66 254C65 268 65 286 66 300L134 300C135 286 135 268 134 254C133 240 131 226 131 212C131 202 133 210 136 200C138 190 140 180 142 168C144 156 147 142 146 128C145 114 140 106 128 101C118 97 110 93 110 86L110 52Z"/>
+      <path d="M55 112C47 122 42 138 40 158C37 184 36 210 37 234C38 250 39 262 41 272L55 272C53 262 52 250 51 234C50 210 51 184 54 160C55 144 57 128 60 117Z"/>
+      <path d="M145 112C153 122 158 138 160 158C163 184 164 210 163 234C162 250 161 262 159 272L145 272C147 262 148 250 149 234C150 210 149 184 146 160C145 144 143 128 140 117Z"/>
+      <ellipse cx="100" cy="30" rx="19" ry="24.5"/>
+    </g>
+  </symbol>
+
+  <!-- ============ MANEQUIM INFANTIL ============ -->
+  <symbol id="art-mannequin-child" viewBox="0 0 200 560">
+    <g>
+      <ellipse cx="100" cy="516" rx="44" ry="9" fill="#000" opacity=".7"/>
+      <ellipse cx="100" cy="512" rx="44" ry="9" fill="url(#gPorcL)" opacity=".5"/>
+      <rect x="96" y="462" width="8" height="52" fill="url(#gChrome)" opacity=".85"/>
+      <!-- cabeça grande, tronco curto e roliço, pernas curtas -->
+      <path d="M76 336C73 358 72 386 73 406C74 426 76 444 77 460C78 472 79 482 79 490L95 490C95 482 95 472 96 460C97 444 98 426 98 406C98 386 97 368 95 352Z"/>
+      <path d="M124 336C127 358 128 386 127 406C126 426 124 444 123 460C122 472 121 482 121 490L105 490C105 482 105 472 104 460C103 444 102 426 102 406C102 386 103 368 105 352Z"/>
+      <path d="M92 156L92 180C92 185 87 187 81 190C73 194 68 201 67 213C66 224 68 234 70 244C72 254 75 260 76 270C78 282 76 296 75 310C74 324 75 340 77 356L123 356C125 340 126 324 125 310C124 296 122 282 124 270C125 260 128 254 130 244C132 234 134 224 133 213C132 201 127 194 119 190C113 187 108 185 108 180L108 156Z"/>
+      <path d="M70 190C63 198 59 210 57 226C54 246 53 266 54 284C55 296 56 306 57 314L69 314C68 306 67 296 66 284C65 266 66 247 68 228C69 214 71 202 74 194Z"/>
+      <path d="M130 190C137 198 141 210 143 226C146 246 147 266 146 284C145 296 144 306 143 314L131 314C132 306 133 296 134 284C135 266 134 247 132 228C131 214 129 202 126 194Z"/>
+      <ellipse cx="100" cy="106" rx="25" ry="30"/>
+    </g>
+  </symbol>
+
+  <!-- ============ BUSTO ============ -->
+  <symbol id="art-bust" viewBox="0 0 200 560">
+    <g>
+      <ellipse cx="100" cy="534" rx="50" ry="9.5" fill="#000" opacity=".7"/>
+      <ellipse cx="100" cy="530" rx="50" ry="9.5" fill="url(#gPorcL)" opacity=".5"/>
+      <rect x="94" y="306" width="12" height="222" rx="2" fill="url(#gChrome)"/>
+      <rect x="86" y="360" width="28" height="9" rx="4.5" fill="url(#gChrome)"/>
+      <circle cx="100" cy="364.5" r="3.2" fill="#121416"/>
+      <!-- ombro, busto, cintura, quadril cortado no meio -->
+      <path d="M100 92C93 92 88 95 88 100L88 116C88 122 82 125 74 129C63 134 57 143 56 158C55 170 58 182 60 194C62 206 66 212 68 222C71 232 75 238 75 250C75 264 68 276 63 288L137 288C132 276 125 264 125 250C125 238 129 232 132 222C134 212 138 206 140 194C142 182 145 170 144 158C143 143 137 134 126 129C118 125 112 122 112 116L112 100C112 95 107 92 100 92Z"/>
+      <path d="M60 288H140L136 308H64Z"/>
+    </g>
+  </symbol>
+
+  <!-- ============ CABIDE ACRÍLICO CAVADO ============ -->
+  <symbol id="art-hanger-curve" viewBox="0 0 400 260">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M200 106V80C200 62 186 52 170 58C156 63 150 76 155 88" stroke="url(#gChrome)" stroke-width="8"/>
+      <path d="M40 176C54 156 78 136 108 124C138 112 168 106 200 106C232 106 262 112 292 124C322 136 346 156 360 176"
+            stroke="url(#gAcryl)" stroke-width="16"/>
+      <path d="M50 176H350" stroke="#9fb5c6" stroke-opacity=".85" stroke-width="16"/>
+      <path d="M84 154C102 138 126 124 154 116" stroke="#eef6fd" stroke-opacity=".55" stroke-width="3.5"/>
+    </g>
+  </symbol>
+
+  <!-- ============ CABIDE VELUDO SLIM ============ -->
+  <symbol id="art-hanger-slim" viewBox="0 0 400 260">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M200 104V78C200 61 187 51 172 57C159 62 153 74 158 86" stroke="url(#gChrome)" stroke-width="7"/>
+      <path d="M46 174C60 155 83 136 112 124C141 112 170 106 200 106C230 106 259 112 288 124C317 136 340 155 354 174"
+            stroke="url(#gVelvet)" stroke-width="11"/>
+      <path d="M54 174H346" stroke="#3c3d45" stroke-width="11"/>
+      <path d="M88 152C106 137 129 124 155 117" stroke="#a4a5ae" stroke-opacity=".4" stroke-width="2.5"/>
+    </g>
+  </symbol>
+
+  <!-- ============ CABIDE COM PRESILHAS ============ -->
+  <symbol id="art-hanger-clip" viewBox="0 0 400 260">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M200 96V66C200 48 186 38 170 44C156 49 150 62 155 74" stroke="url(#gChrome)" stroke-width="8"/>
+      <path d="M200 96 108 118M200 96l92 22" stroke="#4a5057" stroke-width="7"/>
+      <path d="M96 124h208" stroke="#363b40" stroke-width="19"/>
+      <path d="M100 118h200" stroke="#727a83" stroke-width="3.5" stroke-opacity=".85"/>
+    </g>
+    <g>
+      <rect x="124" y="133" width="44" height="80" rx="9" fill="url(#gSteel)"/>
+      <rect x="232" y="133" width="44" height="80" rx="9" fill="url(#gSteel)"/>
+      <rect x="131" y="140" width="30" height="7" rx="3.5" fill="url(#gChrome)" opacity=".9"/>
+      <rect x="239" y="140" width="30" height="7" rx="3.5" fill="url(#gChrome)" opacity=".9"/>
+      <rect x="132" y="191" width="28" height="18" rx="4" fill="#0e1012"/>
+      <rect x="240" y="191" width="28" height="18" rx="4" fill="#0e1012"/>
+      <path d="M146 156v26M254 156v26" stroke="#0e1012" stroke-width="4"/>
+    </g>
+  </symbol>
+
+  <!-- ============ CABIDE INFANTIL (pacote) ============ -->
+  <symbol id="art-hanger-kids" viewBox="0 0 400 260">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">
+      <g stroke="#5f9e7a" transform="translate(0,88)">
+        <path d="M200 112V94C200 82 191 75 180 79C171 82 167 91 170 99"/>
+        <path d="M96 152C108 138 126 124 148 117C165 112 183 110 200 110C217 110 235 112 252 117C274 124 292 138 304 152"/>
+        <path d="M102 152H298"/>
+      </g>
+      <g stroke="#c47d9e" transform="translate(0,44)">
+        <path d="M200 112V94C200 82 191 75 180 79C171 82 167 91 170 99"/>
+        <path d="M96 152C108 138 126 124 148 117C165 112 183 110 200 110C217 110 235 112 252 117C274 124 292 138 304 152"/>
+        <path d="M102 152H298"/>
+      </g>
+      <g stroke="#e3dcd1">
+        <path d="M200 112V94C200 82 191 75 180 79C171 82 167 91 170 99"/>
+        <path d="M96 152C108 138 126 124 148 117C165 112 183 110 200 110C217 110 235 112 252 117C274 124 292 138 304 152"/>
+        <path d="M102 152H298"/>
+      </g>
+    </g>
+  </symbol>
+
+  <!-- ============ ARARA RETA (dois montantes + travessa) ============ -->
+  <symbol id="art-rack-straight" viewBox="0 0 400 520">
+    <!-- cabides pendurados: deixa a função óbvia -->
+    <g fill="none" stroke="#6e757d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".7">
+      <path d="M150 96v10M150 106l-26 30h52ZM200 96v10M200 106l-26 30h52ZM250 96v10M250 106l-26 30h52Z"/>
+    </g>
+    <g fill="url(#gChrome)">
+      <rect x="58" y="84" width="284" height="13" rx="6.5"/>
+      <rect x="74" y="90" width="13" height="344" rx="6"/>
+      <rect x="313" y="90" width="13" height="344" rx="6"/>
+      <rect x="74" y="336" width="252" height="9" rx="4.5"/>
+      <rect x="34" y="428" width="93" height="13" rx="6.5"/>
+      <rect x="273" y="428" width="93" height="13" rx="6.5"/>
+    </g>
+    <g fill="#15171a">
+      <rect x="36" y="441" width="18" height="16" rx="5"/>
+      <rect x="107" y="441" width="18" height="16" rx="5"/>
+      <rect x="275" y="441" width="18" height="16" rx="5"/>
+      <rect x="346" y="441" width="18" height="16" rx="5"/>
+    </g>
+    <ellipse cx="200" cy="474" rx="160" ry="10" fill="#000" opacity=".65"/>
+  </symbol>
+
+  <!-- ============ ARARA INDUSTRIAL ============ -->
+  <symbol id="art-rack-industrial" viewBox="0 0 400 520">
+    <g fill="none" stroke="#6e757d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".6">
+      <path d="M160 160v10M160 170l-24 28h48ZM210 160v10M210 170l-24 28h48ZM260 160v10M260 170l-24 28h48Z"/>
+    </g>
+    <g fill="url(#gSteel)">
+      <rect x="60" y="146" width="280" height="12" rx="4"/>
+      <rect x="66" y="70" width="16" height="376" rx="3"/>
+      <rect x="318" y="70" width="16" height="376" rx="3"/>
+      <rect x="60" y="352" width="280" height="11" rx="4"/>
+      <rect x="44" y="440" width="60" height="14" rx="3"/>
+      <rect x="296" y="440" width="60" height="14" rx="3"/>
+    </g>
+    <rect x="50" y="66" width="300" height="18" rx="2" fill="url(#gWood)"/>
+    <rect x="50" y="84" width="300" height="6" rx="2" fill="#4c3721"/>
+    <ellipse cx="200" cy="472" rx="165" ry="10" fill="#000" opacity=".65"/>
+  </symbol>
+
+  <!-- ============ ARARA GÔNDOLA DUPLA FACE ============ -->
+  <symbol id="art-rack-gondola" viewBox="0 0 400 520">
+    <!-- face de trás, mais alta e recuada -->
+    <g fill="url(#gChrome)" opacity=".55">
+      <rect x="70" y="96" width="260" height="11" rx="5.5"/>
+      <rect x="194" y="102" width="12" height="120" rx="6"/>
+    </g>
+    <g fill="none" stroke="#5f666e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".5">
+      <path d="M150 108v9M150 117l-22 26h44ZM250 108v9M250 117l-22 26h44Z"/>
+    </g>
+    <!-- face da frente -->
+    <g fill="none" stroke="#79818a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity=".8">
+      <path d="M140 168v10M140 178l-24 28h48ZM200 168v10M200 178l-24 28h48ZM260 168v10M260 178l-24 28h48Z"/>
+    </g>
+    <g fill="url(#gChrome)">
+      <rect x="58" y="156" width="284" height="12" rx="6"/>
+      <rect x="192" y="162" width="16" height="230" rx="8"/>
+      <rect x="96" y="384" width="208" height="12" rx="6"/>
+      <rect x="92" y="372" width="14" height="34" rx="7"/>
+      <rect x="294" y="372" width="14" height="34" rx="7"/>
+    </g>
+    <g fill="#15171a">
+      <circle cx="99" cy="418" r="14"/>
+      <circle cx="301" cy="418" r="14"/>
+    </g>
+    <g fill="url(#gChrome)" opacity=".7">
+      <circle cx="99" cy="418" r="5.5"/>
+      <circle cx="301" cy="418" r="5.5"/>
+    </g>
+    <ellipse cx="200" cy="450" rx="160" ry="10" fill="#000" opacity=".65"/>
+  </symbol>
+
+  <!-- ============ PAINEL CANALETADO ============ -->
+  <symbol id="art-panel" viewBox="0 0 400 520">
+    <rect x="58" y="40" width="284" height="430" rx="3" fill="url(#gPanel)"/>
+    <g stroke="#0e1012" stroke-width="6">
+      <path d="M64 82h272M64 124h272M64 166h272M64 208h272M64 250h272M64 292h272M64 334h272M64 376h272M64 418h272"/>
+    </g>
+    <g stroke="#7f8892" stroke-width="1.5" opacity=".55">
+      <path d="M64 85h272M64 127h272M64 169h272M64 211h272M64 253h272M64 295h272M64 337h272M64 379h272M64 421h272"/>
+    </g>
+    <g fill="url(#gChrome)">
+      <rect x="118" y="160" width="72" height="7" rx="3.5"/>
+      <rect x="118" y="160" width="8" height="18" rx="3"/>
+      <rect x="212" y="286" width="72" height="7" rx="3.5"/>
+      <rect x="212" y="286" width="8" height="18" rx="3"/>
+    </g>
+    <rect x="58" y="40" width="284" height="430" rx="3" fill="none" stroke="#585f66" stroke-width="2"/>
+    <ellipse cx="200" cy="486" rx="150" ry="9" fill="#000" opacity=".65"/>
+  </symbol>
+
+  <!-- ============ TORRE GIRATÓRIA ============ -->
+  <symbol id="art-tower" viewBox="0 0 400 520">
+    <path d="M200 96 122 62 200 28l78 34z" fill="#41464c"/>
+    <path d="M122 62v306l78 40V96z" fill="#33383d"/>
+    <path d="M278 62v306l-78 40V96z" fill="#1e2226"/>
+    <g stroke="#0e1012" stroke-width="5">
+      <path d="M122 106l78 38M278 106l-78 38M122 152l78 38M278 152l-78 38M122 198l78 38M278 198l-78 38M122 244l78 38M278 244l-78 38M122 290l78 38M278 290l-78 38"/>
+    </g>
+    <g stroke="#828b95" stroke-width="1.6" opacity=".38">
+      <path d="M122 111l78 38M278 111l-78 38M122 157l78 38M278 157l-78 38M122 203l78 38M278 203l-78 38M122 249l78 38M278 249l-78 38M122 295l78 38M278 295l-78 38"/>
+    </g>
+    <path d="M200 96 122 62v306l78 40 78-40V62z" fill="none" stroke="#5d646c" stroke-width="2"/>
+    <path d="M200 96v312M122 62 200 28l78 34" fill="none" stroke="#5d646c" stroke-width="2"/>
+    <g fill="url(#gChrome)">
+      <rect x="134" y="176" width="54" height="6" rx="3" transform="rotate(-14 134 176)"/>
+      <rect x="214" y="262" width="54" height="6" rx="3" transform="rotate(14 214 262)"/>
+    </g>
+    <ellipse cx="200" cy="434" rx="56" ry="13" fill="url(#gSteel)"/>
+    <ellipse cx="200" cy="428" rx="56" ry="13" fill="url(#gChrome)" opacity=".5"/>
+    <ellipse cx="200" cy="462" rx="116" ry="9" fill="#000" opacity=".65"/>
+  </symbol>
+
+  <!-- ============ BALCÃO VITRINE ============ -->
+  <symbol id="art-counter" viewBox="0 0 400 520">
+    <rect x="40" y="180" width="320" height="250" rx="4" fill="url(#gPanel)"/>
+    <rect x="52" y="196" width="296" height="150" rx="3" fill="url(#gGlass)"/>
+    <g stroke="#9db4c4" stroke-opacity=".45" stroke-width="2" fill="none">
+      <rect x="52" y="196" width="296" height="150" rx="3"/>
+      <path d="M52 272h296M200 196v150"/>
+    </g>
+    <path d="M74 340 156 200h34L108 340z" fill="#dff0fb" opacity=".07"/>
+    <rect x="40" y="164" width="320" height="18" rx="3" fill="url(#gWood)"/>
+    <rect x="40" y="182" width="320" height="6" rx="2" fill="#4c3721"/>
+    <rect x="52" y="356" width="296" height="62" rx="3" fill="#1c2023"/>
+    <rect x="60" y="366" width="130" height="42" rx="3" fill="url(#gPanel)"/>
+    <rect x="210" y="366" width="130" height="42" rx="3" fill="url(#gPanel)"/>
+    <g fill="url(#gChrome)">
+      <rect x="98" y="384" width="54" height="6" rx="3"/>
+      <rect x="248" y="384" width="54" height="6" rx="3"/>
+    </g>
+    <rect x="52" y="430" width="14" height="18" rx="3" fill="#15171a"/>
+    <rect x="334" y="430" width="14" height="18" rx="3" fill="#15171a"/>
+    <ellipse cx="200" cy="462" rx="170" ry="10" fill="#000" opacity=".65"/>
+  </symbol>
+
+  <!-- ============ CESTO ARAMADO ============ -->
+  <symbol id="art-basket" viewBox="0 0 400 520">
+    <g fill="none" stroke="url(#gChrome)" stroke-width="7" stroke-linecap="round">
+      <path d="M96 200h208l-26 200H122z"/>
+      <path d="M104 244h192M110 292h180M116 340h168"/>
+      <path d="M132 200l-8 200M180 200l-3 200M220 200l3 200M268 200l8 200"/>
+      <path d="M140 400v46M260 400v46M140 446h120"/>
+    </g>
+    <rect x="196" y="72" width="9" height="132" rx="4" fill="url(#gChrome)"/>
+    <rect x="122" y="46" width="158" height="62" rx="4" fill="url(#gPorcL)"/>
+    <rect x="122" y="46" width="158" height="62" rx="4" fill="none" stroke="#585f66" stroke-width="2"/>
+    <rect x="140" y="64" width="80" height="10" rx="5" fill="#3a3835" opacity=".55"/>
+    <rect x="140" y="82" width="52" height="10" rx="5" fill="#3a3835" opacity=".35"/>
+    <ellipse cx="200" cy="470" rx="130" ry="10" fill="#000" opacity=".65"/>
+  </symbol>
+
+  <!-- ============ KIT GANCHOS ============ -->
+  <symbol id="art-hooks" viewBox="0 0 400 520">
+    <g fill="none" stroke="url(#gChrome)" stroke-width="9" stroke-linecap="round">
+      <path d="M96 140v-22h150c10 0 16 8 14 18"/>
+      <path d="M96 240v-22h114c10 0 16 8 14 18"/>
+      <path d="M96 340v-22h80c10 0 16 8 14 18"/>
+      <path d="M96 422v-22h46c10 0 16 8 14 18"/>
+    </g>
+    <rect x="62" y="82" width="26" height="374" rx="4" fill="url(#gPanel)"/>
+    <g stroke="#0e1012" stroke-width="5">
+      <path d="M62 118h26M62 218h26M62 318h26M62 400h26"/>
+    </g>
+    <ellipse cx="200" cy="486" rx="140" ry="9" fill="#000" opacity=".65"/>
+  </symbol>
+
+</defs></svg>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="js/products.js"></script>
+<script src="js/site.js"></script>
 </body>
 </html>
