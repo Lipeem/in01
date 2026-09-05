@@ -90,7 +90,7 @@
   let lenis = null;
   if (ANIM && typeof window.Lenis !== 'undefined') {
     lenis = new Lenis({
-      duration: 1.15,
+      duration: 0.95,       // 1.15 parecia "página lenta" em máquina modesta
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       syncTouch: false      // no toque, o scroll nativo é melhor e mais estável
@@ -121,9 +121,11 @@
      momento do site: toda a ousadia mora aqui e o resto fica quieto.
 
      Portões, todos obrigatórios para a sequência rodar:
-       GSAP presente · sem prefers-reduced-motion · viewport >= 1024px ·
-       240 frames carregados em até 5 s · usuário ainda no topo.
+       GSAP presente · sem prefers-reduced-motion · viewport >= 900px ·
+       frames encontrados (pasta assets/hero-frames/ ou embutidos).
      Falhou qualquer um: poster estático, conteúdo completo, sem pin.
+     Carregamento lento não é falha: ver heroPreload. Usuário que já rolou
+     não é falha: ver heroBuildPin.
 
      O que a sequência mostra, medido frame a frame (não pela descrição):
        f_001–f_060  close no torso e recuo da câmera (o recuo acaba no 60)
@@ -134,15 +136,23 @@
   const HERO_FRAMES = 240, HERO_W = 1120, HERO_H = 720;
   const HAS_SPLIT = HAS_GSAP && typeof window.SplitText !== 'undefined';
   if (HAS_SPLIT) gsap.registerPlugin(SplitText);
-  const heroWantsSequence = ANIM && !!heroCanvas && window.matchMedia('(min-width: 1024px)').matches;
+  // 900px, não 1024: notebook de 1366px com 150% de escala no Windows tem
+  // 910px CSS de largura, e janela não maximizada fica abaixo de 1024 fácil.
+  // Abaixo de 900 é celular ou tablet em pé: poster.
+  const HERO_MIN_W = 900;
+  const heroWantsSequence = ANIM && !!heroCanvas && window.matchMedia('(min-width: ' + HERO_MIN_W + 'px)').matches;
 
   const heroState = { frame: 0 };
   window.__heroState = heroState;    // só leitura, para o harness de verificação
   const heroImgs = new Array(HERO_FRAMES);
   const heroLoaded = new Uint8Array(HERO_FRAMES);
+  window.__heroLoaded = heroLoaded;  // idem
   let heroCtx = null, heroDrawn = -1, heroLive = false, heroST = null;
 
-  const heroSrc = (i) => 'assets/hero-frames/f_' + String(i + 1).padStart(3, '0') + '.webp';
+  // A versão hospedada (build-artifact.js) embute os frames como data: URI
+  // em window.EXPOSUL_FRAMES; a versão em pastas lê de assets/hero-frames/.
+  const heroSrc = (i) => (window.EXPOSUL_FRAMES && window.EXPOSUL_FRAMES[i]) ||
+    ('assets/hero-frames/f_' + String(i + 1).padStart(3, '0') + '.webp');
 
   /* O canvas fica no tamanho NATIVO dos frames (1120×720) e o CSS o estica
      com object-fit: cover. Assim o drawImage é uma cópia 1:1, sem
@@ -202,19 +212,43 @@
   }
   function heroTick() { if (heroLive) heroDraw(Math.round(heroState.frame)); }
 
-  // Carrega e decodifica os 240 frames. Resolve true se >= 90% chegou em
-  // até 5 s; false caso contrário. Frames atrasados continuam entrando.
+  // Carrega e decodifica os 240 frames. Política: falha rápido, espera com
+  // paciência. Resolve true quando dá para ligar a sequência:
+  //   · 90% dos frames prontos — o caminho normal, 1 a 4 s; ou
+  //   · passaram 5 s sem nenhuma falha e já há 10%: liga em modo
+  //     progressivo. O desenho usa o frame mais próximo já carregado e os
+  //     demais vão entrando (disco lento, antivírus varrendo os 240
+  //     arquivos recém-extraídos, 4G). Desistir aos 5 s, como antes, era
+  //     trocar o hero por um poster justamente em quem mais demora.
+  // Resolve false se 8+ frames falharam (pasta ausente: os 240 falham em
+  // milissegundos) ou se em 20 s ainda não chegou a 10%.
   function heroPreload() {
     return new Promise((resolve) => {
-      let settled = 0, finished = false;
-      const enough = () => heroLoaded.reduce((a, b) => a + b, 0) >= HERO_FRAMES * 0.9;
-      const finish = () => { if (!finished) { finished = true; clearTimeout(timer); resolve(enough()); } };
-      const timer = setTimeout(finish, 5000);
+      const t0 = performance.now();
+      let settled = 0, loaded = 0, errors = 0, finished = false;
+      const finish = (ok) => {
+        if (finished) return;
+        finished = true; clearTimeout(t5); clearTimeout(t20);
+        resolve(ok);
+      };
+      const check = () => {
+        if (finished) return;
+        if (errors >= 8) return finish(false);
+        if (loaded >= HERO_FRAMES * 0.9) return finish(true);
+        if (performance.now() - t0 >= 5000 && loaded >= HERO_FRAMES * 0.1) return finish(true);
+        if (settled === HERO_FRAMES) return finish(loaded >= HERO_FRAMES * 0.1);
+      };
+      const t5 = setTimeout(check, 5000);
+      const t20 = setTimeout(() => finish(loaded >= HERO_FRAMES * 0.1), 20000);
       for (let i = 0; i < HERO_FRAMES; i++) {
         const img = new Image();
         img.decoding = 'async';
         heroImgs[i] = img;
-        const mark = (ok) => { if (ok) heroLoaded[i] = 1; if (++settled === HERO_FRAMES) finish(); };
+        const mark = (ok) => {
+          settled++;
+          if (ok) { heroLoaded[i] = 1; loaded++; } else errors++;
+          check();
+        };
         img.onload = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(() => mark(true));
         img.onerror = () => mark(false);
         img.src = heroSrc(i);
@@ -233,10 +267,16 @@
 
   function heroBuildPin() {
     if (heroST || !heroMM) return false;
-    // Ligar depois que o usuário já passou do hero daria um salto de tela.
-    if (window.scrollY > hero.offsetHeight * 0.5) return false;
+    // A pista tem 4,5 telas; o hero estático, uma. Se o usuário já rolou
+    // (recarregou no meio da página — o Chrome devolve à mesma posição —,
+    // chegou por âncora, ou o carregamento foi lento), crescer o hero
+    // embaixo dele empurraria tudo 3,5 telas para baixo. Antes a sequência
+    // desistia nesse caso, e "recarregar para ver de novo" virava poster.
+    // Agora liga e compensa o scroll na mesma medida: o que estava na tela
+    // continua na tela.
+    const yBefore = window.scrollY, hBefore = hero.offsetHeight;
 
-    heroMM.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    heroMM.add('(min-width: ' + HERO_MIN_W + 'px) and (prefers-reduced-motion: no-preference)', () => {
       hero.classList.add('is-live');       // vira a pista de 4,5 telas (CSS)
       heroLive = true;
       heroResize();
@@ -302,6 +342,10 @@
         heroLive = false; heroST = null; window.__heroST = null;
       };
     });
+    if (heroST && yBefore > hBefore * 0.5) {
+      const y = yBefore + (hero.offsetHeight - hBefore);
+      if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+    }
     return !!heroST;
   }
 
@@ -586,7 +630,7 @@
     const bestMin = p.tiers[p.tiers.length - 1].min;
     return '' +
       '<article class="card" data-cat="' + p.cat + '" data-id="' + p.id + '">' +
-        '<button class="card__media" data-open="' + p.id + '" data-cursor="Ver ficha" aria-label="Abrir ficha de ' + p.name + '">' +
+        '<button class="card__media" data-open="' + p.id + '" aria-label="Abrir ficha de ' + p.name + '">' +
           (p.tag ? '<span class="card__tag">' + p.tag + '</span>' : '') +
           artMarkup(p, 'card__art') +
         '</button>' +
@@ -727,7 +771,7 @@
     }
     if (panel === cartPanel) $('#cartOpen').setAttribute('aria-expanded', 'false');
     if (panel === productPanel && location.hash.indexOf('#produto/') === 0) {
-      history.replaceState(null, '', location.pathname + location.search);
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}   // iframe com origem opaca lança
     }
     if (lastFocus) { try { lastFocus.focus(); } catch (e) {} }
   }
@@ -961,37 +1005,10 @@
     el.innerHTML = int(Math.round(parseFloat(el.dataset.count))) + (suffix ? '<i>' + suffix + '</i>' : '');
   });
 
-  /* ------------------------------------------------ cursor + magnetismo */
-  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (ANIM && canHover) {
-    html.classList.add('has-cursor');
-    const cur = $('#cursor');
-    const label = $('#cursorLabel');
-    const xTo = gsap.quickTo(cur, 'x', { duration: 0.35, ease: 'power3' });
-    const yTo = gsap.quickTo(cur, 'y', { duration: 0.35, ease: 'power3' });
-
-    window.addEventListener('mousemove', (e) => { xTo(e.clientX); yTo(e.clientY); }, { passive: true });
-    document.addEventListener('mouseleave', () => cur.classList.add('is-hidden'));
-    document.addEventListener('mouseenter', () => cur.classList.remove('is-hidden'));
-
-    document.addEventListener('mouseover', (e) => {
-      const hot = e.target.closest('[data-cursor]');
-      if (hot) { label.textContent = hot.dataset.cursor; cur.classList.add('is-hot'); }
-      else cur.classList.remove('is-hot');
-    });
-
-    // Botões magnéticos: puxam levemente na direção do mouse
-    $$('[data-magnetic]').forEach((el) => {
-      const mx = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3' });
-      const my = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3' });
-      el.addEventListener('mousemove', (e) => {
-        const r = el.getBoundingClientRect();
-        mx((e.clientX - (r.left + r.width / 2)) * 0.28);
-        my((e.clientY - (r.top + r.height / 2)) * 0.4);
-      });
-      el.addEventListener('mouseleave', () => { mx(0); my(0); });
-    });
-  }
+  /* Cursor customizado e botões magnéticos foram removidos: um tween por
+     movimento do mouse sobre um canvas que já troca de frame a cada scroll
+     custava caro em máquina modesta, e os dois são o tique mais reconhecível
+     de site-template. O mouse do sistema basta. */
 
   /* ----------------------------------------------------------------- misc */
   const y = $('#year');

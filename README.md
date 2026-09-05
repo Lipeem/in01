@@ -10,23 +10,30 @@ Substitui o protótipo anterior, preservado em `_legado/`.
 
 ## Como abrir
 
-Há duas formas do mesmo site:
+Há três formas do mesmo site:
+
+**`index.html` + pastas** — a versão para editar e para publicar. Abre por
+duplo clique, mas precisa das pastas `css/`, `js/`, `vendor/` e `assets/`
+do lado. É o que o GitHub Pages serve.
 
 **`exposul-site.html`** — arquivo único, tudo embutido (CSS, JS, GSAP, Lenis,
 as fontes, o logo e o poster do hero). Dê duplo clique e roda: sem servidor,
-sem instalar nada, sem internet. **Para a sequência de vídeo do hero ligar,
-a pasta `assets/hero-frames/` precisa estar ao lado dele.** Sem a pasta, o
-hero fica no poster estático, por conta própria — o carregamento falha e o
-código já trata isso.
+sem instalar nada, sem internet. **Para a sequência do hero ligar, a pasta
+`assets/hero-frames/` precisa estar ao lado dele** (é o conteúdo do zip de
+distribuição). Sem a pasta, o hero fica no poster estático, por conta
+própria — o carregamento falha em milissegundos e o código já trata isso.
 
-**`index.html` + pastas** — a mesma coisa em arquivos separados. É a versão
-para editar e para publicar. Também abre por duplo clique, mas precisa das
-pastas `css/`, `js/` e `vendor/` do lado.
+**Versão hospedável** (`node build-artifact.js`) — um arquivo com os 240
+frames embutidos (4,3 MB), sem `<html>`/`<head>`/`<body>`, para hosts que
+embrulham o conteúdo (o Artifact do claude.ai é um). Nada depende de pasta
+ao lado: o hero gira em qualquer lugar onde o arquivo abrir. Não abre por
+duplo clique, de propósito.
 
-Depois de editar `css/site.css` ou `js/site.js`, regenere o arquivo único:
+Depois de editar `css/site.css` ou `js/site.js`, regenere os arquivos gerados:
 
 ```bash
 node build-single.js
+node build-artifact.js
 ```
 
 Para servir por HTTP (recomendado para testar como ficará publicado):
@@ -41,6 +48,13 @@ npx serve .        # ou: python3 -m http.server 8000
 GitHub Pages, Cloudflare Pages, ou uma pasta no servidor atual. Basta enviar o
 conteúdo do repositório.
 
+**GitHub Pages, o caminho mais curto** (o repositório é público, então é
+grátis): em *Settings → Pages → Build and deployment*, escolha *Deploy from a
+branch*, selecione a branch desejada e a pasta `/ (root)`, salve. Em um ou
+dois minutos o site responde em `https://lipeem.github.io/in01/`, com os
+frames do hero servidos por HTTP. Essa configuração é feita na interface do
+GitHub; nenhum arquivo do repositório precisa mudar.
+
 ---
 
 ## Estrutura
@@ -48,6 +62,7 @@ conteúdo do repositório.
 ```
 exposul-site.html   Arquivo único gerado, com tudo embutido (não editar)
 build-single.js     Gera o arquivo único a partir dos arquivos separados
+build-artifact.js   Gera a versão hospedável, com os 240 frames embutidos
 index.html          Página inteira + sprite SVG dos produtos (inline)
 assets/hero-frames/ 240 frames do hero (f_001…f_240.webp, 1120×720, 2,9 MB)
 assets/             hero-poster.webp (frame 150) e exposul-logo.png
@@ -107,7 +122,7 @@ O rodapé exibe "Protótipo de demonstração — preços e prazos ilustrativos"
 
 É o momento do site. Toda a ousadia está aqui e o resto ficou quieto.
 
-**O que acontece.** Em telas de 1024px ou mais, sem `prefers-reduced-motion`,
+**O que acontece.** Em telas de 900px ou mais, sem `prefers-reduced-motion`,
 o hero vira uma pista de **4,5 telas** (`height: 450vh`) com o palco preso
 ao topo por `position: sticky` — nenhum pin do ScrollTrigger, só o scrub.
 Os 240 frames são desenhados num `<canvas>` conforme a página desce
@@ -129,10 +144,34 @@ close e o convite para rolar. No modo estático (poster) ela entra por linha
 no carregamento, como antes.
 
 **Portões.** A sequência só roda se todos passarem: GSAP presente · sem
-`prefers-reduced-motion` · viewport ≥ 1024px · 90% dos frames carregados em
-até 5 s · usuário ainda no topo. Qualquer um falhando: poster estático
-(`hero-poster.webp`), conteúdo completo, sem pin. Abaixo de 1024px **nenhum
-frame é baixado** — verificado: zero requisições a `hero-frames/` a 390px.
+`prefers-reduced-motion` · viewport ≥ 900px · frames encontrados. Qualquer
+um falhando: poster estático (`hero-poster.webp`), conteúdo completo, sem
+pin. Abaixo de 900px **nenhum frame é baixado** — verificado: zero
+requisições a `hero-frames/` a 390px. O corte era 1024px; desceu para 900
+porque um notebook de 1366px com 150% de escala no Windows tem 910px CSS
+de largura, e uma janela não maximizada fica abaixo de 1024 com facilidade
+— e aí o dono do site abria o hero e via um poster. Abaixo de 900 é celular
+ou tablet em pé.
+
+**Carregamento: falha rápido, espera com paciência.** Com 90% dos frames
+prontos (1 a 4 s, o caso normal) a sequência liga. Se aos 5 s ainda não
+chegou lá mas nada falhou e já há 10%, liga em **modo progressivo**: desenha
+o frame mais próximo já carregado e os demais vão entrando — disco lento,
+antivírus varrendo os 240 arquivos recém-extraídos, 4G. Só desiste se 8 ou
+mais frames falharem (pasta ausente: os 240 falham em milissegundos) ou se
+em 20 s não houver 10%. A versão anterior desistia aos 5 s: trocava o hero
+por um poster justamente em quem mais demorava. Medido: pasta ausente decide
+em 0,1 s; frames a 40 ms cada ligam aos 5,0 s com 119 prontos e completam
+os 240 em seguida.
+
+**Quem já rolou não perde a sequência.** A pista tem 4,5 telas e o hero
+estático tem uma. Se a sequência liga com o usuário fora do topo (recarregou
+no meio da página — o Chrome devolve à mesma posição —, chegou por âncora ou
+o carregamento foi lento), o hero cresce 3,5 telas *acima* dele e o scroll é
+compensado na mesma medida: o que estava na tela continua na tela. Medido
+nos dois casos (âncora e lento + rolado): salto de 0 px. A versão anterior
+desistia da sequência nesse caso, e "recarregar para ver de novo" virava
+poster.
 
 **Três decisões de desempenho, todas medidas em Chromium:**
 
@@ -255,7 +294,8 @@ Peso: ~400 KB de página + 2,9 MB de frames, baixados **só** em desktop, só
 sem `prefers-reduced-motion`, e nunca antes do poster estar na tela.
 
 O hero foi verificado sem colisão entre o manequim, o título e o texto de
-apoio em nove proporções, de 1024×700 a 2560×1440.
+apoio em nove proporções, de 1024×700 a 2560×1440, e a 960×640 depois da
+descida do corte para 900px.
 
 ---
 
