@@ -20,6 +20,14 @@ const CATEGORIES = [
   { id: 'aramados',    label: 'Aramados' }
 ];
 
+// Rótulo curto da unidade, usado nos degraus da escada. Sem isso "30 un."
+// de um item vendido em pacote de 50 é lido como 30 peças.
+function unitShort(unit) {
+  if (unit.indexOf('pacote') > -1) return 'pacotes';
+  if (unit.indexOf('kit') > -1) return 'kits';
+  return 'un.';
+}
+
 const CATALOG = [
   /* ---------------------------------------------------------------- MANEQUINS */
   {
@@ -30,10 +38,10 @@ const CATALOG = [
     desc: 'A silhueta que sustenta a vitrine. Proporção manequim 38, ombro estreito e cintura marcada — a peça cai como cai no corpo. Acabamento perolado fosco que não devolve reflexo de spot.',
     specs: { 'Altura': '1,78 m', 'Manequim': '38', 'Material': 'Fibra reforçada', 'Base': 'Disco de aço · 30 cm' },
     tiers: [
-      { min: 1,  max: 4,    price: 389.00 },
-      { min: 5,  max: 9,    price: 359.00 },
-      { min: 10, max: 29,   price: 328.00 },
-      { min: 30, max: null, price: 297.00 }
+      { min: 1,   max: 1,     price: 389.00 },
+      { min: 2,   max: 3,     price: 350.00 },
+      { min: 4,   max: 9,     price: 319.00 },
+      { min: 10,  max: null,  price: 280.00 }
     ]
   },
   {
@@ -44,10 +52,10 @@ const CATALOG = [
     desc: 'Peitoral e dorsal ampliados para estruturar camisaria e malha pesada. Resolve o problema clássico do masculino: camisa que murcha no manequim e some da vitrine.',
     specs: { 'Altura': '1,88 m', 'Manequim': '42', 'Material': 'Fibra reforçada', 'Base': 'Disco de aço · 32 cm' },
     tiers: [
-      { min: 1,  max: 4,    price: 429.00 },
-      { min: 5,  max: 9,    price: 396.00 },
-      { min: 10, max: 29,   price: 362.00 },
-      { min: 30, max: null, price: 329.00 }
+      { min: 1,   max: 1,     price: 429.00 },
+      { min: 2,   max: 3,     price: 386.00 },
+      { min: 4,   max: 9,     price: 352.00 },
+      { min: 10,  max: null,  price: 309.00 }
     ]
   },
   {
@@ -58,10 +66,10 @@ const CATALOG = [
     desc: 'Revestimento aveludado grafite sobre a base Smart. Absorve luz em vez de refletir, o que empurra a peça de roupa para a frente. Indicado para alfaiataria e festa.',
     specs: { 'Altura': '1,78 m', 'Manequim': '38', 'Revestimento': 'Veludo aderido', 'Base': 'Disco escovado · 30 cm' },
     tiers: [
-      { min: 1,  max: 4,    price: 549.00 },
-      { min: 5,  max: 9,    price: 512.00 },
-      { min: 10, max: 29,   price: 474.00 },
-      { min: 30, max: null, price: 439.00 }
+      { min: 1,   max: 1,     price: 549.00 },
+      { min: 2,   max: 3,     price: 494.00 },
+      { min: 4,   max: 9,     price: 450.00 },
+      { min: 10,  max: null,  price: 395.00 }
     ]
   },
   {
@@ -72,10 +80,10 @@ const CATALOG = [
     desc: 'Manequim 48 com quadril e busto proporcionais de verdade — não é o 38 escalado. Quem vende plus size sabe a diferença que isso faz na prova visual.',
     specs: { 'Altura': '1,76 m', 'Manequim': '48', 'Material': 'Fibra reforçada', 'Base': 'Disco de aço · 34 cm' },
     tiers: [
-      { min: 1,  max: 4,    price: 469.00 },
-      { min: 5,  max: 9,    price: 435.00 },
-      { min: 10, max: 29,   price: 398.00 },
-      { min: 30, max: null, price: 366.00 }
+      { min: 1,   max: 1,     price: 469.00 },
+      { min: 2,   max: 3,     price: 422.00 },
+      { min: 4,   max: 9,     price: 385.00 },
+      { min: 10,  max: null,  price: 338.00 }
     ]
   },
   {
@@ -86,10 +94,10 @@ const CATALOG = [
     desc: 'Meio corpo em haste regulável de 90 cm a 1,45 m. Ocupa 1/3 do espaço de um corpo inteiro e resolve balcão, mesa de exposição e vitrine de passagem estreita.',
     specs: { 'Altura útil': '0,90 – 1,45 m', 'Manequim': '38', 'Haste': 'Aço cromado', 'Base': 'Disco · 28 cm' },
     tiers: [
-      { min: 1,  max: 4,    price: 219.00 },
-      { min: 5,  max: 9,    price: 202.00 },
-      { min: 10, max: 29,   price: 185.00 },
-      { min: 30, max: null, price: 169.00 }
+      { min: 1,   max: 1,     price: 219.00 },
+      { min: 2,   max: 3,     price: 197.00 },
+      { min: 4,   max: 9,     price: 180.00 },
+      { min: 10,  max: null,  price: 158.00 }
     ]
   },
   {
@@ -100,10 +108,10 @@ const CATALOG = [
     desc: 'Proporção real de criança de 6 anos, sem a caricatura de manequim adulto reduzido. Base ampliada para resistir ao esbarrão — que em loja infantil é regra, não exceção.',
     specs: { 'Altura': '1,16 m', 'Idade ref.': '6 anos', 'Material': 'Fibra reforçada', 'Base': 'Disco de aço · 26 cm' },
     tiers: [
-      { min: 1,  max: 4,    price: 279.00 },
-      { min: 5,  max: 9,    price: 258.00 },
-      { min: 10, max: 29,   price: 236.00 },
-      { min: 30, max: null, price: 214.00 }
+      { min: 1,   max: 1,     price: 279.00 },
+      { min: 2,   max: 3,     price: 251.00 },
+      { min: 4,   max: 9,     price: 229.00 },
+      { min: 10,  max: null,  price: 201.00 }
     ]
   },
 
@@ -113,13 +121,13 @@ const CATALOG = [
     name: 'Cabide Acrílico Cavado Cristal — pacote 50',
     art: 'art-hanger-curve', tag: 'Mais vendido',
     unit: 'pacote de 50',
-    desc: 'Cavado profundo que segura decote sem deformar. O acrílico cristal some na arara e deixa a arara parecer só roupa — que é exatamente o ponto.',
+    desc: 'Cavado profundo que segura decote sem deformar. O acrílico cristal some na arara: quem olha a vitrine vê a roupa, não o cabide.',
     specs: { 'Largura': '42 cm', 'Espessura': '8 mm', 'Material': 'Acrílico cristal', 'Gancho': 'Cromado giratório' },
     tiers: [
-      { min: 1,  max: 4,    price: 179.00 },
-      { min: 5,  max: 9,    price: 164.00 },
-      { min: 10, max: 29,   price: 149.00 },
-      { min: 30, max: null, price: 134.00 }
+      { min: 1,   max: 4,     price: 179.00 },
+      { min: 5,   max: 19,    price: 158.00 },
+      { min: 20,  max: 49,    price: 140.00 },
+      { min: 50,  max: null,  price: 122.00 }
     ]
   },
   {
@@ -130,10 +138,10 @@ const CATALOG = [
     desc: 'Perfil de 5 mm: cabe 40% mais peça na mesma arara. O veludo trava alça fina e malha escorregadia, o que elimina o chão de peça caída no fim do dia.',
     specs: { 'Largura': '42 cm', 'Espessura': '5 mm', 'Revestimento': 'Veludo flocado', 'Gancho': 'Cromado giratório' },
     tiers: [
-      { min: 1,  max: 4,    price: 149.00 },
-      { min: 5,  max: 9,    price: 137.00 },
-      { min: 10, max: 29,   price: 124.00 },
-      { min: 30, max: null, price: 112.00 }
+      { min: 1,   max: 4,     price: 149.00 },
+      { min: 5,   max: 19,    price: 131.00 },
+      { min: 20,  max: 49,    price: 116.00 },
+      { min: 50,  max: null,  price: 101.00 }
     ]
   },
   {
@@ -144,10 +152,10 @@ const CATALOG = [
     desc: 'Presilha com borracha interna que corre no trilho inteiro. Segura saia, short e calça sem marcar o tecido — inclusive alfaiataria clara, onde a marca é prejuízo.',
     specs: { 'Largura': '36 cm', 'Presilhas': '2 · corrediças', 'Material': 'Polímero + aço', 'Gancho': 'Cromado giratório' },
     tiers: [
-      { min: 1,  max: 4,    price: 199.00 },
-      { min: 5,  max: 9,    price: 183.00 },
-      { min: 10, max: 29,   price: 166.00 },
-      { min: 30, max: null, price: 149.00 }
+      { min: 1,   max: 4,     price: 199.00 },
+      { min: 5,   max: 19,    price: 175.00 },
+      { min: 20,  max: 49,    price: 155.00 },
+      { min: 50,  max: null,  price: 135.00 }
     ]
   },
   {
@@ -158,10 +166,10 @@ const CATALOG = [
     desc: 'Vão de 30 cm na escala certa da peça infantil. Sortido em quatro cores para quem separa arara por faixa etária e quer que a criança ache sozinha.',
     specs: { 'Largura': '30 cm', 'Cores': '4 · sortidas', 'Material': 'Polipropileno', 'Gancho': 'Integrado' },
     tiers: [
-      { min: 1,  max: 4,    price: 129.00 },
-      { min: 5,  max: 9,    price: 118.00 },
-      { min: 10, max: 29,   price: 107.00 },
-      { min: 30, max: null, price: 96.00 }
+      { min: 1,   max: 4,     price: 129.00 },
+      { min: 5,   max: 19,    price: 114.00 },
+      { min: 20,  max: 49,    price: 101.00 },
+      { min: 50,  max: null,  price: 88.00 }
     ]
   },
 
@@ -174,10 +182,10 @@ const CATALOG = [
     desc: 'O cavalo de batalha da loja. Tubo de 1" com regulagem de altura e rodízio opcional. Monta em dois minutos e aguenta 60 kg de peça pendurada sem entortar.',
     specs: { 'Altura': '1,40 – 1,90 m', 'Comprimento': '1,20 m', 'Carga': 'até 60 kg', 'Tubo': '1" cromado' },
     tiers: [
-      { min: 1,  max: 4,    price: 259.00 },
-      { min: 5,  max: 9,    price: 239.00 },
-      { min: 10, max: 29,   price: 218.00 },
-      { min: 30, max: null, price: 198.00 }
+      { min: 1,   max: 1,     price: 259.00 },
+      { min: 2,   max: 3,     price: 233.00 },
+      { min: 4,   max: 9,     price: 212.00 },
+      { min: 10,  max: null,  price: 186.00 }
     ]
   },
   {
@@ -188,10 +196,10 @@ const CATALOG = [
     desc: 'Estrutura em tubo preto fosco com prateleira superior em MDF. Vira móvel de composição, não só suporte — funciona no meio da loja sem precisar de parede atrás.',
     specs: { 'Altura': '1,60 m', 'Comprimento': '1,20 m', 'Carga': 'até 80 kg', 'Prateleira': 'MDF 18 mm' },
     tiers: [
-      { min: 1,  max: 4,    price: 489.00 },
-      { min: 5,  max: 9,    price: 452.00 },
-      { min: 10, max: 29,   price: 414.00 },
-      { min: 30, max: null, price: 379.00 }
+      { min: 1,   max: 1,     price: 489.00 },
+      { min: 2,   max: 3,     price: 440.00 },
+      { min: 4,   max: 9,     price: 401.00 },
+      { min: 10,  max: null,  price: 352.00 }
     ]
   },
   {
@@ -199,13 +207,13 @@ const CATALOG = [
     name: 'Arara Gôndola Dupla Face com Rodízios',
     art: 'art-rack-gondola',
     unit: 'unidade',
-    desc: 'Dupla face sobre rodízios com trava. Reposiciona a loja inteira em cinco minutos — o que importa mais do que parece em troca de coleção e liquidação.',
+    desc: 'Dupla face sobre rodízios com trava. Reposiciona a loja inteira em cinco minutos, sem desmontar nada — o que resolve troca de coleção e liquidação.',
     specs: { 'Altura': '1,55 m', 'Comprimento': '1,50 m', 'Carga': 'até 120 kg', 'Rodízios': '4 · 2 com trava' },
     tiers: [
-      { min: 1,  max: 4,    price: 899.00 },
-      { min: 5,  max: 9,    price: 832.00 },
-      { min: 10, max: 29,   price: 762.00 },
-      { min: 30, max: null, price: 698.00 }
+      { min: 1,   max: 1,     price: 899.00 },
+      { min: 2,   max: 3,     price: 809.00 },
+      { min: 4,   max: 9,     price: 737.00 },
+      { min: 10,  max: null,  price: 647.00 }
     ]
   },
 
@@ -218,10 +226,10 @@ const CATALOG = [
     desc: 'Canaletas a cada 10 cm com perfil de alumínio embutido. A parede vira sistema: gancho, prateleira e braço mudam de lugar sem furar nada de novo.',
     specs: { 'Medida': '1,20 × 2,00 m', 'Canaletas': 'a cada 10 cm', 'Perfil': 'Alumínio', 'Acabamento': 'Branco / Preto' },
     tiers: [
-      { min: 1,  max: 4,    price: 349.00 },
-      { min: 5,  max: 9,    price: 322.00 },
-      { min: 10, max: 29,   price: 294.00 },
-      { min: 30, max: null, price: 268.00 }
+      { min: 1,   max: 1,     price: 349.00 },
+      { min: 2,   max: 3,     price: 314.00 },
+      { min: 4,   max: 9,     price: 286.00 },
+      { min: 10,  max: null,  price: 251.00 }
     ]
   },
   {
@@ -232,10 +240,10 @@ const CATALOG = [
     desc: 'Quatro faces canaletadas girando sobre rolamento. Cabe em 60 × 60 cm de chão e entrega 4,8 m lineares de exposição — a melhor troca de metro quadrado da linha.',
     specs: { 'Altura': '1,80 m', 'Base': '0,60 × 0,60 m', 'Faces': '4 · canaletadas', 'Giro': 'Rolamento axial' },
     tiers: [
-      { min: 1,  max: 4,    price: 639.00 },
-      { min: 5,  max: 9,    price: 591.00 },
-      { min: 10, max: 29,   price: 542.00 },
-      { min: 30, max: null, price: 496.00 }
+      { min: 1,   max: 1,     price: 639.00 },
+      { min: 2,   max: 3,     price: 575.00 },
+      { min: 4,   max: 9,     price: 524.00 },
+      { min: 10,  max: null,  price: 460.00 }
     ]
   },
   {
@@ -246,10 +254,10 @@ const CATALOG = [
     desc: 'Caixa e vitrine no mesmo móvel, com vidro temperado de 6 mm e gaveteiro fechado. Feito sob medida na fábrica — a medida da sua loja, não a medida do catálogo.',
     specs: { 'Medida': '1,50 × 0,60 m', 'Altura': '1,00 m', 'Vidro': 'Temperado 6 mm', 'Estrutura': 'MDF 18 mm' },
     tiers: [
-      { min: 1,  max: 4,    price: 1290.00 },
-      { min: 5,  max: 9,    price: 1196.00 },
-      { min: 10, max: 29,   price: 1098.00 },
-      { min: 30, max: null, price: 998.00 }
+      { min: 1,   max: 1,     price: 1290.00 },
+      { min: 2,   max: 3,     price: 1161.00 },
+      { min: 4,   max: 9,     price: 1058.00 },
+      { min: 10,  max: null,  price: 929.00 }
     ]
   },
 
@@ -259,13 +267,13 @@ const CATALOG = [
     name: 'Cesto Aramado Promocional com Placa',
     art: 'art-basket',
     unit: 'unidade',
-    desc: 'Cesto de queima com suporte de placa de preço já integrado. É onde a loja gira estoque parado — e onde a placa some se o suporte não vier junto.',
+    desc: 'Cesto de queima com suporte de placa de preço já integrado. É onde a loja gira estoque parado. O suporte de placa vem junto, então o preço não fica preso com fita na grade.',
     specs: { 'Medida': '0,60 × 0,60 m', 'Altura': '0,80 m', 'Fio': 'Aço 4,2 mm', 'Placa': 'Suporte incluso' },
     tiers: [
-      { min: 1,  max: 4,    price: 189.00 },
-      { min: 5,  max: 9,    price: 174.00 },
-      { min: 10, max: 29,   price: 159.00 },
-      { min: 30, max: null, price: 144.00 }
+      { min: 1,   max: 4,     price: 189.00 },
+      { min: 5,   max: 19,    price: 166.00 },
+      { min: 20,  max: 49,    price: 147.00 },
+      { min: 50,  max: null,  price: 129.00 }
     ]
   },
   {
@@ -273,13 +281,13 @@ const CATALOG = [
     name: 'Kit Ganchos para Painel Canaletado — 20 peças',
     art: 'art-hooks',
     unit: 'kit com 20',
-    desc: 'Sortido de 10, 15, 20 e 30 cm com ponta de segurança. É o consumível do painel canaletado: quem compra painel compra gancho de novo em seis meses.',
+    desc: 'Sortido de 10, 15, 20 e 30 cm com ponta de segurança. É o consumível do painel canaletado: gancho entorta, some e muda de lugar toda troca de coleção.',
     specs: { 'Comprimentos': '10 / 15 / 20 / 30 cm', 'Peças': '20 · sortidas', 'Material': 'Aço cromado', 'Encaixe': 'Canaleta padrão' },
     tiers: [
-      { min: 1,  max: 4,    price: 89.00 },
-      { min: 5,  max: 9,    price: 82.00 },
-      { min: 10, max: 29,   price: 74.00 },
-      { min: 30, max: null, price: 67.00 }
+      { min: 1,   max: 4,     price: 89.00 },
+      { min: 5,   max: 19,    price: 78.00 },
+      { min: 20,  max: 49,    price: 69.00 },
+      { min: 50,  max: null,  price: 61.00 }
     ]
   }
 ];

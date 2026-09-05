@@ -43,6 +43,7 @@
       <a class="nav__link" href="#manifesto">A fábrica</a>
       <a class="nav__link" href="#showroom">Showroom</a>
       <a class="nav__link" href="#atacado">Atacado</a>
+      <a class="nav__link" href="#condicoes">Condições</a>
     </nav>
 
     <div class="nav__actions">
@@ -67,6 +68,7 @@
     <li><a href="#manifesto" class="display">A fábrica</a></li>
     <li><a href="#showroom" class="display">Showroom</a></li>
     <li><a href="#atacado" class="display">Atacado</a></li>
+    <li><a href="#condicoes" class="display">Condições</a></li>
   </ul>
   <div class="mobilenav__foot">
     <span>Rua 24 de Maio, 1423 — Rebouças, Curitiba/PR</span>
@@ -150,7 +152,15 @@
       <p class="lead reveal">Preço à vista por unidade. A partir de cinco peças o valor de lojista entra sozinho — sem cadastro, sem pedir orçamento, sem esperar retorno.</p>
     </div>
 
-    <div class="filters" id="filters" role="group" aria-label="Filtrar por categoria"></div>
+    <div class="catalog__tools">
+      <div class="filters" id="filters" role="group" aria-label="Filtrar por categoria"></div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-4.3-4.3"/>
+        </svg>
+        <input type="search" id="search" placeholder="Buscar por nome ou referência (MQ-1140)" aria-label="Buscar no catálogo" autocomplete="off">
+      </div>
+    </div>
 
     <div class="grid" id="grid"></div>
 
@@ -221,6 +231,49 @@
   </div>
 </section>
 
+<!-- ====================================================== FAQ
+     PLACEHOLDER: todo valor entre colchetes precisa ser confirmado com a
+     Exposul antes de publicar. Publicar prazo ou condição errada gera
+     problema comercial e exposição no Código de Defesa do Consumidor. -->
+<section class="section faq" id="condicoes">
+  <div class="shell">
+    <div class="section-head">
+      <div class="reveal">
+        <span class="eyebrow">Antes de perguntar</span>
+        <h2 class="display">Condições, sem precisar abrir o WhatsApp.</h2>
+      </div>
+      <p class="lead reveal">O que trava um pedido quase sempre é a mesma coisa: frete, prazo, pedido mínimo e nota. Está tudo aqui.</p>
+    </div>
+
+    <dl class="faq__grid stagger">
+      <div>
+        <dt>Pedido mínimo</dt>
+        <dd>Não há. Vendemos uma peça avulsa e vendemos carga fechada. O preço de lojista entra pelo volume do pedido inteiro, não item por item.</dd>
+      </div>
+      <div>
+        <dt>Frete e prazo</dt>
+        <dd>Frete calculado por CEP no fechamento. Item de pronta entrega sai de Curitiba em até <b>[confirmar]</b> dias úteis; item sob medida leva <b>[confirmar]</b> dias úteis de produção após a aprovação da medida.</dd>
+      </div>
+      <div>
+        <dt>Pagamento</dt>
+        <dd>Pix, boleto para CNPJ com cadastro aprovado, ou cartão por link de pagamento. <b>[confirmar parcelamento e desconto à vista]</b></dd>
+      </div>
+      <div>
+        <dt>Nota fiscal</dt>
+        <dd>Toda venda sai com NF-e. Para CNPJ, informe a inscrição estadual no fechamento. Entregamos em todo o Brasil; impostos de destino, quando houver, entram no orçamento antes de você aprovar.</dd>
+      </div>
+      <div>
+        <dt>Garantia</dt>
+        <dd><b>[confirmar prazo]</b> contra defeito de fabricação, contado da data da nota.</dd>
+      </div>
+      <div>
+        <dt>Troca e devolução</dt>
+        <dd>Peça de linha pode ser devolvida em até 7 dias corridos do recebimento, conforme o Código de Defesa do Consumidor. Item produzido sob medida não tem devolução por arrependimento.</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
 <!-- ====================================================== CTA -->
 <section class="cta section">
   <div class="cta__glow" aria-hidden="true" data-parallax="0.1"></div>
@@ -255,6 +308,7 @@
           <li><a href="#manifesto">A fábrica</a></li>
           <li><a href="#showroom">Showroom</a></li>
           <li><a href="#atacado">Condição de atacado</a></li>
+          <li><a href="#condicoes">Frete, prazo e pagamento</a></li>
           <li><a href="#catalogo">Catálogo completo</a></li>
         </ul>
       </div>
@@ -268,7 +322,7 @@
       </div>
     </div>
     <div class="footer__bar">
-      <span>© <span id="year">2026</span> Exposul Expositores</span>
+      <span>© <span id="year">2026</span> Exposul Expositores · CNPJ <b>[confirmar]</b></span>
       <span>Protótipo de demonstração — preços e prazos ilustrativos</span>
     </div>
   </div>
@@ -309,6 +363,7 @@
             <span class="buybar__value" id="pTotal">R$ 0,00</span>
             <span class="buybar__unit" id="pUnitPrice"></span>
             <span class="buybar__saved" id="pSaved"></span>
+            <span class="buybar__note" id="pCartNote"></span>
           </div>
         </div>
         <div class="buybar__actions">
@@ -331,11 +386,12 @@
   </div>
   <div class="cart__items" id="cartItems"></div>
   <div class="cart__foot" id="cartFoot" hidden>
+    <p class="cart__nudge" id="cartNudge" hidden></p>
     <div class="cart__line"><span>Subtotal no varejo</span><span id="cartRetail"></span></div>
-    <div class="cart__line cart__saved"><span>Desconto de lojista</span><span id="cartSaved"></span></div>
+    <div class="cart__line cart__saved" id="cartSavedRow"><span>Desconto de lojista</span><span id="cartSaved"></span></div>
     <div class="cart__line cart__line--total"><span>Total</span><b id="cartTotal"></b></div>
     <button class="btn btn--wa btn--block" id="cartCheckout">Fechar pedido no WhatsApp</button>
-    <p class="cart__legal">O pedido segue para o comercial com itens, quantidades e valores. Frete e prazo são confirmados na conversa.</p>
+    <p class="cart__legal">O pedido segue para o comercial com itens, quantidades e valores. Atendemos de segunda a sexta, 8h30 às 18h, e sábado até 13h — fora do horário, deixe a mensagem que retornamos na abertura.</p>
   </div>
 </aside>
 

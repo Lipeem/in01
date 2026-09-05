@@ -282,15 +282,25 @@
   /* =========================================================== COMÉRCIO === */
 
   function tierFor(product, qty) {
+    const q = (typeof qty === 'number' && isFinite(qty)) ? Math.max(1, Math.floor(qty)) : 1;
     for (let i = 0; i < product.tiers.length; i++) {
       const t = product.tiers[i];
-      if (qty >= t.min && (t.max === null || qty <= t.max)) return t;
+      if (q >= t.min && (t.max === null || q <= t.max)) return t;
     }
     return product.tiers[product.tiers.length - 1];
   }
   const basePrice = (p) => p.tiers[0].price;
-  const priceFor = (p, q) => tierFor(p, q).price;
+
+  /* A faixa vale pelo VOLUME DO PEDIDO, não por item isolado.
+     O comprador real da Exposul monta cesta larga e rasa — 3 manequins,
+     1 arara, 2 pacotes de cabide. Calculando por item, esse pedido de mais
+     de dois mil reais caía inteiro no varejo e o carrinho exibia
+     "Desconto de lojista R$ 0,00" — justamente para o cliente-alvo. */
+  const priceFor = (p, lineQty, orderUnits) =>
+    tierFor(p, Math.max(lineQty || 1, orderUnits || 0)).price;
+
   const byId = (id) => CATALOG.filter((p) => p.id === id)[0];
+  const unitLabel = (p) => (typeof unitShort === 'function' ? unitShort(p.unit) : 'un.');
 
   /* -------------------------------------------------------------- carrinho */
   const STORE_KEY = 'exposul.cart.v1';
@@ -304,14 +314,35 @@
     try { localStorage.setItem(STORE_KEY, JSON.stringify(cart)); } catch (e) { /* modo privado */ }
   }
   function cartUnits() { return cart.reduce((s, l) => s + l.qty, 0); }
-  function cartTotals() {
+
+  function cartTotals(extraUnits) {
+    const units = cartUnits() + (extraUnits || 0);
     let total = 0, retail = 0;
     cart.forEach((l) => {
       const p = byId(l.id);
-      total += priceFor(p, l.qty) * l.qty;
+      total += priceFor(p, l.qty, units) * l.qty;
       retail += basePrice(p) * l.qty;
     });
-    return { total: total, retail: retail, saved: retail - total };
+    return { total: total, retail: retail, saved: retail - total, units: units };
+  }
+
+  /* Próximo degrau do pedido: quantos itens faltam e quanto isso devolve.
+     O ganho de ticket na venda por escada vem do empurrão, não da tabela. */
+  function nextStep() {
+    const units = cartUnits();
+    if (!cart.length) return null;
+    let target = null;
+    cart.forEach((l) => {
+      byId(l.id).tiers.forEach((t) => {
+        if (t.min > units && (target === null || t.min < target)) target = t.min;
+      });
+    });
+    if (target === null) return null;
+    const now = cartTotals().total;
+    const then = cartTotals(target - units).total;
+    const gain = now - then;
+    if (gain <= 0) return null;
+    return { missing: target - units, gain: gain };
   }
   function addToCart(id, qty) {
     const line = cart.filter((l) => l.id === id)[0];
@@ -332,7 +363,7 @@
     return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text);
   }
   function waForProduct(p, qty) {
-    const unit = priceFor(p, qty);
+    const unit = priceFor(p, qty, qty + cartUnits());
     return waLink(
       'Olá! Vim pelo site da Exposul.\n\n' +
       '*' + p.name + '* (ref. ' + p.ref + ')\n' +
@@ -347,7 +378,7 @@
     let msg = 'Olá! Vim pelo site da Exposul e montei este pedido:\n\n';
     cart.forEach((l) => {
       const p = byId(l.id);
-      const unit = priceFor(p, l.qty);
+      const unit = priceFor(p, l.qty, t.units);
       msg += '• ' + p.name + ' (ref. ' + p.ref + ')\n';
       msg += '  ' + l.qty + ' × ' + money(unit) + ' = ' + money(unit * l.qty) + '\n';
     });
@@ -385,9 +416,10 @@
       return '<img class="' + cls + '" src="' + p.photo + '" alt="' + p.name + '" loading="lazy" decoding="async">';
     }
     const tone = p.artTone ? ' art--' + p.artTone : '';
+    const wide = p.art.indexOf('hanger') > -1 ? ' art--wide' : '';
     const vb = p.art.indexOf('mannequin') > -1 || p.art === 'art-bust' ? '0 0 200 560'
              : p.art.indexOf('hanger') > -1 ? '0 0 400 260' : '0 0 400 520';
-    return '<svg class="' + cls + ' art' + tone + '" viewBox="' + vb + '" role="img" aria-label="' + p.name + '">' +
+    return '<svg class="' + cls + ' art' + tone + wide + '" viewBox="' + vb + '" role="img" aria-label="' + p.name + '">' +
            '<use href="#' + p.art + '"></use></svg>';
   }
 
@@ -431,28 +463,57 @@
              c.label + '<span>' + n + '</span></button>';
     }).join('');
 
-    filtersEl.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-filter]');
-      if (!btn) return;
-      const cat = btn.dataset.filter;
-      $$('.filter', filtersEl).forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    let activeCat = 'todos';
+    let query = '';
 
+    const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    function applyFilters(animate) {
+      const q = norm(query.trim());
       const cards = $$('.card', grid);
       let shown = 0;
       cards.forEach((card) => {
-        const match = cat === 'todos' || card.dataset.cat === cat;
+        const p = byId(card.dataset.id);
+        const hitCat = activeCat === 'todos' || card.dataset.cat === activeCat;
+        const hitQ = !q || norm(p.name + ' ' + p.ref + ' ' + p.catLabel).indexOf(q) > -1;
+        const match = hitCat && hitQ;
         card.classList.toggle('is-out', !match);
         if (match) shown++;
       });
-      $('#gridEmpty').hidden = shown > 0;
+      const empty = $('#gridEmpty');
+      empty.hidden = shown > 0;
+      empty.textContent = q
+        ? 'Nada encontrado para "' + query.trim() + '". Tente o nome ou a referência, como MQ-1140.'
+        : 'Nada nesta categoria por enquanto.';
 
-      if (ANIM) {
+      if (animate && ANIM) {
         gsap.fromTo(cards.filter((c) => !c.classList.contains('is-out')),
           { opacity: 0, y: 18 },
           { opacity: 1, y: 0, duration: 0.5, stagger: 0.03, ease: 'power2.out', overwrite: true });
+      } else if (!ANIM || !animate) {
+        // Sem isso, um card filtrado antes de revelar ficaria invisível para sempre.
+        cards.forEach((c) => { if (!c.classList.contains('is-out')) gsap && gsap.set(c, { opacity: 1, y: 0 }); });
       }
       if (HAS_GSAP) ScrollTrigger.refresh();
+    }
+
+    filtersEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-filter]');
+      if (!btn) return;
+      activeCat = btn.dataset.filter;
+      $$('.filter', filtersEl).forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      applyFilters(true);
     });
+
+    const searchEl = $('#search');
+    if (searchEl) {
+      let t;
+      searchEl.addEventListener('input', () => {
+        query = searchEl.value;
+        clearTimeout(t);
+        t = setTimeout(() => applyFilters(true), 140);
+      });
+    }
   }
 
   const footerCats = $('#footerCats');
@@ -484,6 +545,7 @@
     lastFocus = document.activeElement;
     scrim.classList.add('is-open');
     panel.classList.add('is-open');
+    document.body.classList.add('has-panel');
     stopScroll();
     setTimeout(() => {
       if (!focusEl) return;
@@ -494,7 +556,14 @@
   }
   function closePanel(panel) {
     panel.classList.remove('is-open');
-    if (!$('.panel.is-open')) { scrim.classList.remove('is-open'); startScroll(); }
+    if (!$('.panel.is-open')) {
+      scrim.classList.remove('is-open');
+      document.body.classList.remove('has-panel');
+      startScroll();
+    }
+    if (panel === productPanel && location.hash.indexOf('#produto/') === 0) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
     if (lastFocus) { try { lastFocus.focus(); } catch (e) {} }
   }
   scrim.addEventListener('click', () => $$('.panel.is-open').forEach(closePanel));
@@ -511,8 +580,9 @@
 
   function renderTiers(p, qty) {
     const active = tierFor(p, qty);
+    const u = unitLabel(p);   // "30 un." de um pacote de 50 era lido como 30 peças
     $('#pTiers').innerHTML = p.tiers.map((t) => {
-      const label = t.max === null ? t.min + '+ un.' : (t.min === t.max ? t.min + ' un.' : t.min + '–' + t.max + ' un.');
+      const label = t.max === null ? t.min + '+ ' + u : (t.min === t.max ? t.min + ' ' + u : t.min + '–' + t.max + ' ' + u);
       const off = Math.round((1 - t.price / basePrice(p)) * 100);
       return '<div class="tier' + (t === active ? ' is-active' : '') + '">' +
              '<span class="tier__qty">' + label + '</span>' +
@@ -523,12 +593,20 @@
 
   function renderProductPrice() {
     const p = current, q = currentQty;
-    const unit = priceFor(p, q);
+    // Conta o que já está no pedido: a faixa vale pelo volume total.
+    const inCart = cartUnits() - (cart.filter((l) => l.id === p.id)[0] || { qty: 0 }).qty;
+    const effective = q + inCart;
+    const unit = priceFor(p, q, effective);
     $('#pTotal').textContent = money(unit * q);
     $('#pUnitPrice').textContent = money(unit) + ' por ' + p.unit;
     const saved = (basePrice(p) - unit) * q;
-    $('#pSaved').textContent = saved > 0 ? 'Você economiza ' + money(saved) + ' na condição de lojista' : '';
-    renderTiers(p, q);
+    $('#pSaved').textContent = saved > 0
+      ? 'Economia de ' + money(saved) + ' na condição de lojista'
+      : (inCart > 0 ? '' : 'A partir de ' + p.tiers[1].min + ' ' + unitLabel(p) + ' o preço de lojista entra sozinho');
+    $('#pCartNote').textContent = inCart > 0
+      ? 'Somando os ' + inCart + (inCart === 1 ? ' item' : ' itens') + ' que já estão no pedido.'
+      : '';
+    renderTiers(p, effective);
     $('#pMinus').disabled = q <= 1;
   }
 
@@ -551,6 +629,8 @@
 
     renderProductPrice();
     $('.product__info').scrollTop = 0;
+    // Rota por produto: o vendedor precisa colar o link do item na conversa.
+    try { history.replaceState(null, '', '#produto/' + p.id); } catch (e) {}
     openPanel(productPanel, $('#productClose'));
     if (ANIM) {
       gsap.fromTo('.product__info > *', { opacity: 0, y: 16 },
@@ -623,7 +703,7 @@
 
     items.innerHTML = cart.map((l) => {
       const p = byId(l.id);
-      const unit = priceFor(p, l.qty);
+      const unit = priceFor(p, l.qty, units);
       return '<div class="citem" data-line="' + p.id + '">' +
         '<div class="citem__art">' + artMarkup(p, 'citem__svg') + '</div>' +
         '<div>' +
@@ -646,6 +726,17 @@
     $('#cartRetail').textContent = money(t.retail);
     $('#cartSaved').textContent = t.saved > 0 ? '− ' + money(t.saved) : money(0);
     $('#cartTotal').textContent = money(t.total);
+
+    const step = nextStep();
+    const nudge = $('#cartNudge');
+    if (step) {
+      nudge.innerHTML = 'Faltam <b>' + step.missing + (step.missing === 1 ? ' item' : ' itens') +
+        '</b> para a próxima faixa — economia de <b>' + money(step.gain) + '</b> neste pedido.';
+      nudge.hidden = false;
+    } else {
+      nudge.hidden = true;
+    }
+    $('#cartSavedRow').hidden = t.saved <= 0;
     $('#cartFoot').hidden = false;
   }
 
@@ -665,6 +756,14 @@
   });
 
   renderCart();
+
+  // Link compartilhado abre a ficha direto.
+  function openFromHash() {
+    const m = /^#produto\/(.+)$/.exec(location.hash);
+    if (m && byId(m[1])) setTimeout(() => openProduct(m[1]), 400);
+  }
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
 
   /* ------------------------------------------------------- reveals gerais */
   if (ANIM) {
