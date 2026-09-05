@@ -12,9 +12,12 @@ Substitui o protótipo anterior, preservado em `_legado/`.
 
 Há duas formas do mesmo site:
 
-**`exposul-site.html`** — arquivo único, tudo embutido (CSS, JS, GSAP, Lenis e
-as fontes). Baixe só ele, dê duplo clique e roda: sem servidor, sem instalar
-nada, sem internet. É a versão para testar e para mandar por e-mail.
+**`exposul-site.html`** — arquivo único, tudo embutido (CSS, JS, GSAP, Lenis,
+as fontes, o logo e o poster do hero). Dê duplo clique e roda: sem servidor,
+sem instalar nada, sem internet. **Para a sequência de vídeo do hero ligar,
+a pasta `assets/hero-frames/` precisa estar ao lado dele.** Sem a pasta, o
+hero fica no poster estático, por conta própria — o carregamento falha e o
+código já trata isso.
 
 **`index.html` + pastas** — a mesma coisa em arquivos separados. É a versão
 para editar e para publicar. Também abre por duplo clique, mas precisa das
@@ -46,11 +49,13 @@ conteúdo do repositório.
 exposul-site.html   Arquivo único gerado, com tudo embutido (não editar)
 build-single.js     Gera o arquivo único a partir dos arquivos separados
 index.html          Página inteira + sprite SVG dos produtos (inline)
+assets/hero-frames/ 240 frames do hero (f_001…f_240.webp, 1120×720, 2,9 MB)
+assets/             hero-poster.webp (frame 150) e exposul-logo.png
 css/fonts.css       Bodoni Moda e Archivo embutidas em base64
 css/site.css        Todo o estilo, comentado por seção
 js/products.js      Catálogo: produtos, preços e escada de atacado
 js/site.js          Movimento, filtros, ficha, carrinho e WhatsApp
-vendor/             GSAP 3.15.0, ScrollTrigger e Lenis 1.3.26
+vendor/             GSAP 3.15.0, ScrollTrigger, SplitText e Lenis 1.3.26
 _legado/            Protótipo anterior, preservado
 ```
 
@@ -98,6 +103,66 @@ O rodapé exibe "Protótipo de demonstração — preços e prazos ilustrativos"
 
 ---
 
+## O hero: sequência de frames pinada ao scroll
+
+É o momento do site. Toda a ousadia está aqui e o resto ficou quieto.
+
+**O que acontece.** Em telas de 1024px ou mais, sem `prefers-reduced-motion`,
+os 240 frames são desenhados num `<canvas>` e o hero fica pinado por 2,5
+telas de scroll. O clipe corre linear com o scroll — 10 s de filme viram
+2,5 telas. A coreografia do texto segue os três atos do material, **medidos
+frame a frame** (a descrição que veio com os frames dizia que o recuo da
+câmera ia até o frame 150; ele acaba no 60):
+
+| Frames | Progresso | Cena | Texto |
+|---|---|---|---|
+| f_001–f_060 | 0–25% | close no torso, câmera recua | headline entra por linha no carregamento; pulso de scroll some ao rolar |
+| f_060–f_150 | 25–62% | plano parado, cena aberta | headline recua (76%, 62% de opacidade); subtítulo e proposta de atacado entram, escalonados |
+| f_150–f_240 | 62–100% | o busto gira até 3/4 | CTA entra; o degradê inferior fecha em `--ink-2` e emenda com o marquee |
+
+A headline entra no **carregamento** (tempo), não no scroll: quem não rola
+ainda vê a headline. A coreografia por scroll começa com ela já na tela.
+
+**Portões.** A sequência só roda se todos passarem: GSAP presente · sem
+`prefers-reduced-motion` · viewport ≥ 1024px · 90% dos frames carregados em
+até 5 s · usuário ainda no topo. Qualquer um falhando: poster estático
+(`hero-poster.webp`), conteúdo completo, sem pin. Abaixo de 1024px **nenhum
+frame é baixado** — verificado: zero requisições a `hero-frames/` a 390px.
+
+**Três decisões de desempenho, todas medidas em Chromium:**
+
+- **Canvas no tamanho nativo dos frames (1120×720), esticado por CSS.** O
+  `drawImage` vira cópia 1:1 (0,1 ms medido) e a escala acontece no
+  compositor. Desenhar num canvas do tamanho da viewport reamostrava 0,8 MP
+  a cada frame.
+- **Grão e blur da nav desligam enquanto o hero está pinado.** Os dois são
+  camadas fixas recompostas sobre um canvas que muda a cada frame. A/B em
+  rasterização por software: 28 frames longos e mínimo de 12 fps com eles;
+  **zero frames longos e 60 fps travados sem eles.** Fora do pin, voltam. O
+  `backdrop-filter` também saiu da lista de `transition` da nav — animar
+  blur por meio segundo ao entrar no pin era o mesmo custo em câmera lenta.
+- **Janela de `ImageBitmap` ficou desligada** (`HERO_USE_BITMAPS = false`).
+  Foi implementada para blindar contra o cache de imagens do navegador
+  descartar frames, mas medida em software piorou (mais churn que ganho).
+  Fica no código, atrás da chave, para testar em GPU real se um dia
+  aparecer hitch de decodificação.
+
+**Paleta.** A cena é preta e dourada; a marca é azul `#0380C3`. O dourado
+ficou no hero porque ele já é a luz-chave do site inteiro (`--key`, nos
+preços, no destaque da proposta, nos rótulos). O azul entrou como **luz**,
+não como tinta: contraluz fria no canto do hero, o próprio logo, e os
+pontos do marquee logo abaixo — três pontos que formam um sistema em vez
+de um corpo estranho. Puxar o hero para o azul foi descartado: azul sobre
+arco dourado suja, e o logo sumiria na própria cor.
+
+**O que foi cortado no resto do site.** Fade-up de cabeçalhos de seção,
+listas escalonadas, contadores animados e parallax — tudo removido. Restam
+dois movimentos ligados ao scroll fora do hero: os cards do catálogo
+(reveal por recorte) e o manifesto (palavra a palavra). O marquee ficou
+como o único elemento ambiente, ligando o hero ao resto.
+
+---
+
 ## Imagens dos produtos
 
 O site não usa foto: os 16 produtos são **SVG desenhados**, com uma única
@@ -127,7 +192,7 @@ Use WebP ou AVIF, fundo escuro ou recortado, proporção 4:5.
 subir em qualquer hospedagem. Cada dependência a mais seria um risco sem
 contrapartida nesta escala.
 
-**Bibliotecas vendorizadas em vez de CDN.** GSAP e Lenis vivem em `vendor/`.
+**Bibliotecas vendorizadas em vez de CDN.** GSAP, ScrollTrigger, SplitText e Lenis vivem em `vendor/`.
 O site não quebra se um CDN cair, não depende de rede externa e as versões
 ficam travadas — GSAP e Three mudam de API entre versões.
 
@@ -168,14 +233,20 @@ Chromium via Playwright, com scroll programático de ponta a ponta:
 
 | | Desktop 1440×900 | Mobile 390×844 |
 |---|---|---|
-| FPS mediano | 60 | 60 |
+| FPS mediano (página inteira) | 60 | 60 |
 | FPS p95 | 59,5 | 59,9 |
 | Frames acima de 33 ms | 3 | 0 |
 | Overflow horizontal | nenhum | nenhum |
 | Erros de console | nenhum | nenhum |
 
-Peso total: ~394 KB (inclui 117 KB de fontes embutidas e 136 KB de GSAP +
-Lenis), sem nenhuma requisição a terceiros.
+**Hero pinado (desktop):** mínimo de **59,5 fps** e **zero frames acima de
+33 ms** em cinco passadas — ida completa, volta completa, só o miolo e duas
+repetições. Medido com rasterização por software (SwiftShader, sem GPU);
+numa máquina com GPU o compositor faz de graça o que aqui é o pior caso.
+Frames carregam em ~1 s por HTTP local e ~1,8 s por `file://`.
+
+Peso: ~400 KB de página + 2,9 MB de frames, baixados **só** em desktop, só
+sem `prefers-reduced-motion`, e nunca antes do poster estar na tela.
 
 O hero foi verificado sem colisão entre o manequim, o título e o texto de
 apoio em nove proporções, de 1024×700 a 2560×1440.

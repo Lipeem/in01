@@ -47,7 +47,7 @@ setTimeout(function () {
 <!-- ====================================================== NAV -->
 <header class="nav" id="nav">
   <div class="nav__inner">
-    <a class="brand" href="#topo" aria-label="Exposul, ir para o topo">EXPOSUL<sup>CWB</sup></a>
+    <a class="brand" href="#topo" aria-label="Exposul, ir para o topo"><img class="brand__logo" src="assets/exposul-logo.png" alt="Exposul" width="956" height="261" decoding="async"></a>
 
     <nav class="nav__links" aria-label="Navegação principal">
       <a class="nav__link" href="#catalogo">Catálogo</a>
@@ -90,38 +90,33 @@ setTimeout(function () {
 
 <main id="conteudo">
 
-<!-- ====================================================== HERO -->
+<!-- ====================================================== HERO
+     Sequência de 240 frames desenhada em <canvas>, pinada e amarrada ao
+     scroll. Só a partir de 1024px e sem prefers-reduced-motion; fora disso,
+     o poster estático. Headline, subtítulo e CTA são camadas HTML por cima
+     do canvas — nunca desenhados nele (SEO e leitor de tela). -->
 <section class="hero" id="topo">
-  <div class="hero__key" aria-hidden="true" data-parallax="0.12"></div>
-  <div class="hero__rim" aria-hidden="true" data-parallax="0.2"></div>
-  <div class="hero__floor" aria-hidden="true"></div>
-
-  <div class="hero__stage">
-    <h1 class="hero__h1">
-      <span class="hero__line hero__line--back" aria-hidden="true" data-split>A forma</span>
-      <span class="hero__line hero__line--front" aria-hidden="true" data-split>que <em>vende</em></span>
-      <span class="sr-only">A forma que vende — manequins, cabides, araras e expositores para lojas</span>
-    </h1>
-
-    <svg class="hero__piece art" viewBox="0 0 200 560" role="img" aria-label="Manequim feminino de corpo inteiro iluminado">
-      <use href="#art-mannequin-f"></use>
-    </svg>
+  <div class="hero__media" aria-hidden="true">
+    <img class="hero__poster" src="assets/hero-poster.webp" alt="" width="1120" height="720" decoding="async" fetchpriority="high">
+    <canvas class="hero__canvas" id="heroCanvas"></canvas>
+    <div class="hero__scrim" id="heroScrim"></div>
+    <div class="hero__rim"></div>
+    <div class="hero__fade" id="heroFade"></div>
   </div>
 
-  <div class="hero__aside">
-    <div class="hero__blurb">
-      <span class="eyebrow">Fábrica própria · Curitiba</span>
-      <p>Manequins, cabides, araras e expositores para quem vive de vitrine. Mais de 700 itens em linha, preço de lojista já na segunda peça e entrega para todo o Brasil.</p>
-      <div class="hero__ctas">
-        <a class="btn btn--solid" href="#catalogo" data-magnetic>Ver o catálogo</a>
-        <a class="btn btn--wa" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic data-magnetic>
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.38a9.86 9.86 0 0 0 4.73 1.2h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.13-2.9-7C17.17 3.03 14.68 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.81.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.09-.16.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.49-.4-.42-.55-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.85.84-.85 2.04s.87 2.37 1 2.53c.12.17 1.72 2.62 4.16 3.67.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
-          Falar com o comercial
-        </a>
-      </div>
+  <div class="hero__content" id="heroContent">
+    <h1 class="hero__title" id="heroTitle">A forma<br>que vende.</h1>
+    <div class="hero__sub" id="heroSub">
+      <p class="hero__lead">Manequins, araras, cabides e expositores direto da fábrica, em Curitiba.</p>
+      <p class="hero__offer"><b>Preço de lojista aberto no site</b>, já na segunda peça. Sem pedir orçamento, sem esperar retorno.</p>
     </div>
-    <div class="hero__scroll" aria-hidden="true">Role<i></i></div>
+    <div class="hero__cta" id="heroCta">
+      <a class="btn btn--solid" href="#catalogo" data-magnetic>Ver o catálogo</a>
+      <a class="btn" href="#condicoes" data-magnetic>Condições de atacado</a>
+    </div>
   </div>
+
+  <div class="hero__scroll" id="heroScroll" aria-hidden="true">Role<i></i></div>
 </section>
 
 <!-- ====================================================== MARQUEE -->
@@ -135,7 +130,7 @@ setTimeout(function () {
     <p class="manifesto__text" id="manifestoText" data-words>
       Vitrine não é decoração. É o vendedor que trabalha vinte e quatro horas por dia, sem folga e sem comissão. A gente fabrica esse vendedor.
     </p>
-    <div class="manifesto__meta stagger">
+    <div class="manifesto__meta">
       <div>
         <h3>Fábrica própria</h3>
         <p>Manequim, arara e balcão saem da nossa produção em Curitiba. Sem intermediário entre a linha de montagem e a sua loja.</p>
@@ -156,11 +151,11 @@ setTimeout(function () {
 <section class="catalog section" id="catalogo">
   <div class="shell">
     <div class="section-head">
-      <div class="reveal">
+      <div>
         <span class="eyebrow">Linha 2026</span>
         <h2 class="display">Tudo que sustenta uma peça de roupa em pé.</h2>
       </div>
-      <p class="lead reveal">Preço à vista por unidade. A partir da segunda peça o valor de lojista entra sozinho — sem cadastro, sem pedir orçamento, sem esperar retorno.</p>
+      <p class="lead">Preço à vista por unidade. A partir da segunda peça o valor de lojista entra sozinho — sem cadastro, sem pedir orçamento, sem esperar retorno.</p>
     </div>
 
     <div class="catalog__tools">
@@ -200,10 +195,10 @@ setTimeout(function () {
   <div class="shell">
     <div class="stats__grid">
       <!-- PLACEHOLDER: confirmar números reais com a Exposul antes de publicar -->
-      <div class="stat reveal"><div class="stat__num" data-count="700" data-suffix="+"></div><p class="stat__label">Itens em linha, entre manequins, aramados, cabides e mobiliário de loja.</p></div>
-      <div class="stat reveal"><div class="stat__num" data-count="48" data-suffix="h"></div><p class="stat__label">Prazo de expedição para itens de pronta entrega no estoque de Curitiba.</p></div>
-      <div class="stat reveal"><div class="stat__num" data-count="5000"></div><p class="stat__label">Lojas atendidas de norte a sul do país, do quiosque à rede de shopping.</p></div>
-      <div class="stat reveal"><div class="stat__num" data-count="12" data-suffix="×"></div><p class="stat__label">Parcelamento sem juros no cartão para pedidos acima de mil reais.</p></div>
+      <div class="stat"><div class="stat__num" data-count="700" data-suffix="+"></div><p class="stat__label">Itens em linha, entre manequins, aramados, cabides e mobiliário de loja.</p></div>
+      <div class="stat"><div class="stat__num" data-count="48" data-suffix="h"></div><p class="stat__label">Prazo de expedição para itens de pronta entrega no estoque de Curitiba.</p></div>
+      <div class="stat"><div class="stat__num" data-count="5000"></div><p class="stat__label">Lojas atendidas de norte a sul do país, do quiosque à rede de shopping.</p></div>
+      <div class="stat"><div class="stat__num" data-count="12" data-suffix="×"></div><p class="stat__label">Parcelamento sem juros no cartão para pedidos acima de mil reais.</p></div>
     </div>
   </div>
 </section>
@@ -212,25 +207,25 @@ setTimeout(function () {
 <section class="section" id="showroom">
   <div class="shell">
     <div class="section-head">
-      <div class="reveal">
+      <div>
         <span class="eyebrow">Rebouças, Curitiba</span>
         <h2 class="display">Venha ver de perto antes de encher a loja.</h2>
       </div>
-      <p class="lead reveal">O showroom fica na fábrica. Dá para pegar no manequim, testar a trava do rodízio da arara e conferir o acabamento antes de decidir — que é o que nenhuma foto resolve.</p>
+      <p class="lead">O showroom fica na fábrica. Dá para pegar no manequim, testar a trava do rodízio da arara e conferir o acabamento antes de decidir — que é o que nenhuma foto resolve.</p>
     </div>
 
     <div class="showroom__grid">
-      <div class="window reveal" aria-hidden="true">
+      <div class="window" aria-hidden="true">
         <div class="window__row">
-          <svg class="art" viewBox="0 0 200 560" data-parallax="0.06"><use href="#art-mannequin-child"></use></svg>
-          <svg class="art" viewBox="0 0 200 560" data-parallax="0.14"><use href="#art-mannequin-f"></use></svg>
-          <svg class="art" viewBox="0 0 200 560" data-parallax="0.09"><use href="#art-bust"></use></svg>
+          <svg class="art" viewBox="0 0 200 560"><use href="#art-mannequin-child"></use></svg>
+          <svg class="art" viewBox="0 0 200 560"><use href="#art-mannequin-f"></use></svg>
+          <svg class="art" viewBox="0 0 200 560"><use href="#art-bust"></use></svg>
         </div>
         <div class="window__floor"></div>
       </div>
 
       <div>
-        <dl class="infolist stagger">
+        <dl class="infolist">
           <div>
             <dt>Endereço</dt>
             <dd>Rua 24 de Maio, 1423 — Rebouças<br>Curitiba / PR</dd>
@@ -261,14 +256,14 @@ setTimeout(function () {
 <section class="section faq" id="condicoes">
   <div class="shell">
     <div class="section-head">
-      <div class="reveal">
+      <div>
         <span class="eyebrow">Antes de perguntar</span>
         <h2 class="display">Condições, sem precisar abrir o WhatsApp.</h2>
       </div>
-      <p class="lead reveal">O que trava um pedido quase sempre é a mesma coisa: frete, prazo, pedido mínimo e nota. Está tudo aqui.</p>
+      <p class="lead">O que trava um pedido quase sempre é a mesma coisa: frete, prazo, pedido mínimo e nota. Está tudo aqui.</p>
     </div>
 
-    <dl class="faq__grid stagger">
+    <dl class="faq__grid">
       <div>
         <dt>Pedido mínimo</dt>
         <dd>Não há. Vendemos uma peça avulsa e vendemos carga fechada. O preço de lojista entra pelo volume do pedido inteiro, não item por item.</dd>
@@ -299,12 +294,12 @@ setTimeout(function () {
 
 <!-- ====================================================== CTA -->
 <section class="cta section">
-  <div class="cta__glow" aria-hidden="true" data-parallax="0.1"></div>
+  <div class="cta__glow" aria-hidden="true"></div>
   <div class="shell cta__inner">
-    <span class="eyebrow reveal">Abrindo, reformando ou repondo</span>
-    <h2 class="display reveal">Monte a loja com quem fabrica.</h2>
-    <p class="lead reveal" style="text-align:center">Manda a planta, a foto do espaço ou só a dúvida. A gente responde com a lista do que resolve e quanto custa.</p>
-    <div class="cta__actions reveal">
+    <span class="eyebrow">Abrindo, reformando ou repondo</span>
+    <h2 class="display">Monte a loja com quem fabrica.</h2>
+    <p class="lead" style="text-align:center">Manda a planta, a foto do espaço ou só a dúvida. A gente responde com a lista do que resolve e quanto custa.</p>
+    <div class="cta__actions">
       <a class="btn btn--wa" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic data-magnetic>Falar no WhatsApp</a>
       <a class="btn" href="#catalogo" data-magnetic>Voltar ao catálogo</a>
     </div>
@@ -318,7 +313,7 @@ setTimeout(function () {
   <div class="shell">
     <div class="footer__grid">
       <div class="footer__brand">
-        <span class="brand">EXPOSUL<sup>CWB</sup></span>
+        <span class="brand"><img class="brand__logo" src="assets/exposul-logo.png" alt="Exposul Expositores" width="956" height="261" decoding="async"></span>
         <p>Fábrica de manequins, cabides, araras e expositores. Rua 24 de Maio, 1423 — Rebouças, Curitiba/PR.</p>
       </div>
       <div>
@@ -802,6 +797,7 @@ setTimeout(function () {
 
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/SplitText.min.js"></script>
 <script src="vendor/lenis.min.js"></script>
 <script src="js/products.js"></script>
 <script src="js/site.js"></script>

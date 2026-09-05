@@ -47,6 +47,7 @@
       preloader.classList.add('is-done');
       document.body.classList.remove('is-locked');
       startHero();
+      if (HAS_GSAP) ScrollTrigger.refresh();
       // Entra só depois do hero: no mobile ele cobria o CTA principal.
       const wa = $('#waFloat');
       if (wa) {
@@ -115,80 +116,210 @@
     });
   });
 
-  /* -------------------------------------------------- split de caracteres */
-  function splitChars(el) {
-    const text = el.textContent;
-    const frag = document.createDocumentFragment();
-    // Preserva marcação simples de <em> quebrando por nós filhos
-    const build = (str, em) => {
-      Array.from(str).forEach((ch) => {
-        if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); return; }
-        const wrap = document.createElement('span');
-        wrap.className = 'char-wrap';
-        const inner = document.createElement(em ? 'em' : 'span');
-        inner.className = 'char';
-        inner.textContent = ch;
-        wrap.appendChild(inner);
-        frag.appendChild(wrap);
-      });
-    };
-    Array.from(el.childNodes).forEach((node) => {
-      if (node.nodeType === 3) build(node.textContent, false);
-      else build(node.textContent, node.tagName === 'EM');
-    });
-    el.textContent = '';
-    el.appendChild(frag);
-    return Array.from(el.querySelectorAll('.char'));
-  }
-
   /* ------------------------------------------------------------ hero
-     Um único momento orquestrado — é aqui que gastamos a ousadia. */
-  const heroLines = $$('[data-split]');
-  let heroChars = [];
-  if (HAS_GSAP) heroLines.forEach((l) => { heroChars = heroChars.concat(splitChars(l)); });
+     Sequência de 240 frames em <canvas>, pinada e amarrada ao scroll. É O
+     momento do site: toda a ousadia mora aqui e o resto fica quieto.
 
-  function startHero() {
-    if (!ANIM) return;
-    const piece = $('.hero__piece');
-    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+     Portões, todos obrigatórios para a sequência rodar:
+       GSAP presente · sem prefers-reduced-motion · viewport >= 1024px ·
+       240 frames carregados em até 5 s · usuário ainda no topo.
+     Falhou qualquer um: poster estático, conteúdo completo, sem pin.
 
-    tl.from(piece, { yPercent: 12, scale: 1.06, opacity: 0, duration: 1.5 }, 0)
-      .to(heroChars, { y: 0, duration: 1.15, stagger: 0.035 }, 0.15)   // 35ms: o stagger "caro"
-      .from('.hero__key', { scale: 0.7, opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
-      .from('.hero__rim', { scale: 0.6, opacity: 0, duration: 2.0, ease: 'power2.out' }, 0.1)
-      .from('.hero__floor', { scaleX: 0.3, opacity: 0, duration: 1.4, ease: 'power2.out' }, 0.3)
-      .from('.hero__blurb > *', { y: 26, opacity: 0, duration: 0.9, stagger: 0.08 }, 0.55)
-      .from('.hero__scroll', { opacity: 0, duration: 0.8 }, 0.9)
-      .from('.nav__inner > *', { y: -18, opacity: 0, duration: 0.8, stagger: 0.07 }, 0.35);
+     O que a sequência mostra, medido frame a frame (não pela descrição):
+       f_001–f_060  close no torso e recuo da câmera (o recuo acaba no 60)
+       f_060–f_150  plano parado, cena aberta: arcos, base, busto frontal
+       f_150–f_240  o busto gira até 3/4 */
+  const hero = $('.hero');
+  const heroCanvas = $('#heroCanvas');
+  const HERO_FRAMES = 240, HERO_W = 1120, HERO_H = 720;
+  const HAS_SPLIT = HAS_GSAP && typeof window.SplitText !== 'undefined';
+  if (HAS_SPLIT) gsap.registerPlugin(SplitText);
+  const heroWantsSequence = ANIM && !!heroCanvas && window.matchMedia('(min-width: 1024px)').matches;
 
-    // Separação em profundidade no scroll: cada camada em velocidade própria
-    gsap.to('.hero__line--back', {
-      yPercent: -68, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
-    });
-    gsap.to('.hero__line--front', {
-      yPercent: 42, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
-    });
-    gsap.to(piece, {
-      yPercent: 14, scale: 1.05, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.8 }
-    });
-    gsap.to('.hero__aside', {
-      opacity: 0, y: -30, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: '55% top', scrub: 0.5 }
+  const heroState = { frame: 0 };
+  window.__heroState = heroState;    // só leitura, para o harness de verificação
+  const heroImgs = new Array(HERO_FRAMES);
+  const heroLoaded = new Uint8Array(HERO_FRAMES);
+  let heroCtx = null, heroDrawn = -1, heroLive = false, heroST = null;
+
+  const heroSrc = (i) => 'assets/hero-frames/f_' + String(i + 1).padStart(3, '0') + '.webp';
+
+  /* O canvas fica no tamanho NATIVO dos frames (1120×720) e o CSS o estica
+     com object-fit: cover. Assim o drawImage é uma cópia 1:1, sem
+     reamostragem — a escala acontece no compositor, uma vez por frame, de
+     graça na GPU. Desenhar num canvas do tamanho da viewport reamostrava
+     0,8 MP a cada frame; medido em software, era a maior parte do custo. */
+  function heroResize() {
+    if (!heroCanvas || !hero) return;
+    if (heroCanvas.width !== HERO_W || heroCanvas.height !== HERO_H) {
+      heroCanvas.width = HERO_W;
+      heroCanvas.height = HERO_H;
+    }
+    heroCtx = heroCanvas.getContext('2d', { alpha: false });
+    heroCtx.imageSmoothingEnabled = false;   // cópia 1:1: suavização só custaria
+    heroDrawn = -1;
+    heroDraw(Math.round(heroState.frame));
+  }
+
+  /* Bitmaps decodificados numa janela deslizante em volta do frame atual.
+     Sem isto o navegador re-decodifica frames que o próprio cache de
+     imagens descartou (240 × 1120×720 não cabem nele) — medido: 8 frames
+     acima de 33 ms na primeira passada, nenhum na segunda, e de volta na
+     quarta. createImageBitmap decodifica fora da thread principal; a
+     janela mantém ~40 frames prontos e libera o resto. */
+  const HERO_USE_BITMAPS = false;   // medido: em rasterização por software piorou; ver README
+  const HERO_WINDOW = 20;
+  const heroBitmaps = new Map();
+  const heroPending = new Set();
+  function heroEnsureWindow(center) {
+    if (!HERO_USE_BITMAPS || typeof createImageBitmap !== 'function') return;
+    const lo = Math.max(0, center - HERO_WINDOW), hi = Math.min(HERO_FRAMES - 1, center + HERO_WINDOW);
+    heroBitmaps.forEach((bm, k) => { if (k < lo - 8 || k > hi + 8) { bm.close(); heroBitmaps.delete(k); } });
+    for (let d = 0; d <= HERO_WINDOW; d++) {
+      for (const k of [center + d, center - d]) {
+        if (k < lo || k > hi || heroBitmaps.has(k) || heroPending.has(k) || !heroLoaded[k]) continue;
+        heroPending.add(k);
+        createImageBitmap(heroImgs[k]).then((bm) => {
+          heroPending.delete(k);
+          if (Math.abs(k - Math.round(heroState.frame)) <= HERO_WINDOW + 8) heroBitmaps.set(k, bm); else bm.close();
+        }).catch(() => heroPending.delete(k));
+      }
+    }
+  }
+
+  // Desenha o frame pedido ou o mais próximo já carregado, para nunca
+  // mostrar um buraco. Só redesenha quando o índice muda.
+  function heroDraw(i) {
+    if (!heroCtx) return;
+    let k = Math.max(0, Math.min(HERO_FRAMES - 1, i));
+    while (k > 0 && !heroLoaded[k]) k--;
+    if (!heroLoaded[k] || k === heroDrawn) return;
+    const t0 = window.__heroProfile ? performance.now() : 0;
+    heroCtx.drawImage(heroBitmaps.get(k) || heroImgs[k], 0, 0);   // 1:1
+    if (window.__heroProfile) window.__heroProfile.push(performance.now() - t0);
+    heroDrawn = k;
+    heroEnsureWindow(k);
+  }
+  function heroTick() { if (heroLive) heroDraw(Math.round(heroState.frame)); }
+
+  // Carrega e decodifica os 240 frames. Resolve true se >= 90% chegou em
+  // até 5 s; false caso contrário. Frames atrasados continuam entrando.
+  function heroPreload() {
+    return new Promise((resolve) => {
+      let settled = 0, finished = false;
+      const enough = () => heroLoaded.reduce((a, b) => a + b, 0) >= HERO_FRAMES * 0.9;
+      const finish = () => { if (!finished) { finished = true; clearTimeout(timer); resolve(enough()); } };
+      const timer = setTimeout(finish, 5000);
+      for (let i = 0; i < HERO_FRAMES; i++) {
+        const img = new Image();
+        img.decoding = 'async';
+        heroImgs[i] = img;
+        const mark = (ok) => { if (ok) heroLoaded[i] = 1; if (++settled === HERO_FRAMES) finish(); };
+        img.onload = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(() => mark(true));
+        img.onerror = () => mark(false);
+        img.src = heroSrc(i);
+      }
     });
   }
 
-  /* ------------------------------------------------------------- parallax */
-  if (ANIM) {
-    $$('[data-parallax]').forEach((el) => {
-      const amt = parseFloat(el.dataset.parallax) || 0.1;
-      gsap.to(el, {
-        yPercent: -amt * 100, ease: 'none',
-        scrollTrigger: { trigger: el.closest('section') || el, start: 'top bottom', end: 'bottom top', scrub: 0.7 }
+  // Sem sequência (mobile, reduced-motion, falha de carregamento, usuário já
+  // rolou): mostra o conteúdo que a coreografia teria revelado.
+  function heroFallback() {
+    if (heroLive || !HAS_GSAP) return;
+    gsap.to(['#heroSub > *', '#heroCta'], { autoAlpha: 1, y: 0, yPercent: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out', delay: 0.2 });
+  }
+
+  const heroMM = HAS_GSAP ? gsap.matchMedia() : null;
+
+  function heroBuildPin() {
+    if (heroST || !heroMM) return false;
+    // Pinar depois que o usuário já passou do hero daria um salto de tela.
+    if (window.scrollY > hero.offsetHeight * 0.5) return false;
+
+    heroMM.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+      hero.classList.add('is-live');
+      heroLive = true;
+      heroResize();
+      heroEnsureWindow(0);
+      gsap.ticker.add(heroTick);          // redesenho no ticker, nunca no evento de scroll
+
+      const tl = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: hero,
+          start: 'top top',
+          end: '+=250%',
+          pin: true,
+          scrub: 0.8,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          // grão e blur da nav saem enquanto pinado: ver nota no CSS
+          onToggle: (self) => document.body.classList.toggle('hero-pinned', self.isActive)
+        }
       });
+      heroST = tl.scrollTrigger;
+      window.__heroST = heroST;           // exposto para o harness de verificação
+
+      // O clipe inteiro, linear: 10 s de filme viram 2,5 telas de scroll.
+      tl.to(heroState, { frame: HERO_FRAMES - 1, duration: 1 }, 0);
+
+      // Ato 1 → 2 (f_060 ≈ 25%): o close vira cena aberta. A headline recua
+      // para o canto e cede o palco; o pulso de scroll some assim que se rola.
+      tl.to('#heroScroll', { autoAlpha: 0, duration: 0.05 }, 0.02);
+      tl.to('#heroTitle', { scale: 0.76, yPercent: -24, opacity: 0.62, duration: 0.16, ease: 'power2.inOut' }, 0.20);
+      tl.to('#heroScrim', { opacity: 0.55, duration: 0.22 }, 0.20);
+
+      // Ato 2 (f_060–f_150): plano parado — é onde texto pousa sem brigar
+      // com movimento. Subtítulo e proposta de atacado entram por linha.
+      tl.fromTo('#heroSub > *', { yPercent: 55, autoAlpha: 0 },
+        { yPercent: 0, autoAlpha: 1, duration: 0.12, stagger: 0.055, ease: 'power3.out' }, 0.30);
+
+      // Ato 3 (f_150–f_240): o giro. CTA entra; o final emenda com a próxima
+      // seção em vez de cortar seco.
+      tl.fromTo('#heroCta', { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.12, ease: 'power3.out' }, 0.64);
+      tl.to('#heroFade', { opacity: 1, duration: 0.15 }, 0.85);
+      tl.to('#heroContent', { yPercent: -5, duration: 0.15 }, 0.85);
+
+      return () => {                      // viewport encolheu: desmonta tudo
+        gsap.ticker.remove(heroTick);
+        heroBitmaps.forEach((bm) => bm.close()); heroBitmaps.clear();
+        hero.classList.remove('is-live');
+        document.body.classList.remove('hero-pinned');
+        heroLive = false; heroST = null; window.__heroST = null;
+      };
     });
+    return !!heroST;
+  }
+
+  if (heroWantsSequence) {
+    // Escondidos desde já (o preloader cobre a tela): a coreografia revela.
+    gsap.set(['#heroSub > *', '#heroCta'], { autoAlpha: 0 });
+    const heroT0 = performance.now();
+    heroPreload().then((ok) => {
+      window.__heroPreload = { ok: ok, ms: Math.round(performance.now() - heroT0), carregados: heroLoaded.reduce((a, b) => a + b, 0) };   // só leitura, harness
+      if (!ok || !heroBuildPin()) heroFallback();
+      ScrollTrigger.refresh();
+    });
+  }
+
+  // Entrada no carregamento (tempo, não scroll): quem não rola ainda vê a
+  // headline. Linhas via SplitText com máscara, escalonadas em 55 ms.
+  function startHero() {
+    if (!ANIM || !hero) return;
+    const play = () => {
+      const title = $('#heroTitle');
+      let lines = [title];
+      if (HAS_SPLIT) {
+        try { lines = SplitText.create(title, { type: 'lines', mask: 'lines', linesClass: 'hero__ln' }).lines; }
+        catch (e) { lines = [title]; }
+      }
+      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+      tl.from(lines, { yPercent: 108, duration: 1.25, stagger: 0.055 }, 0)
+        .from('.nav__inner > *', { y: -18, opacity: 0, duration: 0.8, stagger: 0.07 }, 0.25);
+      if (heroLive) tl.from('#heroScroll', { autoAlpha: 0, duration: 0.8 }, 1.0);
+      ScrollTrigger.refresh();
+    };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(play); else play();
   }
 
   /* ------------------------------------------------------------------ nav */
@@ -796,25 +927,13 @@
   openFromHash();
   window.addEventListener('hashchange', openFromHash);
 
-  /* ------------------------------------------------------- reveals gerais */
+  /* ------------------------------------------------------- reveals
+     Depois do hero, o site fica quieto. Sobram dois movimentos ligados ao
+     scroll: os cards do catálogo (um reveal por recorte, escalonado) e o
+     manifesto (palavra a palavra, acima). Section-heads, listas, contadores
+     e parallax não animam mais — o mesmo fade-up em toda seção era o tell
+     clássico de página gerada. */
   if (ANIM) {
-    $$('.reveal').forEach((el) => {
-      gsap.to(el, {
-        opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
-      });
-      gsap.set(el, { y: 34 });
-    });
-    $$('.stagger').forEach((group) => {
-      const kids = Array.from(group.children);
-      gsap.set(kids, { y: 30 });
-      gsap.to(kids, {
-        opacity: 1, y: 0, duration: 0.85, stagger: 0.07, ease: 'power3.out',
-        scrollTrigger: { trigger: group, start: 'top 85%', once: true }
-      });
-    });
-
-    // Cards do catálogo: reveal por recorte, escalonado
     gsap.set('.card', { opacity: 0, y: 40 });
     ScrollTrigger.batch('.card', {
       start: 'top 92%',
@@ -825,19 +944,8 @@
 
   /* ------------------------------------------------------------ contadores */
   $$('[data-count]').forEach((el) => {
-    const target = parseFloat(el.dataset.count);
     const suffix = el.dataset.suffix || '';
-    const paint = (v) => {
-      el.innerHTML = int(Math.round(v)) + (suffix ? '<i>' + suffix + '</i>' : '');
-    };
-    if (!ANIM) { paint(target); return; }
-    const obj = { v: 0 };
-    paint(0);
-    gsap.to(obj, {
-      v: target, duration: 1.6, ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-      onUpdate: () => paint(obj.v)
-    });
+    el.innerHTML = int(Math.round(parseFloat(el.dataset.count))) + (suffix ? '<i>' + suffix + '</i>' : '');
   });
 
   /* ------------------------------------------------ cursor + magnetismo */
