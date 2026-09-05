@@ -55,10 +55,24 @@ desta lista com a Exposul antes de colocar no ar.**
 | `js/products.js` | **Escada de atacado**: os degraus (5 / 10 / 30 un.) e os percentuais de desconto |
 | `index.html` — seção Números | `700+ itens`, `48h de expedição`, `5.000 lojas`, `12× sem juros` |
 | `index.html` — Showroom | Horário de atendimento |
-| `index.html` — Manifesto | "A escada de atacado começa em cinco peças" |
+| `index.html` — Manifesto | "começa na segunda peça — no quinto pacote, em cabides e ganchos" |
+| `index.html` — Condições | Prazo de expedição, prazo de produção sob medida, parcelamento, desconto à vista e prazo de garantia (marcados como `[confirmar]` na própria página) |
+| `index.html` — Rodapé | CNPJ e razão social |
+| `js/products.js` | Afirmações técnicas: capacidade de carga das araras (60/80/120 kg), "40% mais peça na mesma arara", "4,8 m lineares" da torre, regulagem do busto |
+| `js/products.js` | O balcão vitrine é anunciado como sob medida **e** tem preço fixo com escada de atacado — decidir se é de linha ou sob medida |
+| Etiquetas dos cards | "Mais vendido", "Novidade", "Linha premium", "Sob medida" — confirmar se refletem a realidade comercial |
 
 Trechos com dado de demonstração estão marcados com `<!-- PLACEHOLDER: ... -->`
 no HTML e com um bloco de aviso no topo de `js/products.js`.
+
+**Sobre a escada de atacado:** as faixas foram desenhadas por natureza do
+item — manequim, arara e balcão abrem o desconto na **segunda** peça (a
+compra real de abertura de loja são duas ou três, não cinco); cabide e
+gancho abrem no **quinto** pacote, que é onde o lojista compara centavo. A
+faixa vale pelo **volume do pedido inteiro**, não item por item. Os
+percentuais (10/18/28% e 12/22/32%) são plausíveis para fábrica direta, mas
+**precisam ser confirmados**: publicar um spread menor que o real entrega o
+lojista ao concorrente; maior que o real, vende o que não se honra.
 
 **Já são reais e conferidos:** razão social, endereço (Rua 24 de Maio, 1423 —
 Rebouças, Curitiba/PR), telefones ((41) 3029-4456 e (41) 99691-0019), e as
@@ -141,18 +155,26 @@ Chromium via Playwright, com scroll programático de ponta a ponta:
 |---|---|---|
 | FPS mediano | 60 | 60 |
 | FPS p95 | 59,5 | 59,9 |
-| Frames acima de 33 ms | 4 | 0 |
+| Frames acima de 33 ms | 3 | 0 |
 | Overflow horizontal | nenhum | nenhum |
 | Erros de console | nenhum | nenhum |
 
-Peso total da página: ~260 KB, sem nenhuma requisição a terceiros.
+Peso total: ~394 KB (inclui 117 KB de fontes embutidas e 136 KB de GSAP +
+Lenis), sem nenhuma requisição a terceiros.
+
+O hero foi verificado sem colisão entre o manequim, o título e o texto de
+apoio em nove proporções, de 1024×700 a 2560×1440.
 
 ---
 
 ## O que este MVP ainda não faz
 
-- Sem busca, ordenação ou paginação — com 700+ itens reais, isso passa a ser
-  necessário.
+- Busca por nome e por referência existe; **ordenação e paginação não**. Com
+  700+ itens reais, ambas passam a ser necessárias, junto com subcategorias
+  (Manequins → Feminino / Masculino / Infantil / Plus / Busto).
+- A ficha tem rota própria (`#produto/<id>`) para compartilhar o link, mas
+  não são páginas de verdade — para SEO de cauda longa ("manequim plus size
+  atacado"), cada produto precisa de uma URL indexável.
 - Sem gateway de pagamento: o pedido é montado no site e fechado no WhatsApp.
 - Sem cálculo de frete.
 - Sem cadastro de lojista nem preço por cliente.
