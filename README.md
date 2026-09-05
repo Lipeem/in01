@@ -103,25 +103,30 @@ O rodapé exibe "Protótipo de demonstração — preços e prazos ilustrativos"
 
 ---
 
-## O hero: sequência de frames pinada ao scroll
+## O hero: o busto gira enquanto a página desce
 
 É o momento do site. Toda a ousadia está aqui e o resto ficou quieto.
 
 **O que acontece.** Em telas de 1024px ou mais, sem `prefers-reduced-motion`,
-os 240 frames são desenhados num `<canvas>` e o hero fica pinado por 2,5
-telas de scroll. O clipe corre linear com o scroll — 10 s de filme viram
-2,5 telas. A coreografia do texto segue os três atos do material, **medidos
-frame a frame** (a descrição que veio com os frames dizia que o recuo da
-câmera ia até o frame 150; ele acaba no 60):
+o hero vira uma pista de **4,5 telas** (`height: 450vh`) com o palco preso
+ao topo por `position: sticky` — nenhum pin do ScrollTrigger, só o scrub.
+Os 240 frames são desenhados num `<canvas>` conforme a página desce
+(`scrub: 0.8`, com inércia curta). O texto é esparso e entra em cima da
+imagem, uma frase por vez, alternando o lado. A distribuição dos frames
+pelo scroll segue os três atos do material, **medidos frame a frame** (a
+descrição que veio com os frames dizia que o recuo da câmera ia até o
+frame 150; ele acaba no 60):
 
-| Frames | Progresso | Cena | Texto |
+| Frames | Pista | Cena | Texto |
 |---|---|---|---|
-| f_001–f_060 | 0–25% | close no torso, câmera recua | headline entra por linha no carregamento; pulso de scroll some ao rolar |
-| f_060–f_150 | 25–62% | plano parado, cena aberta | headline recua (76%, 62% de opacidade); subtítulo e proposta de atacado entram, escalonados |
-| f_150–f_240 | 62–100% | o busto gira até 3/4 | CTA entra; o degradê inferior fecha em `--ink-2` e emenda com o marquee |
+| f_001–f_060 | 0–20% | close no torso, câmera recua | só imagem; o pulso "Role" some nos primeiros 2% |
+| f_060–f_150 | 20–32% | plano parado, cena aberta | comprimido de propósito (ninguém nota um plano parado); a headline entra por linha aos 17% |
+| f_150–f_240 | 32–100% | o busto gira até 3/4 | headline sai aos 40%; frase 1 (46–64%, esquerda); frase 2 (69–86%, direita); CTA único aos 90%; o degradê fecha em `--ink-2` e emenda com o marquee |
 
-A headline entra no **carregamento** (tempo), não no scroll: quem não rola
-ainda vê a headline. A coreografia por scroll começa com ela já na tela.
+A headline entra pelo **scroll**, não no carregamento: a abertura é só a
+imagem, como nos vídeos de referência. Quem chega e não rola vê o busto em
+close e o convite para rolar. No modo estático (poster) ela entra por linha
+no carregamento, como antes.
 
 **Portões.** A sequência só roda se todos passarem: GSAP presente · sem
 `prefers-reduced-motion` · viewport ≥ 1024px · 90% dos frames carregados em
@@ -135,12 +140,13 @@ frame é baixado** — verificado: zero requisições a `hero-frames/` a 390px.
   `drawImage` vira cópia 1:1 (0,1 ms medido) e a escala acontece no
   compositor. Desenhar num canvas do tamanho da viewport reamostrava 0,8 MP
   a cada frame.
-- **Grão e blur da nav desligam enquanto o hero está pinado.** Os dois são
-  camadas fixas recompostas sobre um canvas que muda a cada frame. A/B em
-  rasterização por software: 28 frames longos e mínimo de 12 fps com eles;
-  **zero frames longos e 60 fps travados sem eles.** Fora do pin, voltam. O
-  `backdrop-filter` também saiu da lista de `transition` da nav — animar
-  blur por meio segundo ao entrar no pin era o mesmo custo em câmera lenta.
+- **Grão e blur da nav desligam enquanto a sequência está na tela.** Os
+  dois são camadas fixas recompostas sobre um canvas que muda a cada frame.
+  A/B em rasterização por software: 28 frames longos e mínimo de 12 fps com
+  eles; **zero frames longos e 60 fps travados sem eles.** Passada a pista,
+  voltam. O `backdrop-filter` também saiu da lista de `transition` da nav —
+  animar blur por meio segundo ao entrar na pista era o mesmo custo em
+  câmera lenta.
 - **Janela de `ImageBitmap` ficou desligada** (`HERO_USE_BITMAPS = false`).
   Foi implementada para blindar contra o cache de imagens do navegador
   descartar frames, mas medida em software piorou (mais churn que ganho).
@@ -239,11 +245,11 @@ Chromium via Playwright, com scroll programático de ponta a ponta:
 | Overflow horizontal | nenhum | nenhum |
 | Erros de console | nenhum | nenhum |
 
-**Hero pinado (desktop):** mínimo de **59,5 fps** e **zero frames acima de
-33 ms** em cinco passadas — ida completa, volta completa, só o miolo e duas
-repetições. Medido com rasterização por software (SwiftShader, sem GPU);
-numa máquina com GPU o compositor faz de graça o que aqui é o pior caso.
-Frames carregam em ~1 s por HTTP local e ~1,8 s por `file://`.
+**Pista do hero (desktop):** mínimo de **59,5 fps** e **zero frames acima
+de 33 ms** ao percorrer as 4,5 telas de ponta a ponta. Medido com
+rasterização por software (SwiftShader, sem GPU); numa máquina com GPU o
+compositor faz de graça o que aqui é o pior caso. Frames carregam em ~1 s
+por HTTP local e ~1,8 s por `file://`.
 
 Peso: ~400 KB de página + 2,9 MB de frames, baixados **só** em desktop, só
 sem `prefers-reduced-motion`, e nunca antes do poster estar na tela.
