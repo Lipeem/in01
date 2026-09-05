@@ -561,17 +561,23 @@ a { color: inherit; text-decoration: none; }
 .mobilenav__foot a { color: var(--bone); display: inline-block; padding-block: 0.5rem; }
 
 /* --------------------------------------------------------------------------
-   9. Hero — sequência de frames pinada ao scroll
-   Camadas, de trás para a frente: poster (img) → canvas → scrim → contraluz
-   → fade → conteúdo HTML. O texto nunca vai para o canvas.
+   9. Hero — o busto como fundo, girando enquanto a página desce
+   Layout padrão = ESTÁTICO (poster + texto empilhado): vale para mobile,
+   prefers-reduced-motion, GSAP ausente e falha de carregamento. A classe
+   .is-live, adicionada só quando os 240 frames estão prontos, transforma a
+   seção numa pista de 4,5 telas com o palco preso (sticky) e os painéis
+   posicionados nas áreas pretas ao lado do objeto.
    -------------------------------------------------------------------------- */
-.hero {
+.hero { position: relative; background: var(--ink); }
+
+.hero__stage {
   position: relative;
-  height: 100svh;
-  min-height: 600px;
+  min-height: 100svh;
   overflow: hidden;
   isolation: isolate;
-  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 .hero__media { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .hero__poster,
@@ -587,65 +593,61 @@ a { color: inherit; text-decoration: none; }
 .hero__canvas { opacity: 0; transition: opacity 0.7s linear; }
 .hero.is-live .hero__canvas { opacity: 1; }
 
-/* Contraste garantido: nos primeiros frames o torso claro ocupa o
-   centro-direita, então o texto vive à esquerda, sobre este degradê. */
+/* Estático: degradê de baixo para o texto empilhado ter contraste. Some no
+   modo vivo — lá o texto vive nas áreas pretas, sem caixa nem degradê. */
 .hero__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg,
-    rgba(8, 9, 10, 0.90) 0%,
-    rgba(8, 9, 10, 0.70) 26%,
-    rgba(8, 9, 10, 0.26) 54%,
-    transparent 76%);
-  will-change: opacity;
+  background: linear-gradient(to top,
+    rgba(8, 9, 10, 0.94) 0%, rgba(8, 9, 10, 0.72) 42%, rgba(8, 9, 10, 0.26) 72%, transparent 100%);
 }
-/* Contraluz fria no canto: o azul da marca entra na cena como luz. */
-.hero__rim {
-  position: absolute;
-  top: -24%; right: -14%;
-  width: 60vw;
-  aspect-ratio: 1;
-  background: radial-gradient(circle at 50% 50%, rgba(3, 128, 195, 0.17), transparent 60%);
-}
-/* Emenda com a seção seguinte: o fim do pin não pode ser um corte seco. */
+.hero.is-live .hero__scrim { display: none; }
+
+/* Emenda com a seção seguinte. */
 .hero__fade {
   position: absolute;
   left: 0; right: 0; bottom: 0;
-  height: 42%;
-  background: linear-gradient(to top, var(--ink-2) 0%, rgba(12, 14, 16, 0.62) 38%, transparent 100%);
-  opacity: 0.5;
+  height: 36%;
+  background: linear-gradient(to top, var(--ink-2) 0%, rgba(12, 14, 16, 0.55) 40%, transparent 100%);
+  opacity: 0.35;
   will-change: opacity;
 }
 
-.hero__content {
+/* ---- painéis: modo estático (empilhado) ---- */
+.hero__panels {
   position: relative;
   z-index: 2;
-  height: 100%;
+  width: 100%;
   max-width: var(--maxw);
   margin-inline: auto;
-  padding: calc(var(--nav-h) + 1rem) var(--gutter) 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(1.25rem, 2.6vh, 2rem);
+  padding: calc(var(--nav-h) + 2rem) var(--gutter) clamp(2rem, 6vh, 4rem);
+  display: grid;
+  gap: 1.25rem;
 }
-.hero__title {
-  margin: 0;
+.hero__panel { margin: 0; }
+.hero__panel--title {
   font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(3rem, 8.2vw, 7.6rem);
-  line-height: 0.92;
+  font-size: clamp(2.6rem, 8vw, 6.5rem);
+  line-height: 0.95;
   letter-spacing: -0.025em;
   color: var(--bone);
-  transform-origin: 0% 0%;
-  will-change: transform, opacity;
 }
-.hero__ln { will-change: transform; }        /* linhas geradas pelo SplitText */
-.hero__sub { max-width: 46ch; display: grid; gap: 0.85rem; }
-.hero__lead { font-size: var(--t-lead); line-height: 1.45; color: var(--bone); text-wrap: pretty; }
-.hero__offer { font-size: var(--t-body); color: var(--bone-dim); text-wrap: pretty; }
-.hero__offer b { color: var(--key); font-weight: 600; }
-.hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.hero__half { display: block; }
+.hero__ln-mask { display: block; overflow: clip; }   /* máscara de linha, à mão: DOM previsível */
+.hero__ln { display: block; will-change: transform; }
+.hero__panel--l,
+.hero__panel--r {
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 2.1vw, 1.9rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--bone);
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+.hero__panel--r b { color: var(--key); font-weight: 400; }
+.hero__panel--cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
 .hero__scroll {
   position: absolute;
@@ -660,7 +662,6 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
   color: var(--muted);
 }
-@media (min-width: 1024px) { .hero__scroll { display: flex; } }
 .hero__scroll i {
   display: block;
   width: 1px;
@@ -676,18 +677,51 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 1023px) {
-  /* Sem sequência e sem pin: poster estático e o conteúdo normal por cima.
-     Pin + Lenis + barra de endereço que some é o ponto mais frágil da
-     stack, e 3 MB no 4G do lojista não se justificam. */
-  .hero { height: auto; min-height: 86svh; }
-  .hero__canvas { display: none; }
-  .hero__content { min-height: 86svh; justify-content: flex-end; padding-bottom: clamp(2rem, 6vh, 4rem); }
-  .hero__title { font-size: clamp(2.6rem, 11vw, 5rem); }
-  .hero__scrim {
-    background: linear-gradient(to top,
-      rgba(8, 9, 10, 0.94) 0%, rgba(8, 9, 10, 0.72) 42%, rgba(8, 9, 10, 0.28) 72%, transparent 100%);
+  .hero__canvas { display: none; }   /* sem sequência abaixo de 1024px */
+}
+
+/* ---- modo vivo: pista de 4,5 telas, palco preso, painéis nas áreas pretas ---- */
+@media (min-width: 1024px) {
+  .hero.is-live { height: 450vh; }
+  .hero.is-live .hero__stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 600px;
   }
-  .hero__cta .btn { flex: 1 1 auto; }
+  .hero.is-live .hero__scroll { display: flex; }
+  .hero.is-live .hero__panels {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    padding: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .hero.is-live .hero__panel { position: absolute; pointer-events: auto; }
+  /* O busto ocupa o terço central; o título abre em duas metades, uma em
+     cada área preta, na altura do peito. */
+  .hero.is-live .hero__panel--title {
+    inset: 0;
+    font-size: clamp(2.8rem, 5.6vw, 5.6rem);
+    line-height: 0.92;
+    pointer-events: none;
+  }
+  .hero.is-live .hero__half {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+  }
+  .hero.is-live .hero__half--l { left: var(--gutter); }
+  .hero.is-live .hero__half--r { right: var(--gutter); text-align: right; }
+  .hero.is-live .hero__panel--l { left: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; }
+  .hero.is-live .hero__panel--r { right: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; text-align: right; }
+  .hero.is-live .hero__panel--cta {
+    left: 50%;
+    bottom: clamp(2rem, 8vh, 5rem);
+    transform: translateX(-50%);
+  }
 }
 
 /* Enquanto o hero está pinado, o grão fixo e o blur da nav são recompostos
@@ -1584,6 +1618,7 @@ body.has-panel .toast:not(.is-up) { transform: translate3d(-50%, -260%, 0); }
   .hero__scroll i { animation: none; opacity: 1; transform: none; }
   .hero__canvas { display: none !important; }   /* poster estático, zero scrub */
   .hero__scroll { display: none !important; }   /* sem scrub não há o que pulsar */
+  .hero.is-live { height: auto !important; }
   .marquee__track { transform: none !important; }
   .wa-float { transform: none !important; }
   .cursor { display: none !important; }

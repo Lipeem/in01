@@ -226,65 +226,79 @@
   // rolou): mostra o conteúdo que a coreografia teria revelado.
   function heroFallback() {
     if (heroLive || !HAS_GSAP) return;
-    gsap.to(['#heroSub > *', '#heroCta'], { autoAlpha: 1, y: 0, yPercent: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out', delay: 0.2 });
+    gsap.to(['#heroP1', '#heroP2', '#heroCta'], { autoAlpha: 1, opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out', delay: 0.2 });
   }
 
   const heroMM = HAS_GSAP ? gsap.matchMedia() : null;
 
   function heroBuildPin() {
     if (heroST || !heroMM) return false;
-    // Pinar depois que o usuário já passou do hero daria um salto de tela.
+    // Ligar depois que o usuário já passou do hero daria um salto de tela.
     if (window.scrollY > hero.offsetHeight * 0.5) return false;
 
     heroMM.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-      hero.classList.add('is-live');
+      hero.classList.add('is-live');       // vira a pista de 4,5 telas (CSS)
       heroLive = true;
       heroResize();
       heroEnsureWindow(0);
       gsap.ticker.add(heroTick);          // redesenho no ticker, nunca no evento de scroll
+
+      // Título em duas metades, cada uma revelada por linha mascarada. A
+      // máscara é HTML fixo (.hero__ln-mask > .hero__ln): o SplitText
+      // devolvia, para a metade direita, um nó diferente do que ficava no
+      // DOM, e o tween mirava um elemento órfão.
+      const titleLines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
           trigger: hero,
           start: 'top top',
-          end: '+=250%',
-          pin: true,
+          end: 'bottom bottom',           // a pista inteira: sticky segura o palco
           scrub: 0.8,
-          anticipatePin: 1,
           invalidateOnRefresh: true,
-          // grão e blur da nav saem enquanto pinado: ver nota no CSS
+          // grão e blur da nav saem enquanto o busto está na tela: ver CSS
           onToggle: (self) => document.body.classList.toggle('hero-pinned', self.isActive)
         }
       });
       heroST = tl.scrollTrigger;
       window.__heroST = heroST;           // exposto para o harness de verificação
 
-      // O clipe inteiro, linear: 10 s de filme viram 2,5 telas de scroll.
-      tl.to(heroState, { frame: HERO_FRAMES - 1, duration: 1 }, 0);
+      /* Os frames, remapeados ao que o clipe tem de verdade:
+           f_001–f_060  close e recuo da câmera      → 20% da pista (abertura só com imagem)
+           f_060–f_150  plano parado                 → 12%, comprimido: ninguém nota
+           f_150–f_240  o busto gira até 3/4         → 68%: o giro domina o scroll */
+      tl.to(heroState, { frame: 59,  duration: 0.20 }, 0)
+        .to(heroState, { frame: 149, duration: 0.12 }, 0.20)
+        .to(heroState, { frame: 239, duration: 0.68 }, 0.32);
 
-      // Ato 1 → 2 (f_060 ≈ 25%): o close vira cena aberta. A headline recua
-      // para o canto e cede o palco; o pulso de scroll some assim que se rola.
-      tl.to('#heroScroll', { autoAlpha: 0, duration: 0.05 }, 0.02);
-      tl.to('#heroTitle', { scale: 0.76, yPercent: -24, opacity: 0.62, duration: 0.16, ease: 'power2.inOut' }, 0.20);
-      tl.to('#heroScrim', { opacity: 0.55, duration: 0.22 }, 0.20);
+      tl.to('#heroScroll', { autoAlpha: 0, duration: 0.04 }, 0.02);
 
-      // Ato 2 (f_060–f_150): plano parado — é onde texto pousa sem brigar
-      // com movimento. Subtítulo e proposta de atacado entram por linha.
-      tl.fromTo('#heroSub > *', { yPercent: 55, autoAlpha: 0 },
-        { yPercent: 0, autoAlpha: 1, duration: 0.12, stagger: 0.055, ease: 'power3.out' }, 0.30);
+      // Título: entra quando a cena abre (o objeto já está centrado), sai
+      // antes da primeira frase. Opacidade, não visibility: fica na árvore
+      // de acessibilidade o tempo todo.
+      // Estado inicial fixado à mão. `from()` com stagger só renderiza de
+      // imediato o PRIMEIRO alvo; o segundo ficava visível em 0% até o
+      // sub-tween dele iniciar — o que num scrub parado nunca acontece.
+      gsap.set(titleLines, { yPercent: 110 });
+      tl.to(titleLines, { yPercent: 0, duration: 0.08, stagger: 0.025, ease: 'power3.out' }, 0.17);
+      tl.to('#heroTitle', { opacity: 0, y: -28, duration: 0.06, ease: 'power2.in' }, 0.40);
 
-      // Ato 3 (f_150–f_240): o giro. CTA entra; o final emenda com a próxima
-      // seção em vez de cortar seco.
-      tl.fromTo('#heroCta', { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.12, ease: 'power3.out' }, 0.64);
-      tl.to('#heroFade', { opacity: 1, duration: 0.15 }, 0.85);
-      tl.to('#heroContent', { yPercent: -5, duration: 0.15 }, 0.85);
+      // Uma frase por vez, alternando o lado, enquanto o busto gira.
+      tl.fromTo('#heroP1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.46);
+      tl.to('#heroP1', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.64);
+      tl.fromTo('#heroP2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.69);
+      tl.to('#heroP2', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.86);
+
+      // Fim: um CTA só, e o degradê fecha em --ink-2 para emendar no marquee.
+      tl.fromTo('#heroCta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.90);
+      tl.to('#heroFade', { opacity: 1, duration: 0.1 }, 0.90);
 
       return () => {                      // viewport encolheu: desmonta tudo
         gsap.ticker.remove(heroTick);
         heroBitmaps.forEach((bm) => bm.close()); heroBitmaps.clear();
-        hero.classList.remove('is-live');
         document.body.classList.remove('hero-pinned');
+        hero.classList.remove('is-live');
         heroLive = false; heroST = null; window.__heroST = null;
       };
     });
@@ -293,7 +307,8 @@
 
   if (heroWantsSequence) {
     // Escondidos desde já (o preloader cobre a tela): a coreografia revela.
-    gsap.set(['#heroSub > *', '#heroCta'], { autoAlpha: 0 });
+    gsap.set(['#heroP1', '#heroP2'], { opacity: 0 });
+    gsap.set('#heroCta', { autoAlpha: 0 });
     const heroT0 = performance.now();
     heroPreload().then((ok) => {
       window.__heroPreload = { ok: ok, ms: Math.round(performance.now() - heroT0), carregados: heroLoaded.reduce((a, b) => a + b, 0) };   // só leitura, harness
@@ -307,16 +322,14 @@
   function startHero() {
     if (!ANIM || !hero) return;
     const play = () => {
-      const title = $('#heroTitle');
-      let lines = [title];
-      if (HAS_SPLIT) {
-        try { lines = SplitText.create(title, { type: 'lines', mask: 'lines', linesClass: 'hero__ln' }).lines; }
-        catch (e) { lines = [title]; }
-      }
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-      tl.from(lines, { yPercent: 108, duration: 1.25, stagger: 0.055 }, 0)
-        .from('.nav__inner > *', { y: -18, opacity: 0, duration: 0.8, stagger: 0.07 }, 0.25);
-      if (heroLive) tl.from('#heroScroll', { autoAlpha: 0, duration: 0.8 }, 1.0);
+      tl.from('.nav__inner > *', { y: -18, opacity: 0, duration: 0.8, stagger: 0.07 }, 0.1);
+      if (!heroLive && !heroWantsSequence) {
+        // modo estático: título entra por linha no carregamento
+        const lines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
+        gsap.set(lines, { yPercent: 108 });   // mesmo motivo: from() + stagger pisca o 2º alvo
+        tl.to(lines, { yPercent: 0, duration: 1.2, stagger: 0.055 }, 0);
+      }
       ScrollTrigger.refresh();
     };
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(play); else play();

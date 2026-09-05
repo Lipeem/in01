@@ -91,32 +91,34 @@ setTimeout(function () {
 <main id="conteudo">
 
 <!-- ====================================================== HERO
-     Sequência de 240 frames desenhada em <canvas>, pinada e amarrada ao
-     scroll. Só a partir de 1024px e sem prefers-reduced-motion; fora disso,
-     o poster estático. Headline, subtítulo e CTA são camadas HTML por cima
-     do canvas — nunca desenhados nele (SEO e leitor de tela). -->
+     O busto é o FUNDO da página por 4,5 telas: fica preso (sticky) e gira
+     enquanto o conteúdo passa por cima. Abertura só com imagem; uma frase
+     por vez nas áreas pretas ao lado do objeto; um CTA no fim. Só a partir
+     de 1024px e sem prefers-reduced-motion; fora disso, poster estático com
+     o texto empilhado. Texto sempre em HTML, nunca no canvas. -->
 <section class="hero" id="topo">
-  <div class="hero__media" aria-hidden="true">
-    <img class="hero__poster" src="assets/hero-poster.webp" alt="" width="1120" height="720" decoding="async" fetchpriority="high">
-    <canvas class="hero__canvas" id="heroCanvas"></canvas>
-    <div class="hero__scrim" id="heroScrim"></div>
-    <div class="hero__rim"></div>
-    <div class="hero__fade" id="heroFade"></div>
-  </div>
-
-  <div class="hero__content" id="heroContent">
-    <h1 class="hero__title" id="heroTitle">A forma<br>que vende.</h1>
-    <div class="hero__sub" id="heroSub">
-      <p class="hero__lead">Manequins, araras, cabides e expositores direto da fábrica, em Curitiba.</p>
-      <p class="hero__offer"><b>Preço de lojista aberto no site</b>, já na segunda peça. Sem pedir orçamento, sem esperar retorno.</p>
+  <div class="hero__stage">
+    <div class="hero__media" aria-hidden="true">
+      <img class="hero__poster" src="assets/hero-poster.webp" alt="" width="1120" height="720" decoding="async" fetchpriority="high">
+      <canvas class="hero__canvas" id="heroCanvas"></canvas>
+      <div class="hero__scrim"></div>
+      <div class="hero__fade" id="heroFade"></div>
     </div>
-    <div class="hero__cta" id="heroCta">
-      <a class="btn btn--solid" href="#catalogo" data-magnetic>Ver o catálogo</a>
-      <a class="btn" href="#condicoes" data-magnetic>Condições de atacado</a>
-    </div>
-  </div>
 
-  <div class="hero__scroll" id="heroScroll" aria-hidden="true">Role<i></i></div>
+    <div class="hero__panels">
+      <h1 class="hero__panel hero__panel--title" id="heroTitle">
+        <span class="hero__half hero__half--l" id="heroTitleL"><span class="hero__ln-mask"><span class="hero__ln">A forma</span></span></span>
+        <span class="hero__half hero__half--r" id="heroTitleR"><span class="hero__ln-mask"><span class="hero__ln">que vende.</span></span></span>
+      </h1>
+      <p class="hero__panel hero__panel--l" id="heroP1">Manequins, araras, cabides e expositores. Direto da fábrica, em Curitiba.</p>
+      <p class="hero__panel hero__panel--r" id="heroP2"><b>Preço de lojista aberto no site.</b> Já na segunda peça, sem pedir orçamento.</p>
+      <div class="hero__panel hero__panel--cta" id="heroCta">
+        <a class="btn btn--solid" href="#catalogo" data-magnetic>Ver o catálogo</a>
+      </div>
+    </div>
+
+    <div class="hero__scroll" id="heroScroll" aria-hidden="true">Role<i></i></div>
+  </div>
 </section>
 
 <!-- ====================================================== MARQUEE -->
