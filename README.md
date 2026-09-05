@@ -52,7 +52,7 @@ desta lista com a Exposul antes de colocar no ar.**
 | Onde | O quê |
 |---|---|
 | `js/products.js` | **Todos os preços**, referências (`ref`), medidas, materiais e composição dos pacotes |
-| `js/products.js` | **Escada de atacado**: os degraus (5 / 10 / 30 un.) e os percentuais de desconto |
+| `js/products.js` | **Escada de atacado**: os degraus (2 / 4 / 10 un. para item caro; 5 / 20 / 50 pacotes para consumível) e os percentuais de desconto |
 | `index.html` — seção Números | `700+ itens`, `48h de expedição`, `5.000 lojas`, `12× sem juros` |
 | `index.html` — Showroom | Horário de atendimento |
 | `index.html` — Manifesto | "começa na segunda peça — no quinto pacote, em cabides e ganchos" |
@@ -86,7 +86,7 @@ O rodapé exibe "Protótipo de demonstração — preços e prazos ilustrativos"
 ## Imagens dos produtos
 
 O site não usa foto: os 16 produtos são **SVG desenhados**, com uma única
-fonte de luz atravessando cada peça. Isso mantém a página em ~260 KB, deixa
+fonte de luz atravessando cada peça. Isso mantém a página leve, deixa
 tudo nítido em qualquer tela e permite animar as peças.
 
 Quando houver fotografia profissional, a troca é de uma linha por produto.
