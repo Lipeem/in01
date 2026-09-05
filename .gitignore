@@ -1,2 +1,5 @@
 node_modules/
 .DS_Store
+
+# zip de distribuição gerado sob demanda (exposul-site.html + assets/hero-frames): derivável, não versionar
+_exposul-site-hero.zip
