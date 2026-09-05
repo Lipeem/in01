@@ -206,6 +206,10 @@
     menuToggle.setAttribute('aria-expanded', 'true');
     menuToggle.setAttribute('aria-label', 'Fechar menu');
     stopScroll();
+    setTimeout(() => {
+      const first = mobilenav.querySelector('a');
+      if (first) { try { first.focus({ preventScroll: true }); } catch (e) { first.focus(); } }
+    }, 320);
   }
   function closeMobileNav() {
     if (!mobilenav || !mobilenav.classList.contains('is-open')) return;
@@ -213,7 +217,9 @@
     menuToggle.setAttribute('aria-expanded', 'false');
     menuToggle.setAttribute('aria-label', 'Abrir menu');
     startScroll();
+    try { menuToggle.focus({ preventScroll: true }); } catch (e) {}
   }
+  if (mobilenav) mobilenav.addEventListener('keydown', (e) => trapFocus(mobilenav, e));
   if (menuToggle) {
     menuToggle.addEventListener('click', () => {
       mobilenav.classList.contains('is-open') ? closeMobileNav() : openMobileNav();
@@ -362,8 +368,13 @@
   function waLink(text) {
     return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text);
   }
+  /* A ficha cota SEMPRE pela quantidade do próprio item, nunca pelo carrinho.
+     Cotar a faixa do pedido inteiro numa mensagem que lista uma peça só é
+     prometer um preço que a mensagem não justifica. O desconto por volume
+     aparece no carrinho, onde os itens que o sustentam estão à vista — e lá
+     ele só pode melhorar, nunca piorar. */
   function waForProduct(p, qty) {
-    const unit = priceFor(p, qty, qty + cartUnits());
+    const unit = priceFor(p, qty);
     return waLink(
       'Olá! Vim pelo site da Exposul.\n\n' +
       '*' + p.name + '* (ref. ' + p.ref + ')\n' +
@@ -417,8 +428,10 @@
     }
     const tone = p.artTone ? ' art--' + p.artTone : '';
     const wide = p.art.indexOf('hanger') > -1 ? ' art--wide' : '';
-    const vb = p.art.indexOf('mannequin') > -1 || p.art === 'art-bust' ? '0 0 200 560'
-             : p.art.indexOf('hanger') > -1 ? '0 0 400 260' : '0 0 400 520';
+    // viewBox apertado no conteúdo: com o quadro cheio, o desenho usava só
+    // ~56% da própria largura e a peça boiava dentro do card.
+    const vb = p.art.indexOf('mannequin') > -1 || p.art === 'art-bust' ? '36 0 128 552'
+             : p.art.indexOf('hanger') > -1 ? '34 38 332 158' : '28 24 344 476';
     return '<svg class="' + cls + ' art' + tone + wide + '" viewBox="' + vb + '" role="img" aria-label="' + p.name + '">' +
            '<use href="#' + p.art + '"></use></svg>';
   }
@@ -480,6 +493,11 @@
         card.classList.toggle('is-out', !match);
         if (match) shown++;
       });
+      const status = $('#gridStatus');
+      if (status) {
+        status.textContent = shown === 0 ? 'Nenhum item encontrado.'
+          : shown + (shown === 1 ? ' item encontrado.' : ' itens encontrados.');
+      }
       const empty = $('#gridEmpty');
       empty.hidden = shown > 0;
       empty.textContent = q
@@ -492,7 +510,7 @@
           { opacity: 1, y: 0, duration: 0.5, stagger: 0.03, ease: 'power2.out', overwrite: true });
       } else if (!ANIM || !animate) {
         // Sem isso, um card filtrado antes de revelar ficaria invisível para sempre.
-        cards.forEach((c) => { if (!c.classList.contains('is-out')) gsap && gsap.set(c, { opacity: 1, y: 0 }); });
+        if (HAS_GSAP) cards.forEach((c) => { if (!c.classList.contains('is-out')) gsap.set(c, { opacity: 1, y: 0 }); });
       }
       if (HAS_GSAP) ScrollTrigger.refresh();
     }
@@ -559,8 +577,11 @@
     if (!$('.panel.is-open')) {
       scrim.classList.remove('is-open');
       document.body.classList.remove('has-panel');
-      startScroll();
+      // Só destrava se o menu mobile também estiver fechado, senão a página
+      // rolava atrás de um painel opaco de tela cheia.
+      if (!mobilenav || !mobilenav.classList.contains('is-open')) startScroll();
     }
+    if (panel === cartPanel) $('#cartOpen').setAttribute('aria-expanded', 'false');
     if (panel === productPanel && location.hash.indexOf('#produto/') === 0) {
       history.replaceState(null, '', location.pathname + location.search);
     }
@@ -593,20 +614,25 @@
 
   function renderProductPrice() {
     const p = current, q = currentQty;
-    // Conta o que já está no pedido: a faixa vale pelo volume total.
-    const inCart = cartUnits() - (cart.filter((l) => l.id === p.id)[0] || { qty: 0 }).qty;
-    const effective = q + inCart;
-    const unit = priceFor(p, q, effective);
+    const unit = priceFor(p, q);                 // faixa do próprio item
     $('#pTotal').textContent = money(unit * q);
     $('#pUnitPrice').textContent = money(unit) + ' por ' + p.unit;
+
     const saved = (basePrice(p) - unit) * q;
     $('#pSaved').textContent = saved > 0
       ? 'Economia de ' + money(saved) + ' na condição de lojista'
-      : (inCart > 0 ? '' : 'A partir de ' + p.tiers[1].min + ' ' + unitLabel(p) + ' o preço de lojista entra sozinho');
-    $('#pCartNote').textContent = inCart > 0
-      ? 'Somando os ' + inCart + (inCart === 1 ? ' item' : ' itens') + ' que já estão no pedido.'
+      : 'A partir de ' + p.tiers[1].min + ' ' + unitLabel(p) + ' o preço de lojista entra sozinho';
+
+    // No carrinho a faixa vale pelo volume do pedido inteiro, então o preço
+    // só pode melhorar. Mostramos isso como ganho, sem cotá-lo aqui.
+    const jaNoPedido = cartUnits();
+    const noPedido = priceFor(p, q, q + jaNoPedido);
+    $('#pCartNote').textContent = (jaNoPedido > 0 && noPedido < unit)
+      ? 'Com o pedido atual (' + jaNoPedido + (jaNoPedido === 1 ? ' item' : ' itens') + '), cai para ' +
+        money(noPedido) + ' por ' + p.unit + ' no carrinho.'
       : '';
-    renderTiers(p, effective);
+
+    renderTiers(p, q);
     $('#pMinus').disabled = q <= 1;
   }
 
@@ -674,7 +700,7 @@
 
   /* ---------------------------------------------------------- painel carrinho */
   const cartPanel = $('#cart');
-  function openCart() { openPanel(cartPanel, $('#cartClose')); }
+  function openCart() { openPanel(cartPanel, $('#cartClose')); $('#cartOpen').setAttribute('aria-expanded', 'true'); }
   $('#cartOpen').addEventListener('click', openCart);
   $('#cartClose').addEventListener('click', () => closePanel(cartPanel));
   cartPanel.addEventListener('keydown', (e) => trapFocus(cartPanel, e));
@@ -751,8 +777,13 @@
   $('#cartItems').addEventListener('change', (e) => {
     const inp = e.target.closest('[data-qty]');
     if (!inp) return;
+    const id = inp.dataset.qty;
     const v = parseInt(inp.value, 10);
-    setQty(inp.dataset.qty, isNaN(v) ? 1 : v);
+    setQty(id, isNaN(v) ? 1 : v);
+    // renderCart() reescreve a lista inteira: sem devolver o foco, ele caía
+    // no <body>, fora do diálogo, furando a armadilha de foco.
+    const again = $('[data-qty="' + id + '"]');
+    if (again) { try { again.focus({ preventScroll: true }); again.select(); } catch (e) {} }
   });
 
   renderCart();

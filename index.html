@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Exposul — Manequins, cabides, araras e expositores | Curitiba</title>
-<meta name="description" content="Fábrica de manequins, cabides, araras e expositores para lojas. Mais de 700 itens em linha, preço de lojista a partir de 5 unidades e entrega para todo o Brasil. Showroom em Curitiba.">
+<meta name="description" content="Fábrica de manequins, cabides, araras e expositores para lojas. Mais de 700 itens em linha, preço de lojista já na segunda peça e entrega para todo o Brasil. Showroom em Curitiba.">
 <meta name="theme-color" content="#08090a">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Exposul — A forma que vende">
@@ -29,6 +29,17 @@
   <span class="sr-only">Carregando o site</span>
 </div>
 
+<script>
+// Rede de segurança independente de js/site.js. Se o script principal falhar
+// por qualquer motivo, o preloader (position:fixed; inset:0) tapava a página
+// para sempre — tela preta permanente. Este timeout roda de todo jeito.
+setTimeout(function () {
+  var pl = document.getElementById('preloader');
+  if (pl) { pl.style.display = 'none'; }
+  document.body.classList.remove('is-locked');
+}, 7000);
+</script>
+
 <div class="grain" aria-hidden="true"></div>
 
 <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label" id="cursorLabel">Ver</span></div>
@@ -47,7 +58,7 @@
     </nav>
 
     <div class="nav__actions">
-      <button class="cart-btn" id="cartOpen" aria-haspopup="dialog">
+      <button class="cart-btn" id="cartOpen" aria-haspopup="dialog" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
           <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.55L21 8H6"/>
           <circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/>
@@ -100,10 +111,10 @@
   <div class="hero__aside">
     <div class="hero__blurb">
       <span class="eyebrow">Fábrica própria · Curitiba</span>
-      <p>Manequins, cabides, araras e expositores para quem vive de vitrine. Mais de 700 itens em linha, preço de lojista a partir de cinco peças e entrega para todo o Brasil.</p>
+      <p>Manequins, cabides, araras e expositores para quem vive de vitrine. Mais de 700 itens em linha, preço de lojista já na segunda peça e entrega para todo o Brasil.</p>
       <div class="hero__ctas">
         <a class="btn btn--solid" href="#catalogo" data-magnetic>Ver o catálogo</a>
-        <a class="btn btn--wa" href="#" data-wa-generic data-magnetic>
+        <a class="btn btn--wa" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic data-magnetic>
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.38a9.86 9.86 0 0 0 4.73 1.2h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.13-2.9-7C17.17 3.03 14.68 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.81.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.09-.16.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.49-.4-.42-.55-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.85.84-.85 2.04s.87 2.37 1 2.53c.12.17 1.72 2.62 4.16 3.67.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
           Falar com o comercial
         </a>
@@ -131,7 +142,7 @@
       </div>
       <div>
         <h3>Preço de lojista</h3>
-        <p>A escada de atacado começa em cinco peças e está aberta no site. Você vê o desconto antes de pedir, não depois de negociar.</p>
+        <p>A escada de atacado começa na segunda peça — no quinto pacote, em cabides e ganchos — e está aberta no site. Você vê o desconto antes de pedir, não depois de negociar.</p>
       </div>
       <div>
         <h3>Peça avulsa também</h3>
@@ -149,7 +160,7 @@
         <span class="eyebrow">Linha 2026</span>
         <h2 class="display">Tudo que sustenta uma peça de roupa em pé.</h2>
       </div>
-      <p class="lead reveal">Preço à vista por unidade. A partir de cinco peças o valor de lojista entra sozinho — sem cadastro, sem pedir orçamento, sem esperar retorno.</p>
+      <p class="lead reveal">Preço à vista por unidade. A partir da segunda peça o valor de lojista entra sozinho — sem cadastro, sem pedir orçamento, sem esperar retorno.</p>
     </div>
 
     <div class="catalog__tools">
@@ -162,6 +173,18 @@
       </div>
     </div>
 
+    <noscript>
+      <div class="noscript-note">
+        <p><b>O catálogo interativo precisa de JavaScript.</b> Se ele estiver desativado, fale direto com o comercial — respondemos com a lista completa, medidas e preços.</p>
+        <p>
+          WhatsApp <a href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial.">(41) 99691-0019</a> ·
+          Telefone <a href="tel:+554130294456">(41) 3029-4456</a><br>
+          Rua 24 de Maio, 1423 — Rebouças, Curitiba/PR
+        </p>
+      </div>
+    </noscript>
+
+    <p class="sr-only" id="gridStatus" role="status" aria-live="polite"></p>
     <div class="grid" id="grid"></div>
 
     <p class="catalog__note">
@@ -218,7 +241,7 @@
           </div>
           <div>
             <dt>WhatsApp</dt>
-            <dd><a href="#" data-wa-generic>(41) 99691-0019</a></dd>
+            <dd><a href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic>(41) 99691-0019</a></dd>
           </div>
           <div>
             <!-- PLACEHOLDER: confirmar horário real -->
@@ -282,7 +305,7 @@
     <h2 class="display reveal">Monte a loja com quem fabrica.</h2>
     <p class="lead reveal" style="text-align:center">Manda a planta, a foto do espaço ou só a dúvida. A gente responde com a lista do que resolve e quanto custa.</p>
     <div class="cta__actions reveal">
-      <a class="btn btn--wa" href="#" data-wa-generic data-magnetic>Falar no WhatsApp</a>
+      <a class="btn btn--wa" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic data-magnetic>Falar no WhatsApp</a>
       <a class="btn" href="#catalogo" data-magnetic>Voltar ao catálogo</a>
     </div>
   </div>
@@ -317,7 +340,7 @@
         <ul>
           <li><a href="tel:+554130294456">(41) 3029-4456</a></li>
           <li><a href="tel:+5541996910019">(41) 99691-0019</a></li>
-          <li><a href="#" data-wa-generic>WhatsApp comercial</a></li>
+          <li><a href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic>WhatsApp comercial</a></li>
         </ul>
       </div>
     </div>
@@ -395,7 +418,7 @@
   </div>
 </aside>
 
-<a class="wa-float" id="waFloat" href="#" data-wa-generic aria-label="Falar no WhatsApp">
+<a class="wa-float" id="waFloat" href="https://wa.me/5541996910019?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20Exposul%20e%20gostaria%20de%20falar%20com%20o%20comercial." target="_blank" rel="noopener" data-wa-generic aria-label="Falar no WhatsApp">
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.38a9.86 9.86 0 0 0 4.73 1.2h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.64-1.03-5.13-2.9-7C17.17 3.03 14.68 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.81.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.09-.16.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.84-.2-.49-.4-.42-.55-.43h-.47c-.16 0-.43.06-.65.31-.22.25-.85.84-.85 2.04s.87 2.37 1 2.53c.12.17 1.72 2.62 4.16 3.67.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
 </a>
 
@@ -437,11 +460,11 @@
     <stop offset="1"    stop-color="#4a5158"/>
   </linearGradient>
   <linearGradient id="gSteel" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0"    stop-color="#1b1e21"/>
-    <stop offset=".22"  stop-color="#44494e"/>
-    <stop offset=".5"   stop-color="#2b2f33"/>
-    <stop offset=".82"  stop-color="#3c4146"/>
-    <stop offset="1"    stop-color="#17191c"/>
+    <stop offset="0"    stop-color="#31363c"/>
+    <stop offset=".22"  stop-color="#767e88"/>
+    <stop offset=".5"   stop-color="#4a5057"/>
+    <stop offset=".82"  stop-color="#666d76"/>
+    <stop offset="1"    stop-color="#2a2e33"/>
   </linearGradient>
   <linearGradient id="gAcryl" x1="10%" y1="0%" x2="90%" y2="100%">
     <stop offset="0"    stop-color="#dfeaf2" stop-opacity=".92"/>
@@ -459,9 +482,9 @@
     <stop offset="1"    stop-color="#cfe2ee" stop-opacity=".26"/>
   </linearGradient>
   <linearGradient id="gPanel" x1="0%" y1="0%" x2="100%" y2="0%">
-    <stop offset="0"    stop-color="#25282c"/>
-    <stop offset=".5"   stop-color="#33373c"/>
-    <stop offset="1"    stop-color="#1e2124"/>
+    <stop offset="0"    stop-color="#31353a"/>
+    <stop offset=".5"   stop-color="#434850"/>
+    <stop offset="1"    stop-color="#282c31"/>
   </linearGradient>
 
   <!-- Luz única sobre a figura inteira (userSpaceOnUse no espaço 200x560),
@@ -484,7 +507,7 @@
   <!-- ============ MANEQUIM FEMININO ============ -->
   <symbol id="art-mannequin-f" viewBox="0 0 200 560">
     <g>
-      <ellipse cx="100" cy="534" rx="54" ry="9.5" fill="#141619"/>
+      <ellipse cx="100" cy="534" rx="54" ry="9.5" fill="#000" opacity=".7"/>
       <ellipse cx="100" cy="530" rx="54" ry="9.5" fill="url(#gPorcL)" opacity=".5"/>
       <rect x="95.5" y="466" width="9" height="64" fill="url(#gChrome)" opacity=".85"/>
       <!-- pernas -->
@@ -502,7 +525,7 @@
   <!-- ============ MANEQUIM MASCULINO ============ -->
   <symbol id="art-mannequin-m" viewBox="0 0 200 560">
     <g>
-      <ellipse cx="100" cy="534" rx="56" ry="9.5" fill="#141619"/>
+      <ellipse cx="100" cy="534" rx="56" ry="9.5" fill="#000" opacity=".7"/>
       <ellipse cx="100" cy="530" rx="56" ry="9.5" fill="url(#gPorcL)" opacity=".5"/>
       <rect x="95" y="464" width="10" height="66" fill="url(#gChrome)" opacity=".85"/>
       <path d="M65 288C61 320 59 352 60 380C61 408 64 436 66 462C67 478 68 490 68 502L89 502C89 490 89 478 90 462C91 436 93 408 93 380C93 352 92 328 90 306Z"/>
@@ -518,7 +541,7 @@
   <!-- ============ MANEQUIM INFANTIL ============ -->
   <symbol id="art-mannequin-child" viewBox="0 0 200 560">
     <g>
-      <ellipse cx="100" cy="516" rx="44" ry="9" fill="#141619"/>
+      <ellipse cx="100" cy="516" rx="44" ry="9" fill="#000" opacity=".7"/>
       <ellipse cx="100" cy="512" rx="44" ry="9" fill="url(#gPorcL)" opacity=".5"/>
       <rect x="96" y="462" width="8" height="52" fill="url(#gChrome)" opacity=".85"/>
       <!-- cabeça grande, tronco curto e roliço, pernas curtas -->
@@ -534,7 +557,7 @@
   <!-- ============ BUSTO ============ -->
   <symbol id="art-bust" viewBox="0 0 200 560">
     <g>
-      <ellipse cx="100" cy="534" rx="50" ry="9.5" fill="#141619"/>
+      <ellipse cx="100" cy="534" rx="50" ry="9.5" fill="#000" opacity=".7"/>
       <ellipse cx="100" cy="530" rx="50" ry="9.5" fill="url(#gPorcL)" opacity=".5"/>
       <rect x="94" y="306" width="12" height="222" rx="2" fill="url(#gChrome)"/>
       <rect x="86" y="360" width="28" height="9" rx="4.5" fill="url(#gChrome)"/>
@@ -570,30 +593,31 @@
   <!-- ============ CABIDE COM PRESILHAS ============ -->
   <symbol id="art-hanger-clip" viewBox="0 0 400 260">
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M200 112V78C200 60 186 50 170 56C156 61 150 74 155 86" stroke="url(#gChrome)" stroke-width="8"/>
-      <path d="M96 112h208" stroke="#363b40" stroke-width="19"/>
-      <path d="M100 106h200" stroke="#727a83" stroke-width="3.5" stroke-opacity=".85"/>
+      <path d="M200 96V66C200 48 186 38 170 44C156 49 150 62 155 74" stroke="url(#gChrome)" stroke-width="8"/>
+      <path d="M200 96 108 118M200 96l92 22" stroke="#4a5057" stroke-width="7"/>
+      <path d="M96 124h208" stroke="#363b40" stroke-width="19"/>
+      <path d="M100 118h200" stroke="#727a83" stroke-width="3.5" stroke-opacity=".85"/>
     </g>
     <g>
-      <rect x="124" y="121" width="44" height="80" rx="9" fill="url(#gSteel)"/>
-      <rect x="232" y="121" width="44" height="80" rx="9" fill="url(#gSteel)"/>
-      <rect x="131" y="128" width="30" height="7" rx="3.5" fill="url(#gChrome)" opacity=".9"/>
-      <rect x="239" y="128" width="30" height="7" rx="3.5" fill="url(#gChrome)" opacity=".9"/>
-      <rect x="132" y="179" width="28" height="18" rx="4" fill="#0e1012"/>
-      <rect x="240" y="179" width="28" height="18" rx="4" fill="#0e1012"/>
-      <path d="M146 144v26M254 144v26" stroke="#0e1012" stroke-width="4"/>
+      <rect x="124" y="133" width="44" height="80" rx="9" fill="url(#gSteel)"/>
+      <rect x="232" y="133" width="44" height="80" rx="9" fill="url(#gSteel)"/>
+      <rect x="131" y="140" width="30" height="7" rx="3.5" fill="url(#gChrome)" opacity=".9"/>
+      <rect x="239" y="140" width="30" height="7" rx="3.5" fill="url(#gChrome)" opacity=".9"/>
+      <rect x="132" y="191" width="28" height="18" rx="4" fill="#0e1012"/>
+      <rect x="240" y="191" width="28" height="18" rx="4" fill="#0e1012"/>
+      <path d="M146 156v26M254 156v26" stroke="#0e1012" stroke-width="4"/>
     </g>
   </symbol>
 
   <!-- ============ CABIDE INFANTIL (pacote) ============ -->
   <symbol id="art-hanger-kids" viewBox="0 0 400 260">
     <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">
-      <g stroke="#c98f4e" transform="translate(0,88)">
+      <g stroke="#5f9e7a" transform="translate(0,88)">
         <path d="M200 112V94C200 82 191 75 180 79C171 82 167 91 170 99"/>
         <path d="M96 152C108 138 126 124 148 117C165 112 183 110 200 110C217 110 235 112 252 117C274 124 292 138 304 152"/>
         <path d="M102 152H298"/>
       </g>
-      <g stroke="#7d9ec4" transform="translate(0,44)">
+      <g stroke="#c47d9e" transform="translate(0,44)">
         <path d="M200 112V94C200 82 191 75 180 79C171 82 167 91 170 99"/>
         <path d="M96 152C108 138 126 124 148 117C165 112 183 110 200 110C217 110 235 112 252 117C274 124 292 138 304 152"/>
         <path d="M102 152H298"/>
@@ -626,7 +650,7 @@
       <rect x="275" y="441" width="18" height="16" rx="5"/>
       <rect x="346" y="441" width="18" height="16" rx="5"/>
     </g>
-    <ellipse cx="200" cy="474" rx="160" ry="10" fill="#0d0f11"/>
+    <ellipse cx="200" cy="474" rx="160" ry="10" fill="#000" opacity=".65"/>
   </symbol>
 
   <!-- ============ ARARA INDUSTRIAL ============ -->
@@ -644,7 +668,7 @@
     </g>
     <rect x="50" y="66" width="300" height="18" rx="2" fill="url(#gWood)"/>
     <rect x="50" y="84" width="300" height="6" rx="2" fill="#4c3721"/>
-    <ellipse cx="200" cy="472" rx="165" ry="10" fill="#0d0f11"/>
+    <ellipse cx="200" cy="472" rx="165" ry="10" fill="#000" opacity=".65"/>
   </symbol>
 
   <!-- ============ ARARA GÔNDOLA DUPLA FACE ============ -->
@@ -676,7 +700,7 @@
       <circle cx="99" cy="418" r="5.5"/>
       <circle cx="301" cy="418" r="5.5"/>
     </g>
-    <ellipse cx="200" cy="450" rx="160" ry="10" fill="#0d0f11"/>
+    <ellipse cx="200" cy="450" rx="160" ry="10" fill="#000" opacity=".65"/>
   </symbol>
 
   <!-- ============ PAINEL CANALETADO ============ -->
@@ -695,7 +719,7 @@
       <rect x="212" y="286" width="8" height="18" rx="3"/>
     </g>
     <rect x="58" y="40" width="284" height="430" rx="3" fill="none" stroke="#585f66" stroke-width="2"/>
-    <ellipse cx="200" cy="486" rx="150" ry="9" fill="#0d0f11"/>
+    <ellipse cx="200" cy="486" rx="150" ry="9" fill="#000" opacity=".65"/>
   </symbol>
 
   <!-- ============ TORRE GIRATÓRIA ============ -->
@@ -717,7 +741,7 @@
     </g>
     <ellipse cx="200" cy="434" rx="56" ry="13" fill="url(#gSteel)"/>
     <ellipse cx="200" cy="428" rx="56" ry="13" fill="url(#gChrome)" opacity=".5"/>
-    <ellipse cx="200" cy="462" rx="116" ry="9" fill="#0d0f11"/>
+    <ellipse cx="200" cy="462" rx="116" ry="9" fill="#000" opacity=".65"/>
   </symbol>
 
   <!-- ============ BALCÃO VITRINE ============ -->
@@ -740,7 +764,7 @@
     </g>
     <rect x="52" y="430" width="14" height="18" rx="3" fill="#15171a"/>
     <rect x="334" y="430" width="14" height="18" rx="3" fill="#15171a"/>
-    <ellipse cx="200" cy="462" rx="170" ry="10" fill="#0d0f11"/>
+    <ellipse cx="200" cy="462" rx="170" ry="10" fill="#000" opacity=".65"/>
   </symbol>
 
   <!-- ============ CESTO ARAMADO ============ -->
@@ -756,7 +780,7 @@
     <rect x="122" y="46" width="158" height="62" rx="4" fill="none" stroke="#585f66" stroke-width="2"/>
     <rect x="140" y="64" width="80" height="10" rx="5" fill="#3a3835" opacity=".55"/>
     <rect x="140" y="82" width="52" height="10" rx="5" fill="#3a3835" opacity=".35"/>
-    <ellipse cx="200" cy="470" rx="130" ry="10" fill="#0d0f11"/>
+    <ellipse cx="200" cy="470" rx="130" ry="10" fill="#000" opacity=".65"/>
   </symbol>
 
   <!-- ============ KIT GANCHOS ============ -->
@@ -771,7 +795,7 @@
     <g stroke="#0e1012" stroke-width="5">
       <path d="M62 118h26M62 218h26M62 318h26M62 400h26"/>
     </g>
-    <ellipse cx="200" cy="486" rx="140" ry="9" fill="#0d0f11"/>
+    <ellipse cx="200" cy="486" rx="140" ry="9" fill="#000" opacity=".65"/>
   </symbol>
 
 </defs></svg>

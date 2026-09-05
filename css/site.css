@@ -35,7 +35,7 @@
   --display: "Bodoni Moda", "Didot", "Bodoni MT", Georgia, "Times New Roman", serif;
   --sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-  --t-hero:   clamp(2.6rem, 11.5vw, 11rem);
+  --t-hero:   clamp(2.4rem, min(10.5vw, 12.5vh), 9.5rem);
   --t-h2:     clamp(2.25rem, 6vw, 5.25rem);
   --t-h3:     clamp(1.5rem, 3vw, 2.5rem);
   --t-lead:   clamp(1.0625rem, 1.5vw, 1.375rem);
@@ -59,6 +59,11 @@
    2. Reset
    -------------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
+
+/* A regra [hidden]{display:none} do navegador perde para qualquer `display`
+   declarado aqui. Sem este reforço, .cart__foot{display:grid} continuava
+   renderizando com o atributo hidden presente. */
+[hidden] { display: none !important; }
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -268,14 +273,17 @@ a { color: inherit; text-decoration: none; }
    -------------------------------------------------------------------------- */
 .art { fill: url(#gBody); }
 .art--velvet { fill: url(#gBodyVelvet); }
-.art--plus { transform: scaleX(1.13); transform-origin: 50% 50%; }
+/* O scale vive no <use>, em espaço SVG, e não no elemento externo: no
+   externo o hover do card (`transform: scale(1.055)`) sobrescrevia e a peça
+   encolhia de volta para a largura do 38 justamente ao passar o mouse. */
+.art--plus use { transform: scaleX(1.14); transform-origin: 100px 300px; }
 
 .citem__svg { max-height: 100%; width: auto; }
 
 /* Cabides usam viewBox largo (400x260) e manequins alto (200x560). Numa
    célula 4:5 o cabide sobra em largura e some em peso visual — compensamos. */
-.art--wide { transform: scale(1.22); }
-.card:hover .card__art.art--wide { transform: scale(1.29); }
+.art--wide { transform: scale(1.02); }
+.card:hover .card__art.art--wide { transform: scale(1.08); }
 
 /* --------------------------------------------------------------------------
    6. Preloader — nunca trava: some por timeout mesmo se um asset falhar
@@ -622,9 +630,9 @@ a { color: inherit; text-decoration: none; }
 .hero__piece {
   position: relative;
   z-index: 2;
-  height: min(74svh, 660px);
+  height: min(68svh, 620px);
   width: auto;
-  filter: drop-shadow(0 60px 60px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.6));
   will-change: transform;
 }
 
@@ -639,8 +647,11 @@ a { color: inherit; text-decoration: none; }
   display: grid;
   justify-items: center;
   align-content: center;
-  gap: clamp(1.5rem, 9vh, 6rem);
-  padding-bottom: clamp(4rem, 14vh, 9rem);
+  gap: clamp(1rem, 5.5vh, 6.5rem);
+  /* Empurra as duas linhas para baixo: a linha 1 cruza o TRONCO e a cabeça
+     fica limpa acima dela. Encostar na cabeça é o pior dos resultados —
+     a elipse creme tem o mesmo valor e quase o mesmo tamanho do "o". */
+  padding-top: clamp(0.5rem, 3vh, 2.5rem);
   font-weight: 400;
   pointer-events: none;
   text-align: center;
@@ -723,10 +734,10 @@ a { color: inherit; text-decoration: none; }
     padding-top: 1.5rem;
   }
   .hero__stage > * { grid-area: auto; }
-  .hero__piece { height: min(42svh, 330px); }
+  .hero__piece { height: min(36svh, 288px); }
   .hero__h1 { gap: 0.06em; padding-bottom: 0; }
   .hero__line { letter-spacing: -0.045em; }
-  .hero__aside { position: static; padding: 0 var(--gutter); margin-top: 1.5rem; }
+  .hero__aside { position: static; padding: 0 var(--gutter); margin-top: 3rem; }
   .hero__blurb { max-width: none; }
   .hero__ctas .btn { flex: 1 1 auto; }
 }
@@ -773,6 +784,7 @@ a { color: inherit; text-decoration: none; }
    11. Manifesto — bloco pinado, texto revela palavra a palavra no scroll
    -------------------------------------------------------------------------- */
 .manifesto { background: var(--ink-2); }
+.manifesto.section { padding-block: clamp(3rem, 6vh, 5rem); }
 .manifesto__pin {
   min-height: 100svh;
   display: grid;
@@ -789,7 +801,7 @@ a { color: inherit; text-decoration: none; }
   max-width: 20ch;
   text-wrap: balance;
 }
-.manifesto__text .word { color: rgba(242, 239, 233, 0.16); transition: none; }
+.manifesto__text .word { color: rgba(242, 239, 233, 0.34); transition: none; }
 .manifesto__text .word.is-lit { color: var(--bone); }
 .manifesto__text .word--key.is-lit { color: var(--key); font-style: italic; }
 
@@ -880,7 +892,8 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
   font-weight: 600;
 }
-.filter span { font-variant-numeric: tabular-nums; opacity: 0.55; margin-left: 0.4rem; }
+.filter span { font-variant-numeric: tabular-nums; color: var(--muted); margin-left: 0.4rem; }
+.filter[aria-pressed="true"] span { color: #4a4a48; }  /* opacity .55 dava 3,09:1 */
 
 .grid {
   display: grid;
@@ -936,6 +949,11 @@ a { color: inherit; text-decoration: none; }
   will-change: transform;
 }
 .card:hover .card__art { transform: scale(1.055); }
+
+@media (max-width: 619px) {
+  /* Em coluna única o box 4:5 gera 437px de altura e a peça boiava em preto. */
+  .card__media { aspect-ratio: 1 / 1; padding: 1.25rem; }
+}
 
 .card__tag {
   position: absolute;
@@ -1012,6 +1030,15 @@ a { color: inherit; text-decoration: none; }
   gap: 0.5rem 1.5rem;
   align-items: center;
 }
+
+.noscript-note {
+  border: 1px solid var(--line-2);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  display: grid;
+  gap: 1rem;
+  background: var(--ink-2);
+}
+.noscript-note a { color: var(--key); border-bottom: 1px solid currentColor; }
 
 .empty {
   grid-column: 1 / -1;
@@ -1283,7 +1310,7 @@ a { color: inherit; text-decoration: none; }
 .cart.is-open { transform: translate3d(0, 0, 0); transition-delay: 0s, 0s; }
 
 .cart__head {
-  padding: 1.5rem clamp(1.25rem, 3vw, 2rem);
+  padding: 1.5rem 4.5rem 1.5rem clamp(1.25rem, 3vw, 2rem);  /* folga para o × absoluto */
   border-bottom: 1px solid var(--line);
   display: flex;
   align-items: baseline;
@@ -1416,12 +1443,12 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(to bottom, var(--surface) 0%, var(--ink-2) 100%);
   display: grid;
   place-items: end center;
-  padding: 8% 6% 6%;
+  padding: 8% 6% 15%;
   overflow: hidden;
 }
-.window__row { display: flex; align-items: flex-end; gap: 4%; height: 78%; width: 100%; justify-content: center; }
+.window__row { display: flex; align-items: flex-end; gap: 5%; height: 74%; width: 100%; justify-content: center; }
 .window__row svg { height: 100%; width: auto; will-change: transform; }
-.window__row svg:nth-child(1) { height: 78%; }
+.window__row svg:nth-child(1) { height: 62%; }  /* 1,16 m / 1,78 m: criança, não anão */
 .window__row svg:nth-child(2) { height: 100%; }
 .window__row svg:nth-child(3) { height: 72%; }
 .window__floor {
@@ -1507,6 +1534,7 @@ a { color: inherit; text-decoration: none; }
 .footer__bar {
   border-top: 1px solid var(--line);
   padding-top: 1.75rem;
+  padding-right: 5rem;   /* o botão flutuante cobria o fim da linha */
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem 2rem;
@@ -1579,7 +1607,7 @@ body.has-panel .toast:not(.is-up) { transform: translate3d(-50%, -260%, 0); }
 .js-anim .reveal { opacity: 0; }
 .js-anim .stagger > * { opacity: 0; }
 .js-anim .char { transform: translate3d(0, 105%, 0); }
-.js-anim .manifesto__text .word { color: rgba(242, 239, 233, 0.16); }
+.js-anim .manifesto__text .word { color: rgba(242, 239, 233, 0.34); }
 
 /* Sem JS: garante que overlays não fiquem presos e o preloader saia */
 .no-js .preloader { display: none; }

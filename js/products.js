@@ -32,7 +32,7 @@ const CATALOG = [
   /* ---------------------------------------------------------------- MANEQUINS */
   {
     id: 'mq-smart-f', ref: 'MQ-1140', cat: 'manequins', catLabel: 'Manequins',
-    name: 'Manequim Feminino Corpo Inteiro — Linha Smart',
+    name: 'Manequim Feminino Corpo Inteiro — Linha Smart',
     art: 'art-mannequin-f', tag: 'Mais vendido',
     unit: 'unidade',
     desc: 'A silhueta que sustenta a vitrine. Proporção manequim 38, ombro estreito e cintura marcada — a peça cai como cai no corpo. Acabamento perolado fosco que não devolve reflexo de spot.',
@@ -46,7 +46,7 @@ const CATALOG = [
   },
   {
     id: 'mq-smart-m', ref: 'MQ-1210', cat: 'manequins', catLabel: 'Manequins',
-    name: 'Manequim Masculino Bombado — Linha Smart',
+    name: 'Manequim Masculino Bombado — Linha Smart',
     art: 'art-mannequin-m',
     unit: 'unidade',
     desc: 'Peitoral e dorsal ampliados para estruturar camisaria e malha pesada. Resolve o problema clássico do masculino: camisa que murcha no manequim e some da vitrine.',
@@ -118,7 +118,7 @@ const CATALOG = [
   /* ------------------------------------------------------------------ CABIDES */
   {
     id: 'cb-acrilico', ref: 'CB-2010', cat: 'cabides', catLabel: 'Cabides',
-    name: 'Cabide Acrílico Cavado Cristal — pacote 50',
+    name: 'Cabide Acrílico Cavado Cristal — pacote 50',
     art: 'art-hanger-curve', tag: 'Mais vendido',
     unit: 'pacote de 50',
     desc: 'Cavado profundo que segura decote sem deformar. O acrílico cristal some na arara: quem olha a vitrine vê a roupa, não o cabide.',
@@ -132,7 +132,7 @@ const CATALOG = [
   },
   {
     id: 'cb-veludo', ref: 'CB-2140', cat: 'cabides', catLabel: 'Cabides',
-    name: 'Cabide Veludo Slim Antideslizante — pacote 50',
+    name: 'Cabide Veludo Slim Antideslizante — pacote 50',
     art: 'art-hanger-slim',
     unit: 'pacote de 50',
     desc: 'Perfil de 5 mm: cabe 40% mais peça na mesma arara. O veludo trava alça fina e malha escorregadia, o que elimina o chão de peça caída no fim do dia.',
@@ -146,7 +146,7 @@ const CATALOG = [
   },
   {
     id: 'cb-presilha', ref: 'CB-2320', cat: 'cabides', catLabel: 'Cabides',
-    name: 'Cabide com Presilhas Reguláveis — pacote 50',
+    name: 'Cabide com Presilhas Reguláveis — pacote 50',
     art: 'art-hanger-clip',
     unit: 'pacote de 50',
     desc: 'Presilha com borracha interna que corre no trilho inteiro. Segura saia, short e calça sem marcar o tecido — inclusive alfaiataria clara, onde a marca é prejuízo.',
@@ -160,7 +160,7 @@ const CATALOG = [
   },
   {
     id: 'cb-infantil', ref: 'CB-2450', cat: 'cabides', catLabel: 'Cabides',
-    name: 'Cabide Infantil Colorido — pacote 100',
+    name: 'Cabide Infantil Colorido — pacote 100',
     art: 'art-hanger-kids',
     unit: 'pacote de 100',
     desc: 'Vão de 30 cm na escala certa da peça infantil. Sortido em quatro cores para quem separa arara por faixa etária e quer que a criança ache sozinha.',
@@ -278,7 +278,7 @@ const CATALOG = [
   },
   {
     id: 'am-ganchos', ref: 'AM-5220', cat: 'aramados', catLabel: 'Aramados',
-    name: 'Kit Ganchos para Painel Canaletado — 20 peças',
+    name: 'Kit Ganchos para Painel Canaletado — 20 peças',
     art: 'art-hooks',
     unit: 'kit com 20',
     desc: 'Sortido de 10, 15, 20 e 30 cm com ponta de segurança. É o consumível do painel canaletado: gancho entorta, some e muda de lugar toda troca de coleção.',
