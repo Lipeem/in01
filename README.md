@@ -10,8 +10,21 @@ Substitui o protótipo anterior, preservado em `_legado/`.
 
 ## Como abrir
 
-**Duplo clique em `index.html`.** É só isso — não precisa de build, servidor,
-Node nem internet. Todas as dependências estão dentro do repositório.
+Há duas formas do mesmo site:
+
+**`exposul-site.html`** — arquivo único, tudo embutido (CSS, JS, GSAP, Lenis e
+as fontes). Baixe só ele, dê duplo clique e roda: sem servidor, sem instalar
+nada, sem internet. É a versão para testar e para mandar por e-mail.
+
+**`index.html` + pastas** — a mesma coisa em arquivos separados. É a versão
+para editar e para publicar. Também abre por duplo clique, mas precisa das
+pastas `css/`, `js/` e `vendor/` do lado.
+
+Depois de editar `css/site.css` ou `js/site.js`, regenere o arquivo único:
+
+```bash
+node build-single.js
+```
 
 Para servir por HTTP (recomendado para testar como ficará publicado):
 
@@ -30,6 +43,8 @@ conteúdo do repositório.
 ## Estrutura
 
 ```
+exposul-site.html   Arquivo único gerado, com tudo embutido (não editar)
+build-single.js     Gera o arquivo único a partir dos arquivos separados
 index.html          Página inteira + sprite SVG dos produtos (inline)
 css/fonts.css       Bodoni Moda e Archivo embutidas em base64
 css/site.css        Todo o estilo, comentado por seção
