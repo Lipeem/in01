@@ -92,9 +92,11 @@ setTimeout(function () {
      O busto é o FUNDO da página por 4 telas: fica preso (sticky) e gira
      enquanto o conteúdo passa por cima. Abre com o busto inteiro e a
      headline (frame 48, não o close do 1); depois uma frase
-     por vez nas áreas pretas ao lado do objeto; um CTA no fim. Só a partir
-     de 900px e sem prefers-reduced-motion; fora disso, poster estático com
-     o texto empilhado. Texto sempre em HTML, nunca no canvas. -->
+     por vez ao lado do objeto (desktop) ou embaixo dele (celular); um CTA
+     no fim. Telas ≥ 900px usam os frames inteiros; celular em pé usa um
+     conjunto leve (recorte central, metade dos frames); celular deitado e
+     prefers-reduced-motion ficam no poster estático com o texto empilhado.
+     Texto sempre em HTML, nunca no canvas. -->
 <section class="hero" id="topo">
   <div class="hero__stage">
     <div class="hero__media" aria-hidden="true">

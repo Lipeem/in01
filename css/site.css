@@ -638,65 +638,62 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scaleY(1) translateY(44px); opacity: 0; }
 }
 
-/* 899/900 e não 1023/1024: ver HERO_MIN_W em js/site.js — os dois precisam
-   bater. */
-@media (max-width: 899px) {
-  .hero__canvas { display: none; }   /* sem sequência abaixo de 900px */
+/* ---- modo vivo: pista de 4 telas, palco preso, painéis em cima do frame.
+   Vale para qualquer largura; o que muda com a proporção da tela vem nos
+   blocos seguintes. Os 900px precisam bater com HERO_MIN_W em js/site.js. ---- */
+.hero.is-live { height: 400vh; }
+.hero.is-live .hero__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 480px;
 }
-
-/* ---- modo vivo: pista de 4 telas, palco preso, painéis nas áreas pretas ---- */
+.hero.is-live .hero__scroll { display: flex; }
+.hero.is-live .hero__panels {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+  padding: 0;
+  display: block;
+  pointer-events: none;
+}
+.hero.is-live .hero__panel { position: absolute; pointer-events: auto; }
+/* Todo o texto vive na área preta da ESQUERDA, na altura do peito, um
+   bloco substituindo o outro. O render tem o busto à direita do centro
+   (arcos à esquerda, esfera à direita). Medido de 960×640 a 2560×1440 com
+   as caixas reais do texto contra a silhueta do frame: à esquerda sobram
+   230px ou mais em qualquer altura; à direita a folga é NEGATIVA na
+   altura do peito (−35 a −43px em todo notebook) e cai a 6px na altura do
+   pescoço durante o giro. A primeira versão, com uma metade do título de
+   cada lado, invadia o braço em qualquer tela até 1536px. */
+.hero.is-live .hero__panel--title {
+  left: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(3rem, 6.2vw, 6.2rem);
+  line-height: 0.92;
+  pointer-events: none;
+}
+.hero.is-live .hero__half { white-space: nowrap; }   /* uma metade por linha, sem quebra interna */
+.hero.is-live .hero__panel--l,
+.hero.is-live .hero__panel--r { left: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; }
+.hero.is-live .hero__panel--cta {
+  left: 50%;
+  bottom: clamp(2rem, 8vh, 5rem);
+  transform: translateX(-50%);
+}
 @media (min-width: 900px) {
-  .hero.is-live { height: 400vh; }
-  .hero.is-live .hero__stage {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    min-height: 600px;
-  }
-  .hero.is-live .hero__scroll { display: flex; }
-  .hero.is-live .hero__panels {
-    position: absolute;
-    inset: 0;
-    max-width: none;
-    padding: 0;
-    display: block;
-    pointer-events: none;
-  }
-  .hero.is-live .hero__panel { position: absolute; pointer-events: auto; }
-  /* Todo o texto vive na área preta da ESQUERDA, na altura do peito, um
-     bloco substituindo o outro. O render tem o busto à direita do centro
-     (arcos à esquerda, esfera à direita). Medido de 960×640 a 2560×1440 com
-     as caixas reais do texto contra a silhueta do frame: à esquerda sobram
-     230px ou mais em qualquer altura; à direita a folga é NEGATIVA na
-     altura do peito (−35 a −43px em todo notebook) e cai a 6px na altura do
-     pescoço durante o giro. A primeira versão, com uma metade do título de
-     cada lado, invadia o braço em qualquer tela até 1536px. */
-  .hero.is-live .hero__panel--title {
-    left: var(--gutter);
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: clamp(3rem, 6.2vw, 6.2rem);
-    line-height: 0.92;
-    pointer-events: none;
-  }
-  .hero.is-live .hero__half { white-space: nowrap; }   /* uma metade por linha, sem quebra interna */
-  .hero.is-live .hero__panel--l,
-  .hero.is-live .hero__panel--r { left: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; }
-  .hero.is-live .hero__panel--cta {
-    left: 50%;
-    bottom: clamp(2rem, 8vh, 5rem);
-    transform: translateX(-50%);
-  }
+  .hero.is-live .hero__stage { min-height: 600px; }
 }
 
-/* Tela vertical com a sequência ligada: monitor em pé, ou o visualizador do
-   artifact num celular, que renderiza a página com ~980px de largura.
+/* ---- Tela em pé com a sequência ligada: monitor em pé, ou o visualizador
+   do artifact num celular, que renderiza a página com ~980px de largura.
    Cobrir a altura (object-fit: cover) ampliava o frame 3× e o que cabia na
    tela era um peito. Aqui o frame fica com 175vw de largura, centrado — o
    busto ocupa metade da largura e da altura — e as bordas de cima e de
    baixo (o chão do render é mais claro que a página) somem em dois
-   degradês. Só acima de 8/9: abaixo disso "50% − 56,25vw" ficaria negativo. */
-@media (min-width: 900px) and (max-aspect-ratio: 8/9) {
+   degradês. Só acima de 8/9: abaixo disso "50% − 56,25vw" ficaria negativo. ---- */
+@media (max-aspect-ratio: 8/9) {
   .hero.is-live .hero__poster,
   .hero.is-live .hero__canvas {
     inset: auto;
@@ -732,9 +729,10 @@ a { color: inherit; text-decoration: none; }
     left: var(--gutter);
     right: var(--gutter);
     transform: none;
-    font-size: clamp(3rem, 8vw, 6rem);
+    font-size: clamp(2.75rem, 8vw, 6rem);
     text-align: center;
   }
+  .hero.is-live .hero__half { text-align: center; }
   .hero.is-live .hero__panel--l,
   .hero.is-live .hero__panel--r {
     top: auto;
@@ -746,6 +744,101 @@ a { color: inherit; text-decoration: none; }
     transform: none;
     text-align: center;
   }
+}
+
+/* ---- Tablet em pé (600–899px): frames inteiros numa caixa que cabe na
+   altura. O frame inteiro pode ser mais estreito que 175vw sem mostrar
+   borda, desde que fique com pelo menos 100vw — o recorte do celular não
+   pode. A caixa começa logo abaixo do título e a largura sai da altura que
+   sobra (100svh − topo − 22svh para as frases), com a proporção 1120:720.
+   Medido a 768×1024: caixa de 894×575, frase 1 abaixo da caixa. ---- */
+@media (min-width: 600px) and (max-width: 899px) and (max-aspect-ratio: 8/9) {
+  .hero.is-live {
+    --hero-title: clamp(3rem, 8vw, 4.5rem);
+    --hero-box-top: calc(var(--nav-h) + 2vh + 1.84 * var(--hero-title) + 1rem);
+    --hero-box-w: max(100vw, min(175vw, calc((100svh - var(--hero-box-top) - 22svh) / 0.6429)));
+    --hero-box-h: calc(var(--hero-box-w) * 0.6429);
+  }
+  .hero.is-live .hero__poster,
+  .hero.is-live .hero__canvas {
+    top: var(--hero-box-top);
+    width: var(--hero-box-w);
+    height: var(--hero-box-h);
+    transform: translateX(-50%);
+  }
+  .hero.is-live .hero__media::before {
+    height: calc(var(--hero-box-top) + 6vw);
+    background: linear-gradient(to bottom, var(--ink) calc(100% - 6vw), transparent);
+  }
+  .hero.is-live .hero__media::after {
+    height: max(0px, calc(100% - var(--hero-box-top) - var(--hero-box-h) + 10vw));
+    background: linear-gradient(to top, var(--ink) calc(100% - 10vw), transparent);
+  }
+  .hero.is-live .hero__panel--title {
+    top: calc(var(--nav-h) + 2vh);
+    font-size: var(--hero-title);
+  }
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r {
+    bottom: 8vh;
+    font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  }
+}
+
+/* ---- Celular em pé (< 600px): o conjunto leve é o recorte central de
+   640×720, então a caixa tem 100vw — a mesma composição do bloco de tela em
+   pé, sem os 75vw que ficariam fora da tela. Em telas curtas (360×640) a
+   cabeça encostava no título, então a caixa não fica centrada: começa logo
+   abaixo do título, e os degradês seguem a caixa. Os 1,84 são duas linhas
+   de título com line-height 0,92. ---- */
+@media (max-width: 599px) and (max-aspect-ratio: 8/9) {
+  .hero.is-live {
+    --hero-title: clamp(2.5rem, 11.5vw, 3.6rem);
+    --hero-box-top: calc(var(--nav-h) + 2vh + 1.84 * var(--hero-title) + 0.75rem);
+  }
+  .hero.is-live .hero__stage { min-height: 560px; }
+  .hero.is-live .hero__poster,
+  .hero.is-live .hero__canvas {
+    top: var(--hero-box-top);
+    width: 100vw;                    /* height: 112.5vw, herdado do bloco acima */
+    transform: translateX(-50%);
+  }
+  .hero.is-live .hero__media::before {
+    height: calc(var(--hero-box-top) + 8vw);
+    background: linear-gradient(to bottom, var(--ink) calc(100% - 8vw), transparent);
+  }
+  .hero.is-live .hero__media::after {
+    height: max(0px, calc(100% - var(--hero-box-top) - 112.5vw + 12vw));
+    background: linear-gradient(to top, var(--ink) calc(100% - 12vw), transparent);
+  }
+  .hero.is-live .hero__panel--title {
+    top: calc(var(--nav-h) + 2vh);
+    font-size: var(--hero-title);
+  }
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r {
+    bottom: 9vh;
+    font-size: clamp(1.15rem, 4.8vw, 1.5rem);
+  }
+  .hero.is-live .hero__panel--cta { bottom: clamp(1.5rem, 5vh, 3rem); }
+}
+
+/* Celular curto (≤ 700px de altura, o 360×640 de entrada): a caixa de
+   112,5vw não cabe entre título e frase. Título menor e mais colado na nav
+   sobem a caixa; a frase desce; e o degradê de baixo sobe até 24vw para
+   escurecer a base do busto, que fica atrás do texto. */
+@media (max-width: 599px) and (max-aspect-ratio: 8/9) and (max-height: 700px) {
+  .hero.is-live {
+    --hero-title: clamp(2.2rem, 10vw, 2.8rem);
+    --hero-box-top: calc(var(--nav-h) + 1vh + 1.84 * var(--hero-title) + 0.5rem);
+  }
+  .hero.is-live .hero__panel--title { top: calc(var(--nav-h) + 1vh); }
+  .hero.is-live .hero__media::after {
+    height: max(0px, calc(100% - var(--hero-box-top) - 112.5vw + 24vw));
+    background: linear-gradient(to top, var(--ink) calc(100% - 24vw), rgba(8, 9, 10, 0.55) calc(100% - 12vw), transparent);
+  }
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r { bottom: 6vh; font-size: clamp(1.05rem, 4.4vw, 1.3rem); }
 }
 
 /* Enquanto o hero está pinado, o grão fixo e o blur da nav são recompostos

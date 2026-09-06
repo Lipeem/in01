@@ -6,9 +6,10 @@
    · sai sem <!doctype>, <html>, <head> e <body> — o host fornece;
    · <title> e <style> vão no topo do arquivo (o host lê o título nos
      primeiros 8 KB);
-   · os 240 frames do hero entram embutidos como data: URI em
-     window.EXPOSUL_FRAMES (~3,9 MB em base64). Nada depende de pasta ao
-     lado: o hero gira em qualquer lugar onde o arquivo abrir.
+   · os frames do hero entram embutidos como data: URI — os 192 inteiros em
+     window.EXPOSUL_FRAMES e os 96 do recorte (celular) em EXPOSUL_FRAMES_M,
+     ~4 MB em base64. Nada depende de pasta ao lado: o hero gira em
+     qualquer lugar onde o arquivo abrir.
 
    Uso:  node build-artifact.js [saida.html]
    ========================================================================== */
@@ -41,12 +42,21 @@ html = html
   .replace(/<body>\s*/i, '')
   .replace(/\s*<\/body>\s*<\/html>\s*$/i, '\n');
 
-/* 3. Scripts embutidos, frames antes do site.js. */
-const frameDir = path.join(root, 'assets', 'hero-frames');
-const frameFiles = fs.readdirSync(frameDir).filter((f) => /^f_\d{3}\.webp$/.test(f)).sort();
-if (frameFiles.length !== 240) { console.error('ERRO: esperava 240 frames, achei ' + frameFiles.length); process.exit(1); }
-const frames = frameFiles.map((f) => dataUri('assets/hero-frames/' + f, 'image/webp'));
-const framesJs = '<script>/* ---- frames do hero (assets/hero-frames/) ---- */\nwindow.EXPOSUL_FRAMES=[\n' + frames.map((d) => JSON.stringify(d)).join(',\n') + '\n];</script>';
+/* 3. Scripts embutidos, frames antes do site.js. Os dois conjuntos entram:
+      o inteiro (f_049…f_240, telas >= 900px) e o leve (recorte central,
+      celular em pé). Objeto índice → data: URI, no mesmo índice 0-based que
+      js/site.js usa. Os 47 frames do close inicial não entram: ninguém os
+      vê (ver HERO_FIRST). */
+const embedSet = (dir, name, expect) => {
+  const files = fs.readdirSync(path.join(root, dir)).filter((f) => /^f_\d{3}\.webp$/.test(f)).sort();
+  const use = files.filter((f) => parseInt(f.slice(2, 5), 10) - 1 >= 48);
+  if (use.length !== expect) { console.error('ERRO: ' + dir + ': esperava ' + expect + ' frames a partir do f_049, achei ' + use.length); process.exit(1); }
+  const entries = use.map((f) => JSON.stringify(String(parseInt(f.slice(2, 5), 10) - 1)) + ':' + JSON.stringify(dataUri(dir + '/' + f, 'image/webp')));
+  return 'window.' + name + '={\n' + entries.join(',\n') + '\n};';
+};
+const framesJs = '<script>/* ---- frames do hero (assets/hero-frames/ e assets/hero-frames-m/) ---- */\n' +
+  embedSet('assets/hero-frames', 'EXPOSUL_FRAMES', 192) + '\n' +
+  embedSet('assets/hero-frames-m', 'EXPOSUL_FRAMES_M', 96) + '</script>';
 
 const js = [
   ['vendor/gsap.min.js', read('vendor/gsap.min.js')],
@@ -84,4 +94,4 @@ if (/<html|<\/html>|<body>|<\/body>|<!doctype/i.test(html.slice(0, 200) + html.s
 }
 
 fs.writeFileSync(out, html);
-console.log(path.basename(out) + ' gerado —', (Buffer.byteLength(html) / 1048576).toFixed(2), 'MB, frames embutidos:', frames.length);
+console.log(path.basename(out) + ' gerado —', (Buffer.byteLength(html) / 1048576).toFixed(2), 'MB, frames embutidos: 192 inteiros + 96 do recorte.');

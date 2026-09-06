@@ -117,12 +117,22 @@
   });
 
   /* ------------------------------------------------------------ hero
-     Sequência de 240 frames em <canvas>, pinada e amarrada ao scroll. É O
-     momento do site: toda a ousadia mora aqui e o resto fica quieto.
+     Sequência de frames em <canvas>, presa (sticky) e amarrada ao scroll. É
+     O momento do site: toda a ousadia mora aqui e o resto fica quieto.
+
+     Dois conjuntos do mesmo clipe:
+       assets/hero-frames/    f_049…f_240 inteiros, 1120×720  → telas ≥ 900px (2,3 MB)
+       assets/hero-frames-m/  f_049…f_239 de 2 em 2, recorte central 640×720
+                              → celular em pé (< 600px), ~0,8 MB
+     Tablet em pé (600–899px) usa os inteiros numa caixa menor: ver CSS.
+     O recorte é exatamente o que cabe na tela em pé (100vw, quando o frame
+     inteiro teria 175vw): a composição é a mesma nos dois conjuntos, e o
+     poster inteiro com object-fit: cover na mesma caixa dá o mesmo recorte.
 
      Portões, todos obrigatórios para a sequência rodar:
-       GSAP presente · sem prefers-reduced-motion · viewport >= 900px ·
-       frames encontrados (pasta assets/hero-frames/ ou embutidos).
+       GSAP presente · sem prefers-reduced-motion · frames encontrados ·
+       tela ≥ 900px, ou tela < 900px EM PÉ (celular deitado fica no poster:
+       um recorte 640×720 coberto num 844×390 mostraria só o peito).
      Falhou qualquer um: poster estático, conteúdo completo, sem pin.
      Carregamento lento não é falha: ver heroPreload. Usuário que já rolou
      não é falha: ver heroBuildPin.
@@ -133,14 +143,9 @@
        f_150–f_240  o busto gira até 3/4 */
   const hero = $('.hero');
   const heroCanvas = $('#heroCanvas');
-  const HERO_FRAMES = 240, HERO_W = 1120, HERO_H = 720;
+  const HERO_FRAMES = 240;
   const HAS_SPLIT = HAS_GSAP && typeof window.SplitText !== 'undefined';
   if (HAS_SPLIT) gsap.registerPlugin(SplitText);
-  // 900px, não 1024: notebook de 1366px com 150% de escala no Windows tem
-  // 910px CSS de largura, e janela não maximizada fica abaixo de 1024 fácil.
-  // Abaixo de 900 é celular ou tablet em pé: poster.
-  const HERO_MIN_W = 900;
-  const heroWantsSequence = ANIM && !!heroCanvas && window.matchMedia('(min-width: ' + HERO_MIN_W + 'px)').matches;
 
   // Abre no frame 48, não no 1: o clipe começa num close do peito e só no
   // 45–50 a câmera mostra o busto inteiro. Com o close coberto por altura
@@ -148,26 +153,54 @@
   const HERO_FIRST = 48;
   const heroState = { frame: HERO_FIRST };
   window.__heroState = heroState;    // só leitura, para o harness de verificação
-  const heroImgs = new Array(HERO_FRAMES);
-  const heroLoaded = new Uint8Array(HERO_FRAMES);
-  window.__heroLoaded = heroLoaded;  // idem
+
+  // 900px, não 1024: notebook de 1366px com 150% de escala no Windows tem
+  // 910px CSS de largura, e janela não maximizada fica abaixo de 1024 fácil.
+  // Precisa bater com os @media do CSS.
+  const HERO_MIN_W = 900;
+  // Abaixo de 600px (celular) entra o conjunto leve; tablet em pé (600–899)
+  // usa os frames inteiros numa caixa que cabe na altura: o frame inteiro
+  // pode ser mais estreito que 175vw sem mostrar borda, o recorte não.
+  const HERO_CROP_W = 600;
+  const MQ_DESKTOP = '(min-width: ' + HERO_MIN_W + 'px)';
+  const MQ_TABLET = '(min-width: ' + HERO_CROP_W + 'px) and (max-width: ' + (HERO_MIN_W - 1) + 'px) and (orientation: portrait)';
+  const MQ_PHONE = '(max-width: ' + (HERO_CROP_W - 1) + 'px) and (orientation: portrait)';
+  const heroWantsSequence = ANIM && !!heroCanvas &&
+    (window.matchMedia(MQ_DESKTOP).matches || window.matchMedia(MQ_TABLET).matches || window.matchMedia(MQ_PHONE).matches);
+
+  // Os dois conjuntos. `idx` são os índices (0-based) que existem em cada
+  // um; `loaded` e `imgs` são indexados por frame, como sempre, e o desenho
+  // usa o frame mais próximo já carregado — no conjunto leve, que só tem os
+  // pares, isso rende o giro de 2 em 2 sem nenhum caso especial.
+  const heroSets = {
+    d: { key: 'd', w: 1120, h: 720, dir: 'assets/hero-frames/',   embed: 'EXPOSUL_FRAMES',   idx: [], imgs: new Array(HERO_FRAMES), loaded: new Uint8Array(HERO_FRAMES), promise: null, ok: null },
+    m: { key: 'm', w: 640,  h: 720, dir: 'assets/hero-frames-m/', embed: 'EXPOSUL_FRAMES_M', idx: [], imgs: new Array(HERO_FRAMES), loaded: new Uint8Array(HERO_FRAMES), promise: null, ok: null }
+  };
+  for (let i = HERO_FIRST; i < HERO_FRAMES; i++) {
+    heroSets.d.idx.push(i);
+    if ((i - HERO_FIRST) % 2 === 0) heroSets.m.idx.push(i);
+  }
+  let heroCur = heroSets[window.matchMedia('(max-width: ' + (HERO_CROP_W - 1) + 'px)').matches ? 'm' : 'd'];
+  window.__heroLoaded = heroCur.loaded;   // harness
+  window.__heroSet = () => heroCur.key;   // harness
   let heroCtx = null, heroDrawn = -1, heroLive = false, heroST = null;
 
   // A versão hospedada (build-artifact.js) embute os frames como data: URI
-  // em window.EXPOSUL_FRAMES; a versão em pastas lê de assets/hero-frames/.
-  const heroSrc = (i) => (window.EXPOSUL_FRAMES && window.EXPOSUL_FRAMES[i]) ||
-    ('assets/hero-frames/f_' + String(i + 1).padStart(3, '0') + '.webp');
+  // em window.EXPOSUL_FRAMES / EXPOSUL_FRAMES_M (objeto índice → URI); a
+  // versão em pastas lê dos diretórios.
+  const heroSrc = (set, i) => (window[set.embed] && window[set.embed][i]) ||
+    (set.dir + 'f_' + String(i + 1).padStart(3, '0') + '.webp');
 
-  /* O canvas fica no tamanho NATIVO dos frames (1120×720) e o CSS o estica
+  /* O canvas fica no tamanho NATIVO dos frames do conjunto e o CSS o estica
      com object-fit: cover. Assim o drawImage é uma cópia 1:1, sem
      reamostragem — a escala acontece no compositor, uma vez por frame, de
      graça na GPU. Desenhar num canvas do tamanho da viewport reamostrava
      0,8 MP a cada frame; medido em software, era a maior parte do custo. */
   function heroResize() {
     if (!heroCanvas || !hero) return;
-    if (heroCanvas.width !== HERO_W || heroCanvas.height !== HERO_H) {
-      heroCanvas.width = HERO_W;
-      heroCanvas.height = HERO_H;
+    if (heroCanvas.width !== heroCur.w || heroCanvas.height !== heroCur.h) {
+      heroCanvas.width = heroCur.w;
+      heroCanvas.height = heroCur.h;
     }
     heroCtx = heroCanvas.getContext('2d', { alpha: false });
     heroCtx.imageSmoothingEnabled = false;   // cópia 1:1: suavização só custaria
@@ -187,15 +220,16 @@
   const heroPending = new Set();
   function heroEnsureWindow(center) {
     if (!HERO_USE_BITMAPS || typeof createImageBitmap !== 'function') return;
+    const set = heroCur;
     const lo = Math.max(0, center - HERO_WINDOW), hi = Math.min(HERO_FRAMES - 1, center + HERO_WINDOW);
     heroBitmaps.forEach((bm, k) => { if (k < lo - 8 || k > hi + 8) { bm.close(); heroBitmaps.delete(k); } });
     for (let d = 0; d <= HERO_WINDOW; d++) {
       for (const k of [center + d, center - d]) {
-        if (k < lo || k > hi || heroBitmaps.has(k) || heroPending.has(k) || !heroLoaded[k]) continue;
+        if (k < lo || k > hi || heroBitmaps.has(k) || heroPending.has(k) || !set.loaded[k]) continue;
         heroPending.add(k);
-        createImageBitmap(heroImgs[k]).then((bm) => {
+        createImageBitmap(set.imgs[k]).then((bm) => {
           heroPending.delete(k);
-          if (Math.abs(k - Math.round(heroState.frame)) <= HERO_WINDOW + 8) heroBitmaps.set(k, bm); else bm.close();
+          if (set === heroCur && Math.abs(k - Math.round(heroState.frame)) <= HERO_WINDOW + 8) heroBitmaps.set(k, bm); else bm.close();
         }).catch(() => heroPending.delete(k));
       }
     }
@@ -205,63 +239,86 @@
   // mostrar um buraco. Só redesenha quando o índice muda.
   function heroDraw(i) {
     if (!heroCtx) return;
+    const L = heroCur.loaded;
     let k = Math.max(0, Math.min(HERO_FRAMES - 1, i));
-    while (k > 0 && !heroLoaded[k]) k--;
-    if (!heroLoaded[k] || k === heroDrawn) return;
+    while (k > 0 && !L[k]) k--;
+    if (!L[k] || k === heroDrawn) return;
     const t0 = window.__heroProfile ? performance.now() : 0;
-    heroCtx.drawImage(heroBitmaps.get(k) || heroImgs[k], 0, 0);   // 1:1
+    heroCtx.drawImage(heroBitmaps.get(k) || heroCur.imgs[k], 0, 0);   // 1:1
     if (window.__heroProfile) window.__heroProfile.push(performance.now() - t0);
     heroDrawn = k;
     heroEnsureWindow(k);
   }
   function heroTick() { if (heroLive) heroDraw(Math.round(heroState.frame)); }
 
-  // Carrega e decodifica os 240 frames. Política: falha rápido, espera com
+  // Carrega e decodifica um conjunto. Política: falha rápido, espera com
   // paciência. Resolve true quando dá para ligar a sequência:
   //   · 90% dos frames prontos — o caminho normal, 1 a 4 s; ou
   //   · passaram 5 s sem nenhuma falha e já há 10%: liga em modo
   //     progressivo. O desenho usa o frame mais próximo já carregado e os
-  //     demais vão entrando (disco lento, antivírus varrendo os 240
-  //     arquivos recém-extraídos, 4G). Desistir aos 5 s, como antes, era
-  //     trocar o hero por um poster justamente em quem mais demora.
-  // Resolve false se 8+ frames falharam (pasta ausente: os 240 falham em
+  //     demais vão entrando (disco lento, antivírus varrendo os arquivos
+  //     recém-extraídos, 4G). Desistir aos 5 s, como antes, era trocar o
+  //     hero por um poster justamente em quem mais demora.
+  // Resolve false se 8+ frames falharam (pasta ausente: todos falham em
   // milissegundos) ou se em 20 s ainda não chegou a 10%.
-  function heroPreload() {
-    return new Promise((resolve) => {
-      const t0 = performance.now();
+  function heroPreload(set) {
+    if (set.promise) return set.promise;
+    set.promise = new Promise((resolve) => {
+      const N = set.idx.length, t0 = performance.now();
       let settled = 0, loaded = 0, errors = 0, finished = false;
       const finish = (ok) => {
         if (finished) return;
         finished = true; clearTimeout(t5); clearTimeout(t20);
+        set.ok = ok;
         resolve(ok);
       };
       const check = () => {
         if (finished) return;
         if (errors >= 8) return finish(false);
-        if (loaded >= HERO_FRAMES * 0.9) return finish(true);
-        if (performance.now() - t0 >= 5000 && loaded >= HERO_FRAMES * 0.1) return finish(true);
-        if (settled === HERO_FRAMES) return finish(loaded >= HERO_FRAMES * 0.1);
+        if (loaded >= N * 0.9) return finish(true);
+        if (performance.now() - t0 >= 5000 && loaded >= N * 0.1) return finish(true);
+        if (settled === N) return finish(loaded >= N * 0.1);
       };
       const t5 = setTimeout(check, 5000);
-      const t20 = setTimeout(() => finish(loaded >= HERO_FRAMES * 0.1), 20000);
-      for (let i = 0; i < HERO_FRAMES; i++) {
+      const t20 = setTimeout(() => finish(loaded >= N * 0.1), 20000);
+      set.idx.forEach((i) => {
         const img = new Image();
         img.decoding = 'async';
-        heroImgs[i] = img;
+        set.imgs[i] = img;
         const mark = (ok) => {
           settled++;
-          if (ok) { heroLoaded[i] = 1; loaded++; } else errors++;
+          if (ok) { set.loaded[i] = 1; loaded++; } else errors++;
           check();
         };
         img.onload = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(() => mark(true));
         img.onerror = () => mark(false);
-        img.src = heroSrc(i);
-      }
+        img.src = heroSrc(set, i);
+      });
     });
+    return set.promise;
   }
 
-  // Sem sequência (mobile, reduced-motion, falha de carregamento, usuário já
-  // rolou): mostra o conteúdo que a coreografia teria revelado.
+  // Troca de conjunto quando a tela cruza os 900px com a sequência viva
+  // (tablet girando, janela redimensionada). Até o outro conjunto chegar, o
+  // atual continua na tela: object-fit: cover recorta o inteiro na caixa do
+  // recorte, e o recorte esticado na caixa do inteiro perde as bordas por
+  // alguns segundos — melhor que um buraco.
+  function heroUseSet(key) {
+    const set = heroSets[key];
+    if (heroCur === set) return;
+    const apply = () => {
+      heroCur = set;
+      window.__heroLoaded = set.loaded;
+      heroBitmaps.forEach((bm) => bm.close()); heroBitmaps.clear();
+      heroDrawn = -1;
+      if (heroLive) heroResize();
+    };
+    if (set.ok) return apply();
+    heroPreload(set).then((ok) => { if (ok && heroSets[key] !== heroCur) apply(); });
+  }
+
+  // Sem sequência (celular deitado, reduced-motion, falha de carregamento):
+  // mostra o conteúdo que a coreografia teria revelado.
   function heroFallback() {
     if (heroLive || !HAS_GSAP) return;
     gsap.to(['#heroP1', '#heroP2', '#heroCta'], { autoAlpha: 1, opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out', delay: 0.2 });
@@ -280,7 +337,15 @@
     // continua na tela.
     const yBefore = window.scrollY, hBefore = hero.offsetHeight;
 
-    heroMM.add('(min-width: ' + HERO_MIN_W + 'px) and (prefers-reduced-motion: no-preference)', () => {
+    // Objeto de condições: a função roda quando qualquer uma casa e roda de
+    // novo (depois da limpeza) quando o estado muda — tela cruzando 900px,
+    // celular girando. Nenhuma casando (celular deitado): desmonta, poster.
+    heroMM.add({
+      desktop: MQ_DESKTOP + ' and (prefers-reduced-motion: no-preference)',
+      tablet: MQ_TABLET + ' and (prefers-reduced-motion: no-preference)',
+      phone: MQ_PHONE + ' and (prefers-reduced-motion: no-preference)'
+    }, (ctx) => {
+      heroUseSet(ctx.conditions.phone ? 'm' : 'd');
       hero.classList.add('is-live');       // vira a pista de 4 telas (CSS)
       heroLive = true;
       heroResize();
@@ -320,8 +385,8 @@
       // acessibilidade o tempo todo.
       tl.to('#heroTitle', { opacity: 0, y: -28, duration: 0.06, ease: 'power2.in' }, 0.26);
 
-      // Uma frase por vez, no mesmo lugar do título (área preta à esquerda),
-      // enquanto o busto gira. A direita fica limpa para o giro: ver CSS.
+      // Uma frase por vez, no mesmo lugar do título (área preta à esquerda
+      // no desktop; embaixo do busto no celular), enquanto o busto gira.
       tl.fromTo('#heroP1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.34);
       tl.to('#heroP1', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.54);
       tl.fromTo('#heroP2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.60);
@@ -331,7 +396,7 @@
       tl.fromTo('#heroCta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.88);
       tl.to('#heroFade', { opacity: 1, duration: 0.1 }, 0.90);
 
-      return () => {                      // viewport encolheu: desmonta tudo
+      return () => {                      // condições mudaram: desmonta tudo
         gsap.ticker.remove(heroTick);
         heroBitmaps.forEach((bm) => bm.close()); heroBitmaps.clear();
         document.body.classList.remove('hero-pinned');
@@ -351,8 +416,8 @@
     gsap.set(['#heroP1', '#heroP2'], { opacity: 0 });
     gsap.set('#heroCta', { autoAlpha: 0 });
     const heroT0 = performance.now();
-    heroPreload().then((ok) => {
-      window.__heroPreload = { ok: ok, ms: Math.round(performance.now() - heroT0), carregados: heroLoaded.reduce((a, b) => a + b, 0) };   // só leitura, harness
+    heroPreload(heroCur).then((ok) => {
+      window.__heroPreload = { ok: ok, ms: Math.round(performance.now() - heroT0), carregados: heroCur.loaded.reduce((a, b) => a + b, 0), conjunto: heroCur.key, total: heroCur.idx.length };   // só leitura, harness
       if (!ok || !heroBuildPin()) heroFallback();
       ScrollTrigger.refresh();
     });

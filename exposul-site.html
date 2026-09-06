@@ -678,65 +678,62 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scaleY(1) translateY(44px); opacity: 0; }
 }
 
-/* 899/900 e não 1023/1024: ver HERO_MIN_W em js/site.js — os dois precisam
-   bater. */
-@media (max-width: 899px) {
-  .hero__canvas { display: none; }   /* sem sequência abaixo de 900px */
+/* ---- modo vivo: pista de 4 telas, palco preso, painéis em cima do frame.
+   Vale para qualquer largura; o que muda com a proporção da tela vem nos
+   blocos seguintes. Os 900px precisam bater com HERO_MIN_W em js/site.js. ---- */
+.hero.is-live { height: 400vh; }
+.hero.is-live .hero__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 480px;
 }
-
-/* ---- modo vivo: pista de 4 telas, palco preso, painéis nas áreas pretas ---- */
+.hero.is-live .hero__scroll { display: flex; }
+.hero.is-live .hero__panels {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+  padding: 0;
+  display: block;
+  pointer-events: none;
+}
+.hero.is-live .hero__panel { position: absolute; pointer-events: auto; }
+/* Todo o texto vive na área preta da ESQUERDA, na altura do peito, um
+   bloco substituindo o outro. O render tem o busto à direita do centro
+   (arcos à esquerda, esfera à direita). Medido de 960×640 a 2560×1440 com
+   as caixas reais do texto contra a silhueta do frame: à esquerda sobram
+   230px ou mais em qualquer altura; à direita a folga é NEGATIVA na
+   altura do peito (−35 a −43px em todo notebook) e cai a 6px na altura do
+   pescoço durante o giro. A primeira versão, com uma metade do título de
+   cada lado, invadia o braço em qualquer tela até 1536px. */
+.hero.is-live .hero__panel--title {
+  left: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(3rem, 6.2vw, 6.2rem);
+  line-height: 0.92;
+  pointer-events: none;
+}
+.hero.is-live .hero__half { white-space: nowrap; }   /* uma metade por linha, sem quebra interna */
+.hero.is-live .hero__panel--l,
+.hero.is-live .hero__panel--r { left: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; }
+.hero.is-live .hero__panel--cta {
+  left: 50%;
+  bottom: clamp(2rem, 8vh, 5rem);
+  transform: translateX(-50%);
+}
 @media (min-width: 900px) {
-  .hero.is-live { height: 400vh; }
-  .hero.is-live .hero__stage {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    min-height: 600px;
-  }
-  .hero.is-live .hero__scroll { display: flex; }
-  .hero.is-live .hero__panels {
-    position: absolute;
-    inset: 0;
-    max-width: none;
-    padding: 0;
-    display: block;
-    pointer-events: none;
-  }
-  .hero.is-live .hero__panel { position: absolute; pointer-events: auto; }
-  /* Todo o texto vive na área preta da ESQUERDA, na altura do peito, um
-     bloco substituindo o outro. O render tem o busto à direita do centro
-     (arcos à esquerda, esfera à direita). Medido de 960×640 a 2560×1440 com
-     as caixas reais do texto contra a silhueta do frame: à esquerda sobram
-     230px ou mais em qualquer altura; à direita a folga é NEGATIVA na
-     altura do peito (−35 a −43px em todo notebook) e cai a 6px na altura do
-     pescoço durante o giro. A primeira versão, com uma metade do título de
-     cada lado, invadia o braço em qualquer tela até 1536px. */
-  .hero.is-live .hero__panel--title {
-    left: var(--gutter);
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: clamp(3rem, 6.2vw, 6.2rem);
-    line-height: 0.92;
-    pointer-events: none;
-  }
-  .hero.is-live .hero__half { white-space: nowrap; }   /* uma metade por linha, sem quebra interna */
-  .hero.is-live .hero__panel--l,
-  .hero.is-live .hero__panel--r { left: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; }
-  .hero.is-live .hero__panel--cta {
-    left: 50%;
-    bottom: clamp(2rem, 8vh, 5rem);
-    transform: translateX(-50%);
-  }
+  .hero.is-live .hero__stage { min-height: 600px; }
 }
 
-/* Tela vertical com a sequência ligada: monitor em pé, ou o visualizador do
-   artifact num celular, que renderiza a página com ~980px de largura.
+/* ---- Tela em pé com a sequência ligada: monitor em pé, ou o visualizador
+   do artifact num celular, que renderiza a página com ~980px de largura.
    Cobrir a altura (object-fit: cover) ampliava o frame 3× e o que cabia na
    tela era um peito. Aqui o frame fica com 175vw de largura, centrado — o
    busto ocupa metade da largura e da altura — e as bordas de cima e de
    baixo (o chão do render é mais claro que a página) somem em dois
-   degradês. Só acima de 8/9: abaixo disso "50% − 56,25vw" ficaria negativo. */
-@media (min-width: 900px) and (max-aspect-ratio: 8/9) {
+   degradês. Só acima de 8/9: abaixo disso "50% − 56,25vw" ficaria negativo. ---- */
+@media (max-aspect-ratio: 8/9) {
   .hero.is-live .hero__poster,
   .hero.is-live .hero__canvas {
     inset: auto;
@@ -772,9 +769,10 @@ a { color: inherit; text-decoration: none; }
     left: var(--gutter);
     right: var(--gutter);
     transform: none;
-    font-size: clamp(3rem, 8vw, 6rem);
+    font-size: clamp(2.75rem, 8vw, 6rem);
     text-align: center;
   }
+  .hero.is-live .hero__half { text-align: center; }
   .hero.is-live .hero__panel--l,
   .hero.is-live .hero__panel--r {
     top: auto;
@@ -786,6 +784,101 @@ a { color: inherit; text-decoration: none; }
     transform: none;
     text-align: center;
   }
+}
+
+/* ---- Tablet em pé (600–899px): frames inteiros numa caixa que cabe na
+   altura. O frame inteiro pode ser mais estreito que 175vw sem mostrar
+   borda, desde que fique com pelo menos 100vw — o recorte do celular não
+   pode. A caixa começa logo abaixo do título e a largura sai da altura que
+   sobra (100svh − topo − 22svh para as frases), com a proporção 1120:720.
+   Medido a 768×1024: caixa de 894×575, frase 1 abaixo da caixa. ---- */
+@media (min-width: 600px) and (max-width: 899px) and (max-aspect-ratio: 8/9) {
+  .hero.is-live {
+    --hero-title: clamp(3rem, 8vw, 4.5rem);
+    --hero-box-top: calc(var(--nav-h) + 2vh + 1.84 * var(--hero-title) + 1rem);
+    --hero-box-w: max(100vw, min(175vw, calc((100svh - var(--hero-box-top) - 22svh) / 0.6429)));
+    --hero-box-h: calc(var(--hero-box-w) * 0.6429);
+  }
+  .hero.is-live .hero__poster,
+  .hero.is-live .hero__canvas {
+    top: var(--hero-box-top);
+    width: var(--hero-box-w);
+    height: var(--hero-box-h);
+    transform: translateX(-50%);
+  }
+  .hero.is-live .hero__media::before {
+    height: calc(var(--hero-box-top) + 6vw);
+    background: linear-gradient(to bottom, var(--ink) calc(100% - 6vw), transparent);
+  }
+  .hero.is-live .hero__media::after {
+    height: max(0px, calc(100% - var(--hero-box-top) - var(--hero-box-h) + 10vw));
+    background: linear-gradient(to top, var(--ink) calc(100% - 10vw), transparent);
+  }
+  .hero.is-live .hero__panel--title {
+    top: calc(var(--nav-h) + 2vh);
+    font-size: var(--hero-title);
+  }
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r {
+    bottom: 8vh;
+    font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  }
+}
+
+/* ---- Celular em pé (< 600px): o conjunto leve é o recorte central de
+   640×720, então a caixa tem 100vw — a mesma composição do bloco de tela em
+   pé, sem os 75vw que ficariam fora da tela. Em telas curtas (360×640) a
+   cabeça encostava no título, então a caixa não fica centrada: começa logo
+   abaixo do título, e os degradês seguem a caixa. Os 1,84 são duas linhas
+   de título com line-height 0,92. ---- */
+@media (max-width: 599px) and (max-aspect-ratio: 8/9) {
+  .hero.is-live {
+    --hero-title: clamp(2.5rem, 11.5vw, 3.6rem);
+    --hero-box-top: calc(var(--nav-h) + 2vh + 1.84 * var(--hero-title) + 0.75rem);
+  }
+  .hero.is-live .hero__stage { min-height: 560px; }
+  .hero.is-live .hero__poster,
+  .hero.is-live .hero__canvas {
+    top: var(--hero-box-top);
+    width: 100vw;                    /* height: 112.5vw, herdado do bloco acima */
+    transform: translateX(-50%);
+  }
+  .hero.is-live .hero__media::before {
+    height: calc(var(--hero-box-top) + 8vw);
+    background: linear-gradient(to bottom, var(--ink) calc(100% - 8vw), transparent);
+  }
+  .hero.is-live .hero__media::after {
+    height: max(0px, calc(100% - var(--hero-box-top) - 112.5vw + 12vw));
+    background: linear-gradient(to top, var(--ink) calc(100% - 12vw), transparent);
+  }
+  .hero.is-live .hero__panel--title {
+    top: calc(var(--nav-h) + 2vh);
+    font-size: var(--hero-title);
+  }
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r {
+    bottom: 9vh;
+    font-size: clamp(1.15rem, 4.8vw, 1.5rem);
+  }
+  .hero.is-live .hero__panel--cta { bottom: clamp(1.5rem, 5vh, 3rem); }
+}
+
+/* Celular curto (≤ 700px de altura, o 360×640 de entrada): a caixa de
+   112,5vw não cabe entre título e frase. Título menor e mais colado na nav
+   sobem a caixa; a frase desce; e o degradê de baixo sobe até 24vw para
+   escurecer a base do busto, que fica atrás do texto. */
+@media (max-width: 599px) and (max-aspect-ratio: 8/9) and (max-height: 700px) {
+  .hero.is-live {
+    --hero-title: clamp(2.2rem, 10vw, 2.8rem);
+    --hero-box-top: calc(var(--nav-h) + 1vh + 1.84 * var(--hero-title) + 0.5rem);
+  }
+  .hero.is-live .hero__panel--title { top: calc(var(--nav-h) + 1vh); }
+  .hero.is-live .hero__media::after {
+    height: max(0px, calc(100% - var(--hero-box-top) - 112.5vw + 24vw));
+    background: linear-gradient(to top, var(--ink) calc(100% - 24vw), rgba(8, 9, 10, 0.55) calc(100% - 12vw), transparent);
+  }
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r { bottom: 6vh; font-size: clamp(1.05rem, 4.4vw, 1.3rem); }
 }
 
 /* Enquanto o hero está pinado, o grão fixo e o blur da nav são recompostos
@@ -1767,9 +1860,11 @@ setTimeout(function () {
      O busto é o FUNDO da página por 4 telas: fica preso (sticky) e gira
      enquanto o conteúdo passa por cima. Abre com o busto inteiro e a
      headline (frame 48, não o close do 1); depois uma frase
-     por vez nas áreas pretas ao lado do objeto; um CTA no fim. Só a partir
-     de 900px e sem prefers-reduced-motion; fora disso, poster estático com
-     o texto empilhado. Texto sempre em HTML, nunca no canvas. -->
+     por vez ao lado do objeto (desktop) ou embaixo dele (celular); um CTA
+     no fim. Telas ≥ 900px usam os frames inteiros; celular em pé usa um
+     conjunto leve (recorte central, metade dos frames); celular deitado e
+     prefers-reduced-motion ficam no poster estático com o texto empilhado.
+     Texto sempre em HTML, nunca no canvas. -->
 <section class="hero" id="topo">
   <div class="hero__stage">
     <div class="hero__media" aria-hidden="true">
@@ -2933,12 +3028,22 @@ const CATALOG = [
   });
 
   /* ------------------------------------------------------------ hero
-     Sequência de 240 frames em <canvas>, pinada e amarrada ao scroll. É O
-     momento do site: toda a ousadia mora aqui e o resto fica quieto.
+     Sequência de frames em <canvas>, presa (sticky) e amarrada ao scroll. É
+     O momento do site: toda a ousadia mora aqui e o resto fica quieto.
+
+     Dois conjuntos do mesmo clipe:
+       assets/hero-frames/    f_049…f_240 inteiros, 1120×720  → telas ≥ 900px (2,3 MB)
+       assets/hero-frames-m/  f_049…f_239 de 2 em 2, recorte central 640×720
+                              → celular em pé (< 600px), ~0,8 MB
+     Tablet em pé (600–899px) usa os inteiros numa caixa menor: ver CSS.
+     O recorte é exatamente o que cabe na tela em pé (100vw, quando o frame
+     inteiro teria 175vw): a composição é a mesma nos dois conjuntos, e o
+     poster inteiro com object-fit: cover na mesma caixa dá o mesmo recorte.
 
      Portões, todos obrigatórios para a sequência rodar:
-       GSAP presente · sem prefers-reduced-motion · viewport >= 900px ·
-       frames encontrados (pasta assets/hero-frames/ ou embutidos).
+       GSAP presente · sem prefers-reduced-motion · frames encontrados ·
+       tela ≥ 900px, ou tela < 900px EM PÉ (celular deitado fica no poster:
+       um recorte 640×720 coberto num 844×390 mostraria só o peito).
      Falhou qualquer um: poster estático, conteúdo completo, sem pin.
      Carregamento lento não é falha: ver heroPreload. Usuário que já rolou
      não é falha: ver heroBuildPin.
@@ -2949,14 +3054,9 @@ const CATALOG = [
        f_150–f_240  o busto gira até 3/4 */
   const hero = $('.hero');
   const heroCanvas = $('#heroCanvas');
-  const HERO_FRAMES = 240, HERO_W = 1120, HERO_H = 720;
+  const HERO_FRAMES = 240;
   const HAS_SPLIT = HAS_GSAP && typeof window.SplitText !== 'undefined';
   if (HAS_SPLIT) gsap.registerPlugin(SplitText);
-  // 900px, não 1024: notebook de 1366px com 150% de escala no Windows tem
-  // 910px CSS de largura, e janela não maximizada fica abaixo de 1024 fácil.
-  // Abaixo de 900 é celular ou tablet em pé: poster.
-  const HERO_MIN_W = 900;
-  const heroWantsSequence = ANIM && !!heroCanvas && window.matchMedia('(min-width: ' + HERO_MIN_W + 'px)').matches;
 
   // Abre no frame 48, não no 1: o clipe começa num close do peito e só no
   // 45–50 a câmera mostra o busto inteiro. Com o close coberto por altura
@@ -2964,26 +3064,54 @@ const CATALOG = [
   const HERO_FIRST = 48;
   const heroState = { frame: HERO_FIRST };
   window.__heroState = heroState;    // só leitura, para o harness de verificação
-  const heroImgs = new Array(HERO_FRAMES);
-  const heroLoaded = new Uint8Array(HERO_FRAMES);
-  window.__heroLoaded = heroLoaded;  // idem
+
+  // 900px, não 1024: notebook de 1366px com 150% de escala no Windows tem
+  // 910px CSS de largura, e janela não maximizada fica abaixo de 1024 fácil.
+  // Precisa bater com os @media do CSS.
+  const HERO_MIN_W = 900;
+  // Abaixo de 600px (celular) entra o conjunto leve; tablet em pé (600–899)
+  // usa os frames inteiros numa caixa que cabe na altura: o frame inteiro
+  // pode ser mais estreito que 175vw sem mostrar borda, o recorte não.
+  const HERO_CROP_W = 600;
+  const MQ_DESKTOP = '(min-width: ' + HERO_MIN_W + 'px)';
+  const MQ_TABLET = '(min-width: ' + HERO_CROP_W + 'px) and (max-width: ' + (HERO_MIN_W - 1) + 'px) and (orientation: portrait)';
+  const MQ_PHONE = '(max-width: ' + (HERO_CROP_W - 1) + 'px) and (orientation: portrait)';
+  const heroWantsSequence = ANIM && !!heroCanvas &&
+    (window.matchMedia(MQ_DESKTOP).matches || window.matchMedia(MQ_TABLET).matches || window.matchMedia(MQ_PHONE).matches);
+
+  // Os dois conjuntos. `idx` são os índices (0-based) que existem em cada
+  // um; `loaded` e `imgs` são indexados por frame, como sempre, e o desenho
+  // usa o frame mais próximo já carregado — no conjunto leve, que só tem os
+  // pares, isso rende o giro de 2 em 2 sem nenhum caso especial.
+  const heroSets = {
+    d: { key: 'd', w: 1120, h: 720, dir: 'assets/hero-frames/',   embed: 'EXPOSUL_FRAMES',   idx: [], imgs: new Array(HERO_FRAMES), loaded: new Uint8Array(HERO_FRAMES), promise: null, ok: null },
+    m: { key: 'm', w: 640,  h: 720, dir: 'assets/hero-frames-m/', embed: 'EXPOSUL_FRAMES_M', idx: [], imgs: new Array(HERO_FRAMES), loaded: new Uint8Array(HERO_FRAMES), promise: null, ok: null }
+  };
+  for (let i = HERO_FIRST; i < HERO_FRAMES; i++) {
+    heroSets.d.idx.push(i);
+    if ((i - HERO_FIRST) % 2 === 0) heroSets.m.idx.push(i);
+  }
+  let heroCur = heroSets[window.matchMedia('(max-width: ' + (HERO_CROP_W - 1) + 'px)').matches ? 'm' : 'd'];
+  window.__heroLoaded = heroCur.loaded;   // harness
+  window.__heroSet = () => heroCur.key;   // harness
   let heroCtx = null, heroDrawn = -1, heroLive = false, heroST = null;
 
   // A versão hospedada (build-artifact.js) embute os frames como data: URI
-  // em window.EXPOSUL_FRAMES; a versão em pastas lê de assets/hero-frames/.
-  const heroSrc = (i) => (window.EXPOSUL_FRAMES && window.EXPOSUL_FRAMES[i]) ||
-    ('assets/hero-frames/f_' + String(i + 1).padStart(3, '0') + '.webp');
+  // em window.EXPOSUL_FRAMES / EXPOSUL_FRAMES_M (objeto índice → URI); a
+  // versão em pastas lê dos diretórios.
+  const heroSrc = (set, i) => (window[set.embed] && window[set.embed][i]) ||
+    (set.dir + 'f_' + String(i + 1).padStart(3, '0') + '.webp');
 
-  /* O canvas fica no tamanho NATIVO dos frames (1120×720) e o CSS o estica
+  /* O canvas fica no tamanho NATIVO dos frames do conjunto e o CSS o estica
      com object-fit: cover. Assim o drawImage é uma cópia 1:1, sem
      reamostragem — a escala acontece no compositor, uma vez por frame, de
      graça na GPU. Desenhar num canvas do tamanho da viewport reamostrava
      0,8 MP a cada frame; medido em software, era a maior parte do custo. */
   function heroResize() {
     if (!heroCanvas || !hero) return;
-    if (heroCanvas.width !== HERO_W || heroCanvas.height !== HERO_H) {
-      heroCanvas.width = HERO_W;
-      heroCanvas.height = HERO_H;
+    if (heroCanvas.width !== heroCur.w || heroCanvas.height !== heroCur.h) {
+      heroCanvas.width = heroCur.w;
+      heroCanvas.height = heroCur.h;
     }
     heroCtx = heroCanvas.getContext('2d', { alpha: false });
     heroCtx.imageSmoothingEnabled = false;   // cópia 1:1: suavização só custaria
@@ -3003,15 +3131,16 @@ const CATALOG = [
   const heroPending = new Set();
   function heroEnsureWindow(center) {
     if (!HERO_USE_BITMAPS || typeof createImageBitmap !== 'function') return;
+    const set = heroCur;
     const lo = Math.max(0, center - HERO_WINDOW), hi = Math.min(HERO_FRAMES - 1, center + HERO_WINDOW);
     heroBitmaps.forEach((bm, k) => { if (k < lo - 8 || k > hi + 8) { bm.close(); heroBitmaps.delete(k); } });
     for (let d = 0; d <= HERO_WINDOW; d++) {
       for (const k of [center + d, center - d]) {
-        if (k < lo || k > hi || heroBitmaps.has(k) || heroPending.has(k) || !heroLoaded[k]) continue;
+        if (k < lo || k > hi || heroBitmaps.has(k) || heroPending.has(k) || !set.loaded[k]) continue;
         heroPending.add(k);
-        createImageBitmap(heroImgs[k]).then((bm) => {
+        createImageBitmap(set.imgs[k]).then((bm) => {
           heroPending.delete(k);
-          if (Math.abs(k - Math.round(heroState.frame)) <= HERO_WINDOW + 8) heroBitmaps.set(k, bm); else bm.close();
+          if (set === heroCur && Math.abs(k - Math.round(heroState.frame)) <= HERO_WINDOW + 8) heroBitmaps.set(k, bm); else bm.close();
         }).catch(() => heroPending.delete(k));
       }
     }
@@ -3021,63 +3150,86 @@ const CATALOG = [
   // mostrar um buraco. Só redesenha quando o índice muda.
   function heroDraw(i) {
     if (!heroCtx) return;
+    const L = heroCur.loaded;
     let k = Math.max(0, Math.min(HERO_FRAMES - 1, i));
-    while (k > 0 && !heroLoaded[k]) k--;
-    if (!heroLoaded[k] || k === heroDrawn) return;
+    while (k > 0 && !L[k]) k--;
+    if (!L[k] || k === heroDrawn) return;
     const t0 = window.__heroProfile ? performance.now() : 0;
-    heroCtx.drawImage(heroBitmaps.get(k) || heroImgs[k], 0, 0);   // 1:1
+    heroCtx.drawImage(heroBitmaps.get(k) || heroCur.imgs[k], 0, 0);   // 1:1
     if (window.__heroProfile) window.__heroProfile.push(performance.now() - t0);
     heroDrawn = k;
     heroEnsureWindow(k);
   }
   function heroTick() { if (heroLive) heroDraw(Math.round(heroState.frame)); }
 
-  // Carrega e decodifica os 240 frames. Política: falha rápido, espera com
+  // Carrega e decodifica um conjunto. Política: falha rápido, espera com
   // paciência. Resolve true quando dá para ligar a sequência:
   //   · 90% dos frames prontos — o caminho normal, 1 a 4 s; ou
   //   · passaram 5 s sem nenhuma falha e já há 10%: liga em modo
   //     progressivo. O desenho usa o frame mais próximo já carregado e os
-  //     demais vão entrando (disco lento, antivírus varrendo os 240
-  //     arquivos recém-extraídos, 4G). Desistir aos 5 s, como antes, era
-  //     trocar o hero por um poster justamente em quem mais demora.
-  // Resolve false se 8+ frames falharam (pasta ausente: os 240 falham em
+  //     demais vão entrando (disco lento, antivírus varrendo os arquivos
+  //     recém-extraídos, 4G). Desistir aos 5 s, como antes, era trocar o
+  //     hero por um poster justamente em quem mais demora.
+  // Resolve false se 8+ frames falharam (pasta ausente: todos falham em
   // milissegundos) ou se em 20 s ainda não chegou a 10%.
-  function heroPreload() {
-    return new Promise((resolve) => {
-      const t0 = performance.now();
+  function heroPreload(set) {
+    if (set.promise) return set.promise;
+    set.promise = new Promise((resolve) => {
+      const N = set.idx.length, t0 = performance.now();
       let settled = 0, loaded = 0, errors = 0, finished = false;
       const finish = (ok) => {
         if (finished) return;
         finished = true; clearTimeout(t5); clearTimeout(t20);
+        set.ok = ok;
         resolve(ok);
       };
       const check = () => {
         if (finished) return;
         if (errors >= 8) return finish(false);
-        if (loaded >= HERO_FRAMES * 0.9) return finish(true);
-        if (performance.now() - t0 >= 5000 && loaded >= HERO_FRAMES * 0.1) return finish(true);
-        if (settled === HERO_FRAMES) return finish(loaded >= HERO_FRAMES * 0.1);
+        if (loaded >= N * 0.9) return finish(true);
+        if (performance.now() - t0 >= 5000 && loaded >= N * 0.1) return finish(true);
+        if (settled === N) return finish(loaded >= N * 0.1);
       };
       const t5 = setTimeout(check, 5000);
-      const t20 = setTimeout(() => finish(loaded >= HERO_FRAMES * 0.1), 20000);
-      for (let i = 0; i < HERO_FRAMES; i++) {
+      const t20 = setTimeout(() => finish(loaded >= N * 0.1), 20000);
+      set.idx.forEach((i) => {
         const img = new Image();
         img.decoding = 'async';
-        heroImgs[i] = img;
+        set.imgs[i] = img;
         const mark = (ok) => {
           settled++;
-          if (ok) { heroLoaded[i] = 1; loaded++; } else errors++;
+          if (ok) { set.loaded[i] = 1; loaded++; } else errors++;
           check();
         };
         img.onload = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(() => mark(true));
         img.onerror = () => mark(false);
-        img.src = heroSrc(i);
-      }
+        img.src = heroSrc(set, i);
+      });
     });
+    return set.promise;
   }
 
-  // Sem sequência (mobile, reduced-motion, falha de carregamento, usuário já
-  // rolou): mostra o conteúdo que a coreografia teria revelado.
+  // Troca de conjunto quando a tela cruza os 900px com a sequência viva
+  // (tablet girando, janela redimensionada). Até o outro conjunto chegar, o
+  // atual continua na tela: object-fit: cover recorta o inteiro na caixa do
+  // recorte, e o recorte esticado na caixa do inteiro perde as bordas por
+  // alguns segundos — melhor que um buraco.
+  function heroUseSet(key) {
+    const set = heroSets[key];
+    if (heroCur === set) return;
+    const apply = () => {
+      heroCur = set;
+      window.__heroLoaded = set.loaded;
+      heroBitmaps.forEach((bm) => bm.close()); heroBitmaps.clear();
+      heroDrawn = -1;
+      if (heroLive) heroResize();
+    };
+    if (set.ok) return apply();
+    heroPreload(set).then((ok) => { if (ok && heroSets[key] !== heroCur) apply(); });
+  }
+
+  // Sem sequência (celular deitado, reduced-motion, falha de carregamento):
+  // mostra o conteúdo que a coreografia teria revelado.
   function heroFallback() {
     if (heroLive || !HAS_GSAP) return;
     gsap.to(['#heroP1', '#heroP2', '#heroCta'], { autoAlpha: 1, opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out', delay: 0.2 });
@@ -3096,7 +3248,15 @@ const CATALOG = [
     // continua na tela.
     const yBefore = window.scrollY, hBefore = hero.offsetHeight;
 
-    heroMM.add('(min-width: ' + HERO_MIN_W + 'px) and (prefers-reduced-motion: no-preference)', () => {
+    // Objeto de condições: a função roda quando qualquer uma casa e roda de
+    // novo (depois da limpeza) quando o estado muda — tela cruzando 900px,
+    // celular girando. Nenhuma casando (celular deitado): desmonta, poster.
+    heroMM.add({
+      desktop: MQ_DESKTOP + ' and (prefers-reduced-motion: no-preference)',
+      tablet: MQ_TABLET + ' and (prefers-reduced-motion: no-preference)',
+      phone: MQ_PHONE + ' and (prefers-reduced-motion: no-preference)'
+    }, (ctx) => {
+      heroUseSet(ctx.conditions.phone ? 'm' : 'd');
       hero.classList.add('is-live');       // vira a pista de 4 telas (CSS)
       heroLive = true;
       heroResize();
@@ -3136,8 +3296,8 @@ const CATALOG = [
       // acessibilidade o tempo todo.
       tl.to('#heroTitle', { opacity: 0, y: -28, duration: 0.06, ease: 'power2.in' }, 0.26);
 
-      // Uma frase por vez, no mesmo lugar do título (área preta à esquerda),
-      // enquanto o busto gira. A direita fica limpa para o giro: ver CSS.
+      // Uma frase por vez, no mesmo lugar do título (área preta à esquerda
+      // no desktop; embaixo do busto no celular), enquanto o busto gira.
       tl.fromTo('#heroP1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.34);
       tl.to('#heroP1', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.54);
       tl.fromTo('#heroP2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.60);
@@ -3147,7 +3307,7 @@ const CATALOG = [
       tl.fromTo('#heroCta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.88);
       tl.to('#heroFade', { opacity: 1, duration: 0.1 }, 0.90);
 
-      return () => {                      // viewport encolheu: desmonta tudo
+      return () => {                      // condições mudaram: desmonta tudo
         gsap.ticker.remove(heroTick);
         heroBitmaps.forEach((bm) => bm.close()); heroBitmaps.clear();
         document.body.classList.remove('hero-pinned');
@@ -3167,8 +3327,8 @@ const CATALOG = [
     gsap.set(['#heroP1', '#heroP2'], { opacity: 0 });
     gsap.set('#heroCta', { autoAlpha: 0 });
     const heroT0 = performance.now();
-    heroPreload().then((ok) => {
-      window.__heroPreload = { ok: ok, ms: Math.round(performance.now() - heroT0), carregados: heroLoaded.reduce((a, b) => a + b, 0) };   // só leitura, harness
+    heroPreload(heroCur).then((ok) => {
+      window.__heroPreload = { ok: ok, ms: Math.round(performance.now() - heroT0), carregados: heroCur.loaded.reduce((a, b) => a + b, 0), conjunto: heroCur.key, total: heroCur.idx.length };   // só leitura, harness
       if (!ok || !heroBuildPin()) heroFallback();
       ScrollTrigger.refresh();
     });

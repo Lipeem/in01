@@ -19,12 +19,12 @@ do lado. É o que o GitHub Pages serve.
 **`exposul-site.html`** — arquivo único, tudo embutido (CSS, JS, GSAP, Lenis,
 as fontes, o logo e o poster do hero). Dê duplo clique e roda: sem servidor,
 sem instalar nada, sem internet. **Para a sequência do hero ligar, a pasta
-`assets/hero-frames/` precisa estar ao lado dele** (é o conteúdo do zip de
-distribuição). Sem a pasta, o hero fica no poster estático, por conta
+`assets/hero-frames/` (e `assets/hero-frames-m/`, para celular) precisa
+estar ao lado dele** (é o conteúdo do zip de distribuição). Sem a pasta, o hero fica no poster estático, por conta
 própria — o carregamento falha em milissegundos e o código já trata isso.
 
-**Versão hospedável** (`node build-artifact.js`) — um arquivo com os 240
-frames embutidos (4,3 MB), sem `<html>`/`<head>`/`<body>`, para hosts que
+**Versão hospedável** (`node build-artifact.js`) — um arquivo com os dois
+conjuntos de frames embutidos (4,7 MB), sem `<html>`/`<head>`/`<body>`, para hosts que
 embrulham o conteúdo (o Artifact do claude.ai é um). Nada depende de pasta
 ao lado: o hero gira em qualquer lugar onde o arquivo abrir. Não abre por
 duplo clique, de propósito.
@@ -62,9 +62,10 @@ GitHub; nenhum arquivo do repositório precisa mudar.
 ```
 exposul-site.html   Arquivo único gerado, com tudo embutido (não editar)
 build-single.js     Gera o arquivo único a partir dos arquivos separados
-build-artifact.js   Gera a versão hospedável, com os 240 frames embutidos
+build-artifact.js   Gera a versão hospedável, com os dois conjuntos de frames embutidos
 index.html          Página inteira + sprite SVG dos produtos (inline)
-assets/hero-frames/ 240 frames do hero (f_001…f_240.webp, 1120×720, 2,9 MB)
+assets/hero-frames/ 240 frames do hero (f_001…f_240.webp, 1120×720, 2,9 MB); o site carrega do 49 em diante
+assets/hero-frames-m/ 96 frames para celular: recorte central 640×720 dos frames pares a partir do 49 (0,8 MB)
 assets/             hero-poster.webp (frame 150) e exposul-logo.png
 css/fonts.css       Bodoni Moda e Archivo embutidas em base64
 css/site.css        Todo o estilo, comentado por seção
@@ -122,7 +123,8 @@ O rodapé exibe "Protótipo de demonstração — preços e prazos ilustrativos"
 
 É o momento do site. Toda a ousadia está aqui e o resto ficou quieto.
 
-**O que acontece.** Em telas de 900px ou mais, sem `prefers-reduced-motion`,
+**O que acontece.** Sem `prefers-reduced-motion`, em qualquer tela de 900px
+ou mais e em celular ou tablet em pé (ver a tabela em "Celular e tablet"),
 o hero vira uma pista de **4 telas** (`height: 400vh`) com o palco preso
 ao topo por `position: sticky` — nenhum pin do ScrollTrigger, só o scrub.
 Os frames são desenhados num `<canvas>` conforme a página desce
@@ -167,14 +169,41 @@ e as bordas de cima e de baixo, onde o chão do render é mais claro que a
 página, somem em dois degradês. Só acima de 8/9 de proporção.
 
 **Portões.** A sequência só roda se todos passarem: GSAP presente · sem
-`prefers-reduced-motion` · viewport ≥ 900px · frames encontrados. Qualquer
-um falhando: poster estático (`hero-poster.webp`), conteúdo completo, sem
-pin. Abaixo de 900px **nenhum frame é baixado** — verificado: zero
-requisições a `hero-frames/` a 390px. O corte era 1024px; desceu para 900
-porque um notebook de 1366px com 150% de escala no Windows tem 910px CSS
-de largura, e uma janela não maximizada fica abaixo de 1024 com facilidade
-— e aí o dono do site abria o hero e via um poster. Abaixo de 900 é celular
-ou tablet em pé.
+`prefers-reduced-motion` · frames encontrados · tela ≥ 900px, ou tela
+menor **em pé**. Qualquer um falhando: poster estático (`hero-poster.webp`),
+conteúdo completo, sem pin. Celular deitado fica no poster de propósito: o
+recorte de 640×720 coberto num 844×390 mostraria só o peito. O corte de
+desktop era 1024px; desceu para 900 porque um notebook de 1366px com 150%
+de escala no Windows tem 910px CSS de largura, e uma janela não maximizada
+fica abaixo de 1024 com facilidade.
+
+**Celular e tablet.** Três conjuntos de regras, um clipe:
+
+| Tela | Frames | Caixa do frame | Texto |
+|---|---|---|---|
+| ≥ 900px, paisagem | inteiros, 1120×720 (192 a partir do f_049, 2,3 MB) | cobre a viewport | título e frases à esquerda |
+| ≥ 900px, em pé (monitor em pé, visualizador do artifact no celular) | inteiros | 175vw centrada, bordas em degradê | título em cima, frases embaixo |
+| 600–899px em pé (tablet) | inteiros | começa abaixo do título; a largura sai da altura que sobra (≥ 100vw, ≤ 175vw) | idem |
+| < 600px em pé (celular) | **recorte central 640×720, frames pares, 96 arquivos, 0,8 MB** | 100vw, abaixo do título | idem, fontes menores |
+| < 900px deitado | nenhum | poster estático | empilhado |
+
+O recorte é exatamente o que cabe na tela em pé (100vw quando o frame
+inteiro teria 175vw), então a composição é a mesma em todas as linhas da
+tabela, e o poster inteiro com `object-fit: cover` na caixa do recorte dá o
+mesmo enquadramento. Os frames pares bastam: o giro fica de 2 em 2, 45
+passos no scroll, e o desenho já usava "o frame mais próximo carregado".
+Tablet não usa o recorte porque a caixa dele precisa ser mais estreita que
+175vw para caber na altura, e só o frame inteiro pode encolher sem mostrar
+borda. Se a tela cruza os 900px com a sequência viva (tablet girando), o
+outro conjunto é carregado e trocado quando chega.
+
+Medido em Chromium com emulação de toque: 390×844, 360×640, 412×915 e
+768×1024 ligam a sequência (o 768 com os inteiros), zero erros, zero
+overflow, título sem encostar na cabeça (26 a 41px de folga), frase abaixo
+da caixa (ou na borda dela, no 360×640, com o degradê subindo 24vw para
+escurecer a base). 844×390 (deitado) fica no poster sem baixar nenhum
+frame. FPS emulado sem GPU não diz nada sobre celular real: **falta testar
+num aparelho** — GitHub Pages é o caminho (ver "Como publicar").
 
 **Carregamento: falha rápido, espera com paciência.** Com 90% dos frames
 prontos (1 a 4 s, o caso normal) a sequência liga. Se aos 5 s ainda não
@@ -313,8 +342,9 @@ rasterização por software (SwiftShader, sem GPU); numa máquina com GPU o
 compositor faz de graça o que aqui é o pior caso. Frames carregam em ~1 s
 por HTTP local e ~1,8 s por `file://`.
 
-Peso: ~400 KB de página + 2,9 MB de frames, baixados **só** em desktop, só
-sem `prefers-reduced-motion`, e nunca antes do poster estar na tela.
+Peso: ~400 KB de página + 2,3 MB de frames no desktop (a partir do f_049)
+ou 0,8 MB no celular, só sem `prefers-reduced-motion`, e nunca antes do
+poster estar na tela.
 
 O hero foi verificado sem colisão entre o manequim, o título e o texto de
 apoio em nove proporções, de 1024×700 a 2560×1440, e a 960×640 depois da
