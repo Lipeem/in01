@@ -142,7 +142,11 @@
   const HERO_MIN_W = 900;
   const heroWantsSequence = ANIM && !!heroCanvas && window.matchMedia('(min-width: ' + HERO_MIN_W + 'px)').matches;
 
-  const heroState = { frame: 0 };
+  // Abre no frame 48, não no 1: o clipe começa num close do peito e só no
+  // 45–50 a câmera mostra o busto inteiro. Com o close coberto por altura
+  // numa tela vertical, a primeira tela era um peito de três metros.
+  const HERO_FIRST = 48;
+  const heroState = { frame: HERO_FIRST };
   window.__heroState = heroState;    // só leitura, para o harness de verificação
   const heroImgs = new Array(HERO_FRAMES);
   const heroLoaded = new Uint8Array(HERO_FRAMES);
@@ -267,28 +271,24 @@
 
   function heroBuildPin() {
     if (heroST || !heroMM) return false;
-    // A pista tem 4,5 telas; o hero estático, uma. Se o usuário já rolou
+    // A pista tem 4 telas; o hero estático, uma. Se o usuário já rolou
     // (recarregou no meio da página — o Chrome devolve à mesma posição —,
     // chegou por âncora, ou o carregamento foi lento), crescer o hero
-    // embaixo dele empurraria tudo 3,5 telas para baixo. Antes a sequência
+    // embaixo dele empurraria tudo 3 telas para baixo. Antes a sequência
     // desistia nesse caso, e "recarregar para ver de novo" virava poster.
     // Agora liga e compensa o scroll na mesma medida: o que estava na tela
     // continua na tela.
     const yBefore = window.scrollY, hBefore = hero.offsetHeight;
 
     heroMM.add('(min-width: ' + HERO_MIN_W + 'px) and (prefers-reduced-motion: no-preference)', () => {
-      hero.classList.add('is-live');       // vira a pista de 4,5 telas (CSS)
+      hero.classList.add('is-live');       // vira a pista de 4 telas (CSS)
       heroLive = true;
       heroResize();
-      heroEnsureWindow(0);
+      heroEnsureWindow(HERO_FIRST);
       gsap.ticker.add(heroTick);          // redesenho no ticker, nunca no evento de scroll
 
-      // Título em duas metades, cada uma revelada por linha mascarada. A
-      // máscara é HTML fixo (.hero__ln-mask > .hero__ln): o SplitText
-      // devolvia, para a metade direita, um nó diferente do que ficava no
-      // DOM, e o tween mirava um elemento órfão.
-      const titleLines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
-
+      // O título entra no carregamento (startHero), nos dois modos. Aqui o
+      // scroll só o tira de cena.
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
@@ -304,34 +304,31 @@
       heroST = tl.scrollTrigger;
       window.__heroST = heroST;           // exposto para o harness de verificação
 
-      /* Os frames, remapeados ao que o clipe tem de verdade:
-           f_001–f_060  close e recuo da câmera      → 20% da pista (abertura só com imagem)
-           f_060–f_150  plano parado                 → 12%, comprimido: ninguém nota
-           f_150–f_240  o busto gira até 3/4         → 68%: o giro domina o scroll */
-      tl.to(heroState, { frame: 59,  duration: 0.20 }, 0)
-        .to(heroState, { frame: 149, duration: 0.12 }, 0.20)
-        .to(heroState, { frame: 239, duration: 0.68 }, 0.32);
+      /* Os frames, remapeados ao que o clipe tem de verdade (medido):
+           f_048–f_060  busto inteiro, câmera assenta →  6% da pista
+           f_060–f_150  plano parado                  →  8%, comprimido: ninguém nota
+           f_150–f_240  o busto gira até 3/4          → 86%: o giro domina o scroll
+         O close do início (f_001–f_047) ficou de fora: ver HERO_FIRST. */
+      tl.to(heroState, { frame: 59,  duration: 0.06 }, 0)
+        .to(heroState, { frame: 149, duration: 0.08 }, 0.06)
+        .to(heroState, { frame: 239, duration: 0.86 }, 0.14);
 
       tl.to('#heroScroll', { autoAlpha: 0, duration: 0.04 }, 0.02);
 
-      // Título: entra quando a cena abre (o objeto já está centrado), sai
-      // antes da primeira frase. Opacidade, não visibility: fica na árvore
-      // de acessibilidade o tempo todo.
-      // Estado inicial fixado à mão. `from()` com stagger só renderiza de
-      // imediato o PRIMEIRO alvo; o segundo ficava visível em 0% até o
-      // sub-tween dele iniciar — o que num scrub parado nunca acontece.
-      gsap.set(titleLines, { yPercent: 110 });
-      tl.to(titleLines, { yPercent: 0, duration: 0.08, stagger: 0.025, ease: 'power3.out' }, 0.17);
-      tl.to('#heroTitle', { opacity: 0, y: -28, duration: 0.06, ease: 'power2.in' }, 0.40);
+      // Título: já está na tela (entrou no carregamento); sai antes da
+      // primeira frase. Opacidade, não visibility: fica na árvore de
+      // acessibilidade o tempo todo.
+      tl.to('#heroTitle', { opacity: 0, y: -28, duration: 0.06, ease: 'power2.in' }, 0.26);
 
-      // Uma frase por vez, alternando o lado, enquanto o busto gira.
-      tl.fromTo('#heroP1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.46);
-      tl.to('#heroP1', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.64);
-      tl.fromTo('#heroP2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.69);
-      tl.to('#heroP2', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.86);
+      // Uma frase por vez, no mesmo lugar do título (área preta à esquerda),
+      // enquanto o busto gira. A direita fica limpa para o giro: ver CSS.
+      tl.fromTo('#heroP1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.34);
+      tl.to('#heroP1', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.54);
+      tl.fromTo('#heroP2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.60);
+      tl.to('#heroP2', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.80);
 
       // Fim: um CTA só, e o degradê fecha em --ink-2 para emendar no marquee.
-      tl.fromTo('#heroCta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.90);
+      tl.fromTo('#heroCta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.88);
       tl.to('#heroFade', { opacity: 1, duration: 0.1 }, 0.90);
 
       return () => {                      // viewport encolheu: desmonta tudo
@@ -368,12 +365,16 @@
     const play = () => {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
       tl.from('.nav__inner > *', { y: -18, opacity: 0, duration: 0.8, stagger: 0.07 }, 0.1);
-      if (!heroLive && !heroWantsSequence) {
-        // modo estático: título entra por linha no carregamento
-        const lines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
-        gsap.set(lines, { yPercent: 108 });   // mesmo motivo: from() + stagger pisca o 2º alvo
-        tl.to(lines, { yPercent: 0, duration: 1.2, stagger: 0.055 }, 0);
-      }
+      // Título entra por linha no carregamento, nos DOIS modos: quem não
+      // rola vê a headline, e a primeira tela (miniatura, link compartilhado)
+      // já é busto + headline. No modo vivo o scroll só a tira (heroBuildPin).
+      // A máscara é HTML fixo (.hero__ln-mask > .hero__ln): o SplitText
+      // devolvia, para a metade direita, um nó diferente do que ficava no DOM.
+      // Estado inicial via set(): from() com stagger só renderiza de
+      // imediato o PRIMEIRO alvo e o segundo piscava.
+      const lines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
+      gsap.set(lines, { yPercent: 108 });
+      tl.to(lines, { yPercent: 0, duration: 1.2, stagger: 0.055 }, 0);
       ScrollTrigger.refresh();
     };
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(play); else play();

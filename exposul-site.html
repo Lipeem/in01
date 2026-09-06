@@ -567,7 +567,7 @@ a { color: inherit; text-decoration: none; }
    Layout padrão = ESTÁTICO (poster + texto empilhado): vale para mobile,
    prefers-reduced-motion, GSAP ausente e falha de carregamento. A classe
    .is-live, adicionada só quando os 240 frames estão prontos, transforma a
-   seção numa pista de 4,5 telas com o palco preso (sticky) e os painéis
+   seção numa pista de 4 telas com o palco preso (sticky) e os painéis
    posicionados nas áreas pretas ao lado do objeto.
    -------------------------------------------------------------------------- */
 .hero { position: relative; background: var(--ink); }
@@ -684,9 +684,9 @@ a { color: inherit; text-decoration: none; }
   .hero__canvas { display: none; }   /* sem sequência abaixo de 900px */
 }
 
-/* ---- modo vivo: pista de 4,5 telas, palco preso, painéis nas áreas pretas ---- */
+/* ---- modo vivo: pista de 4 telas, palco preso, painéis nas áreas pretas ---- */
 @media (min-width: 900px) {
-  .hero.is-live { height: 450vh; }
+  .hero.is-live { height: 400vh; }
   .hero.is-live .hero__stage {
     position: sticky;
     top: 0;
@@ -703,28 +703,88 @@ a { color: inherit; text-decoration: none; }
     pointer-events: none;
   }
   .hero.is-live .hero__panel { position: absolute; pointer-events: auto; }
-  /* O busto ocupa o terço central; o título abre em duas metades, uma em
-     cada área preta, na altura do peito. */
+  /* Todo o texto vive na área preta da ESQUERDA, na altura do peito, um
+     bloco substituindo o outro. O render tem o busto à direita do centro
+     (arcos à esquerda, esfera à direita). Medido de 960×640 a 2560×1440 com
+     as caixas reais do texto contra a silhueta do frame: à esquerda sobram
+     230px ou mais em qualquer altura; à direita a folga é NEGATIVA na
+     altura do peito (−35 a −43px em todo notebook) e cai a 6px na altura do
+     pescoço durante o giro. A primeira versão, com uma metade do título de
+     cada lado, invadia o braço em qualquer tela até 1536px. */
   .hero.is-live .hero__panel--title {
-    inset: 0;
-    font-size: clamp(2.8rem, 5.6vw, 5.6rem);
+    left: var(--gutter);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: clamp(3rem, 6.2vw, 6.2rem);
     line-height: 0.92;
     pointer-events: none;
   }
-  .hero.is-live .hero__half {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    white-space: nowrap;
-  }
-  .hero.is-live .hero__half--l { left: var(--gutter); }
-  .hero.is-live .hero__half--r { right: var(--gutter); text-align: right; }
-  .hero.is-live .hero__panel--l { left: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; }
-  .hero.is-live .hero__panel--r { right: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; text-align: right; }
+  .hero.is-live .hero__half { white-space: nowrap; }   /* uma metade por linha, sem quebra interna */
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r { left: var(--gutter); top: 50%; transform: translateY(-50%); max-width: 26vw; }
   .hero.is-live .hero__panel--cta {
     left: 50%;
     bottom: clamp(2rem, 8vh, 5rem);
     transform: translateX(-50%);
+  }
+}
+
+/* Tela vertical com a sequência ligada: monitor em pé, ou o visualizador do
+   artifact num celular, que renderiza a página com ~980px de largura.
+   Cobrir a altura (object-fit: cover) ampliava o frame 3× e o que cabia na
+   tela era um peito. Aqui o frame fica com 175vw de largura, centrado — o
+   busto ocupa metade da largura e da altura — e as bordas de cima e de
+   baixo (o chão do render é mais claro que a página) somem em dois
+   degradês. Só acima de 8/9: abaixo disso "50% − 56,25vw" ficaria negativo. */
+@media (min-width: 900px) and (max-aspect-ratio: 8/9) {
+  .hero.is-live .hero__poster,
+  .hero.is-live .hero__canvas {
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: 175vw;
+    height: 112.5vw;                 /* 175vw × 720/1120 */
+    transform: translate(-50%, -50%);
+  }
+  .hero.is-live .hero__media::before,
+  .hero.is-live .hero__media::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+  .hero.is-live .hero__media::before {
+    top: 0;
+    height: calc(50% - 56.25vw + 10vw);
+    background: linear-gradient(to bottom, var(--ink) calc(100% - 10vw), transparent);
+  }
+  .hero.is-live .hero__media::after {
+    bottom: 0;
+    height: calc(50% - 56.25vw + 14vw);
+    background: linear-gradient(to top, var(--ink) calc(100% - 14vw), transparent);
+  }
+  /* Em pé não sobra área preta ao lado do busto: o título sobe, centrado,
+     uma metade por linha, no preto acima da cabeça. As frases descem para
+     o preto abaixo da base, centradas. */
+  .hero.is-live .hero__panel--title {
+    top: calc(var(--nav-h) + 3vh);
+    left: var(--gutter);
+    right: var(--gutter);
+    transform: none;
+    font-size: clamp(3rem, 8vw, 6rem);
+    text-align: center;
+  }
+  .hero.is-live .hero__panel--l,
+  .hero.is-live .hero__panel--r {
+    top: auto;
+    bottom: 11vh;
+    left: var(--gutter);
+    right: var(--gutter);
+    max-width: 34ch;
+    margin-inline: auto;
+    transform: none;
+    text-align: center;
   }
 }
 
@@ -1704,8 +1764,9 @@ setTimeout(function () {
 <main id="conteudo">
 
 <!-- ====================================================== HERO
-     O busto é o FUNDO da página por 4,5 telas: fica preso (sticky) e gira
-     enquanto o conteúdo passa por cima. Abertura só com imagem; uma frase
+     O busto é o FUNDO da página por 4 telas: fica preso (sticky) e gira
+     enquanto o conteúdo passa por cima. Abre com o busto inteiro e a
+     headline (frame 48, não o close do 1); depois uma frase
      por vez nas áreas pretas ao lado do objeto; um CTA no fim. Só a partir
      de 900px e sem prefers-reduced-motion; fora disso, poster estático com
      o texto empilhado. Texto sempre em HTML, nunca no canvas. -->
@@ -2897,7 +2958,11 @@ const CATALOG = [
   const HERO_MIN_W = 900;
   const heroWantsSequence = ANIM && !!heroCanvas && window.matchMedia('(min-width: ' + HERO_MIN_W + 'px)').matches;
 
-  const heroState = { frame: 0 };
+  // Abre no frame 48, não no 1: o clipe começa num close do peito e só no
+  // 45–50 a câmera mostra o busto inteiro. Com o close coberto por altura
+  // numa tela vertical, a primeira tela era um peito de três metros.
+  const HERO_FIRST = 48;
+  const heroState = { frame: HERO_FIRST };
   window.__heroState = heroState;    // só leitura, para o harness de verificação
   const heroImgs = new Array(HERO_FRAMES);
   const heroLoaded = new Uint8Array(HERO_FRAMES);
@@ -3022,28 +3087,24 @@ const CATALOG = [
 
   function heroBuildPin() {
     if (heroST || !heroMM) return false;
-    // A pista tem 4,5 telas; o hero estático, uma. Se o usuário já rolou
+    // A pista tem 4 telas; o hero estático, uma. Se o usuário já rolou
     // (recarregou no meio da página — o Chrome devolve à mesma posição —,
     // chegou por âncora, ou o carregamento foi lento), crescer o hero
-    // embaixo dele empurraria tudo 3,5 telas para baixo. Antes a sequência
+    // embaixo dele empurraria tudo 3 telas para baixo. Antes a sequência
     // desistia nesse caso, e "recarregar para ver de novo" virava poster.
     // Agora liga e compensa o scroll na mesma medida: o que estava na tela
     // continua na tela.
     const yBefore = window.scrollY, hBefore = hero.offsetHeight;
 
     heroMM.add('(min-width: ' + HERO_MIN_W + 'px) and (prefers-reduced-motion: no-preference)', () => {
-      hero.classList.add('is-live');       // vira a pista de 4,5 telas (CSS)
+      hero.classList.add('is-live');       // vira a pista de 4 telas (CSS)
       heroLive = true;
       heroResize();
-      heroEnsureWindow(0);
+      heroEnsureWindow(HERO_FIRST);
       gsap.ticker.add(heroTick);          // redesenho no ticker, nunca no evento de scroll
 
-      // Título em duas metades, cada uma revelada por linha mascarada. A
-      // máscara é HTML fixo (.hero__ln-mask > .hero__ln): o SplitText
-      // devolvia, para a metade direita, um nó diferente do que ficava no
-      // DOM, e o tween mirava um elemento órfão.
-      const titleLines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
-
+      // O título entra no carregamento (startHero), nos dois modos. Aqui o
+      // scroll só o tira de cena.
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
@@ -3059,34 +3120,31 @@ const CATALOG = [
       heroST = tl.scrollTrigger;
       window.__heroST = heroST;           // exposto para o harness de verificação
 
-      /* Os frames, remapeados ao que o clipe tem de verdade:
-           f_001–f_060  close e recuo da câmera      → 20% da pista (abertura só com imagem)
-           f_060–f_150  plano parado                 → 12%, comprimido: ninguém nota
-           f_150–f_240  o busto gira até 3/4         → 68%: o giro domina o scroll */
-      tl.to(heroState, { frame: 59,  duration: 0.20 }, 0)
-        .to(heroState, { frame: 149, duration: 0.12 }, 0.20)
-        .to(heroState, { frame: 239, duration: 0.68 }, 0.32);
+      /* Os frames, remapeados ao que o clipe tem de verdade (medido):
+           f_048–f_060  busto inteiro, câmera assenta →  6% da pista
+           f_060–f_150  plano parado                  →  8%, comprimido: ninguém nota
+           f_150–f_240  o busto gira até 3/4          → 86%: o giro domina o scroll
+         O close do início (f_001–f_047) ficou de fora: ver HERO_FIRST. */
+      tl.to(heroState, { frame: 59,  duration: 0.06 }, 0)
+        .to(heroState, { frame: 149, duration: 0.08 }, 0.06)
+        .to(heroState, { frame: 239, duration: 0.86 }, 0.14);
 
       tl.to('#heroScroll', { autoAlpha: 0, duration: 0.04 }, 0.02);
 
-      // Título: entra quando a cena abre (o objeto já está centrado), sai
-      // antes da primeira frase. Opacidade, não visibility: fica na árvore
-      // de acessibilidade o tempo todo.
-      // Estado inicial fixado à mão. `from()` com stagger só renderiza de
-      // imediato o PRIMEIRO alvo; o segundo ficava visível em 0% até o
-      // sub-tween dele iniciar — o que num scrub parado nunca acontece.
-      gsap.set(titleLines, { yPercent: 110 });
-      tl.to(titleLines, { yPercent: 0, duration: 0.08, stagger: 0.025, ease: 'power3.out' }, 0.17);
-      tl.to('#heroTitle', { opacity: 0, y: -28, duration: 0.06, ease: 'power2.in' }, 0.40);
+      // Título: já está na tela (entrou no carregamento); sai antes da
+      // primeira frase. Opacidade, não visibility: fica na árvore de
+      // acessibilidade o tempo todo.
+      tl.to('#heroTitle', { opacity: 0, y: -28, duration: 0.06, ease: 'power2.in' }, 0.26);
 
-      // Uma frase por vez, alternando o lado, enquanto o busto gira.
-      tl.fromTo('#heroP1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.46);
-      tl.to('#heroP1', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.64);
-      tl.fromTo('#heroP2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.69);
-      tl.to('#heroP2', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.86);
+      // Uma frase por vez, no mesmo lugar do título (área preta à esquerda),
+      // enquanto o busto gira. A direita fica limpa para o giro: ver CSS.
+      tl.fromTo('#heroP1', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.34);
+      tl.to('#heroP1', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.54);
+      tl.fromTo('#heroP2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.60);
+      tl.to('#heroP2', { opacity: 0, y: -24, duration: 0.05, ease: 'power2.in' }, 0.80);
 
       // Fim: um CTA só, e o degradê fecha em --ink-2 para emendar no marquee.
-      tl.fromTo('#heroCta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.90);
+      tl.fromTo('#heroCta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power3.out' }, 0.88);
       tl.to('#heroFade', { opacity: 1, duration: 0.1 }, 0.90);
 
       return () => {                      // viewport encolheu: desmonta tudo
@@ -3123,12 +3181,16 @@ const CATALOG = [
     const play = () => {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
       tl.from('.nav__inner > *', { y: -18, opacity: 0, duration: 0.8, stagger: 0.07 }, 0.1);
-      if (!heroLive && !heroWantsSequence) {
-        // modo estático: título entra por linha no carregamento
-        const lines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
-        gsap.set(lines, { yPercent: 108 });   // mesmo motivo: from() + stagger pisca o 2º alvo
-        tl.to(lines, { yPercent: 0, duration: 1.2, stagger: 0.055 }, 0);
-      }
+      // Título entra por linha no carregamento, nos DOIS modos: quem não
+      // rola vê a headline, e a primeira tela (miniatura, link compartilhado)
+      // já é busto + headline. No modo vivo o scroll só a tira (heroBuildPin).
+      // A máscara é HTML fixo (.hero__ln-mask > .hero__ln): o SplitText
+      // devolvia, para a metade direita, um nó diferente do que ficava no DOM.
+      // Estado inicial via set(): from() com stagger só renderiza de
+      // imediato o PRIMEIRO alvo e o segundo piscava.
+      const lines = ['#heroTitleL .hero__ln', '#heroTitleR .hero__ln'];
+      gsap.set(lines, { yPercent: 108 });
+      tl.to(lines, { yPercent: 0, duration: 1.2, stagger: 0.055 }, 0);
       ScrollTrigger.refresh();
     };
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(play); else play();

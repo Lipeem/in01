@@ -123,25 +123,48 @@ O rodapé exibe "Protótipo de demonstração — preços e prazos ilustrativos"
 É o momento do site. Toda a ousadia está aqui e o resto ficou quieto.
 
 **O que acontece.** Em telas de 900px ou mais, sem `prefers-reduced-motion`,
-o hero vira uma pista de **4,5 telas** (`height: 450vh`) com o palco preso
+o hero vira uma pista de **4 telas** (`height: 400vh`) com o palco preso
 ao topo por `position: sticky` — nenhum pin do ScrollTrigger, só o scrub.
-Os 240 frames são desenhados num `<canvas>` conforme a página desce
-(`scrub: 0.8`, com inércia curta). O texto é esparso e entra em cima da
-imagem, uma frase por vez, alternando o lado. A distribuição dos frames
-pelo scroll segue os três atos do material, **medidos frame a frame** (a
+Os frames são desenhados num `<canvas>` conforme a página desce
+(`scrub: 0.8`, com inércia curta). O texto é esparso e vive na área preta
+à esquerda do busto, um bloco substituindo o outro; a direita fica limpa
+para o giro. A distribuição dos frames
+pelo scroll segue os atos do material, **medidos frame a frame** (a
 descrição que veio com os frames dizia que o recuo da câmera ia até o
 frame 150; ele acaba no 60):
 
 | Frames | Pista | Cena | Texto |
 |---|---|---|---|
-| f_001–f_060 | 0–20% | close no torso, câmera recua | só imagem; o pulso "Role" some nos primeiros 2% |
-| f_060–f_150 | 20–32% | plano parado, cena aberta | comprimido de propósito (ninguém nota um plano parado); a headline entra por linha aos 17% |
-| f_150–f_240 | 32–100% | o busto gira até 3/4 | headline sai aos 40%; frase 1 (46–64%, esquerda); frase 2 (69–86%, direita); CTA único aos 90%; o degradê fecha em `--ink-2` e emenda com o marquee |
+| f_048–f_060 | 0–6% | busto inteiro, a câmera assenta | headline já na tela (entra no carregamento); o pulso "Role" some nos primeiros 2% |
+| f_060–f_150 | 6–14% | plano parado, cena aberta | comprimido de propósito: ninguém nota um plano parado |
+| f_150–f_240 | 14–100% | o busto gira até 3/4 | headline sai aos 26%; frase 1 (34–54%); frase 2 (60–80%); CTA único aos 88%; o degradê fecha em `--ink-2` e emenda com o marquee |
 
-A headline entra pelo **scroll**, não no carregamento: a abertura é só a
-imagem, como nos vídeos de referência. Quem chega e não rola vê o busto em
-close e o convite para rolar. No modo estático (poster) ela entra por linha
-no carregamento, como antes.
+**Por que todo o texto fica à esquerda.** O render tem o busto à direita
+do centro (arcos à esquerda, esfera à direita). A primeira versão abria o
+título em duas metades, uma em cada área preta, e foi medida com as
+caixas reais do texto contra a silhueta do frame em nove proporções: à
+direita a folga era **negativa** na altura do peito (−35 a −43px de
+960×640 a 1536×864) e caía a 6px na altura do pescoço durante o giro; à
+esquerda sobram 230px ou mais em qualquer altura. Então o título empilha
+à esquerda, as frases entram no mesmo lugar, e a direita fica para o giro.
+
+**A abertura é o frame 48, não o 1.** O clipe começa num close do peito e
+só por volta do frame 45–50 a câmera mostra o busto inteiro. Abrir no 1
+parecia cinematográfico no monitor e era um erro na prática: a primeira
+tela do site era um peito, e numa tela vertical (o visualizador do artifact
+no celular renderiza a ~980px de largura e cobre a altura) o close virava
+um peito de três metros. Os 47 frames do close ficaram de fora, e o
+poster (frame 150) é visualmente o mesmo enquadramento da abertura.
+
+A headline entra no **carregamento**, nos dois modos: a primeira tela
+(miniatura, link compartilhado, quem não rola) já é busto + headline. No
+modo vivo o scroll só a tira de cena.
+
+**Tela vertical com a sequência ligada** (monitor em pé, ou o visualizador
+do artifact no celular): o frame deixa de cobrir a altura e passa a ter
+175vw de largura, centrado — o busto ocupa metade da largura e da altura —
+e as bordas de cima e de baixo, onde o chão do render é mais claro que a
+página, somem em dois degradês. Só acima de 8/9 de proporção.
 
 **Portões.** A sequência só roda se todos passarem: GSAP presente · sem
 `prefers-reduced-motion` · viewport ≥ 900px · frames encontrados. Qualquer
@@ -164,10 +187,10 @@ por um poster justamente em quem mais demorava. Medido: pasta ausente decide
 em 0,1 s; frames a 40 ms cada ligam aos 5,0 s com 119 prontos e completam
 os 240 em seguida.
 
-**Quem já rolou não perde a sequência.** A pista tem 4,5 telas e o hero
+**Quem já rolou não perde a sequência.** A pista tem 4 telas e o hero
 estático tem uma. Se a sequência liga com o usuário fora do topo (recarregou
 no meio da página — o Chrome devolve à mesma posição —, chegou por âncora ou
-o carregamento foi lento), o hero cresce 3,5 telas *acima* dele e o scroll é
+o carregamento foi lento), o hero cresce 3 telas *acima* dele e o scroll é
 compensado na mesma medida: o que estava na tela continua na tela. Medido
 nos dois casos (âncora e lento + rolado): salto de 0 px. A versão anterior
 desistia da sequência nesse caso, e "recarregar para ver de novo" virava
@@ -285,7 +308,7 @@ Chromium via Playwright, com scroll programático de ponta a ponta:
 | Erros de console | nenhum | nenhum |
 
 **Pista do hero (desktop):** mínimo de **59,5 fps** e **zero frames acima
-de 33 ms** ao percorrer as 4,5 telas de ponta a ponta. Medido com
+de 33 ms** ao percorrer as 4 telas de ponta a ponta. Medido com
 rasterização por software (SwiftShader, sem GPU); numa máquina com GPU o
 compositor faz de graça o que aqui é o pior caso. Frames carregam em ~1 s
 por HTTP local e ~1,8 s por `file://`.
