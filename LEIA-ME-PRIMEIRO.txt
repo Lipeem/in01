@@ -1,0 +1,31 @@
+EXPOSUL — protótipo do site
+===========================
+
+TRÊS FORMAS DE ABRIR, em ordem de conveniência:
+
+1) exposul-site.html
+   Duplo clique. Abre no navegador, sem servidor, sem internet.
+   O busto gira porque a pasta assets/hero-frames/ está aqui do lado.
+   NÃO mova esse arquivo para fora desta pasta, senão o hero vira
+   uma foto parada (é proposital: ele não acha os frames).
+
+2) index.html
+   A mesma coisa, em arquivos separados. É a versão para EDITAR e
+   para PUBLICAR num servidor. Precisa das pastas css/, js/,
+   vendor/ e assets/ ao lado.
+
+3) exposul-artifact.html
+   Versão para hospedar em serviço que embrulha o HTML (o Artifact
+   do claude.ai é um). Tem os frames embutidos, 4,7 MB.
+   NÃO abre por duplo clique — é de propósito.
+
+PARA VER NO CELULAR
+   Precisa estar num endereço de verdade (http://), não em arquivo
+   local. O caminho mais curto está no README.md, seção
+   "Como publicar" → GitHub Pages.
+
+ANTES DE PUBLICAR DE VERDADE
+   Leia o README.md, seção "Dados que PRECISAM ser confirmados".
+   Preços, prazos e números são de demonstração.
+
+Detalhes técnicos, decisões e o que foi medido: README.md

@@ -3,3 +3,6 @@ node_modules/
 
 # zip de distribuição gerado sob demanda (exposul-site.html + assets/hero-frames): derivável, não versionar
 _exposul-site-hero.zip
+
+# versão hospedável gerada sob demanda (4,7 MB de base64): derivável com `node build-artifact.js`
+exposul-artifact.html
