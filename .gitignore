@@ -6,3 +6,6 @@ _exposul-site-hero.zip
 
 # versão hospedável gerada sob demanda (4,7 MB de base64): derivável com `node build-artifact.js`
 exposul-artifact.html
+
+# pacote de download gerado sob demanda: derivável do próprio repositório
+exposul-projeto-completo.zip
