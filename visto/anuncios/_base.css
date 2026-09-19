@@ -1,0 +1,68 @@
+/* Base comum dos três criativos. Mesma identidade do site: tinta azul-noite,
+   papel e carimbo vermelhão. Renderizados em PNG por Playwright. */
+@import url("../css/fonts.css");
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; }
+body {
+  font-family: "Archivo", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  position: relative;
+}
+.ad {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+}
+.ink  { background: #080b12; color: #eceae4; }
+.pape { background: #f2efe7; color: #14181f; }
+
+.disp { font-family: "Bodoni Moda", Georgia, serif; font-weight: 400; letter-spacing: -0.025em; line-height: 0.95; }
+.hot  { color: #d9553c; }
+.it   { font-style: italic; }
+
+/* grão — chapado, sem blend */
+.grain {
+  position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.glow {
+  position: absolute; z-index: 0; pointer-events: none; border-radius: 50%;
+}
+
+/* cabeçalho de marca */
+.brand {
+  display: flex; align-items: baseline; gap: 16px;
+  font-family: "Bodoni Moda", Georgia, serif; font-size: 38px; letter-spacing: -0.01em;
+}
+.brand span {
+  font-family: "Archivo", sans-serif; font-size: 18px; font-weight: 600;
+  letter-spacing: 0.26em; text-transform: uppercase; opacity: 0.55;
+}
+
+/* carimbo */
+.stamp {
+  display: grid; place-items: center; text-align: center;
+  border: 5px double currentColor; border-radius: 50%;
+  color: #d9553c; aspect-ratio: 1;
+}
+.stamp b { font-family: "Bodoni Moda", Georgia, serif; font-weight: 700; display: block; line-height: 1; }
+.stamp i { font-style: normal; font-size: 16px; letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase; opacity: 0.8; display: block; }
+.stamp hr { border: 0; height: 2px; background: currentColor; opacity: 0.5; width: 55%; margin: 10px auto; }
+
+/* chamada final */
+.cta {
+  display: flex; align-items: center; gap: 22px;
+  background: #1faf54; color: #fff; border-radius: 999px;
+  padding: 28px 44px; font-size: 34px; font-weight: 700; letter-spacing: 0.01em;
+  align-self: flex-start;
+  width: fit-content;
+}
+.cta svg { width: 40px; height: 40px; fill: currentColor; flex: none; }
+.foot-note { font-size: 20px; line-height: 1.5; opacity: 0.5; }
+.rule { height: 1px; background: currentColor; opacity: 0.16; }
