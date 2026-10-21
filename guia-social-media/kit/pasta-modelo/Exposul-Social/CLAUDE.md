@@ -6,7 +6,9 @@ Sempre carregue a skill **marca-exposul** antes de escrever qualquer texto.
 ## Pastas
 - `00-pauta/` — calendário da semana (`semana-AAAA-MM-DD.md`) e roteiros.
 - `01-brutos/` — material original enviado pela equipe. **Nunca altere nem apague nada aqui.**
-  Subpastas: `videos/`, `fotos/`, `depoimentos/`, `lojas/<nome-da-loja>/`.
+  Subpastas: `videos/`, `fotos/`, `depoimentos/`, `lojas/<nome-da-loja>/`,
+  `produtos/<linha>/` (manequins, cabides, araras, parede, balcao) e `audios-do-dono/`
+  (áudios de WhatsApp com ideias do dono: transcreva e transforme em pauta, nunca publique o áudio sem ele aprovar).
 - `02-em-edicao/` — arquivos de trabalho seus (cortes, legendas .srt, testes).
 - `03-para-aprovar/<data>-<slug>/` — cada peça pronta numa pasta com:
   `video.mp4` ou `slide-01.jpg…`, `capa.jpg`, `legenda.txt`, `alt.txt`, `ficha.md`.
