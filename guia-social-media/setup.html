@@ -18,6 +18,9 @@
     <nav aria-label="Seções do guia">
       <div class="group">Comece aqui</div>
       <a href="index.html">Visão geral</a>
+      <div class="group">Mercado</div>
+      <a href="concorrentes.html">Concorrentes</a>
+      <a href="reputacao.html">Reputação</a>
       <div class="group">Pensar</div>
       <a href="estrategia.html">Estratégia</a>
       <a href="linha-editorial.html">Linha editorial</a>
@@ -31,6 +34,7 @@
       <a href="rotina.html">Rotina semanal</a>
       <div class="group">Aprender</div>
       <a href="videos.html">Vídeos do YouTube</a>
+      <a href="comparativo.html">Comparativo</a>
       <a href="fontes.html">Fontes</a>
     </nav>
   </aside>
@@ -60,9 +64,17 @@
 <p>No Buffer, conecte o Instagram em <em>Channels › Connect › Instagram</em>, escolhendo a conta profissional vinculada ao Facebook. Instale o app do Buffer no celular do dono: é por ele que ele vai aprovar.</p>
 
 <h2>Etapa 2. Programas no Windows</h2>
+<h3>Claude Desktop: baixe pelo site, não pelo winget</h3>
+<p>Baixe o instalador em <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a>. No Windows, <strong>o Cowork só funciona no pacote .msix</strong>. Quem instala pelo instalador .exe antigo recebe o Claude Desktop sem Cowork. O pacote do winget oferece os dois formatos, por isso não use o winget para o Claude.</p>
+<p>O Cowork também precisa de <strong>virtualização ligada</strong> no computador e do recurso do Windows <strong>Plataforma de Máquina Virtual</strong>. Se o Cowork não aparecer depois de instalar:</p>
+<ol>
+<li>Menu Iniciar › "Ativar ou desativar recursos do Windows" › marque <strong>Plataforma de Máquina Virtual</strong> › OK › reinicie.</li>
+<li>Se continuar sem Cowork, a virtualização está desligada na BIOS. No Gerenciador de Tarefas › Desempenho › CPU, veja se "Virtualização" está "Habilitado". Se não estiver, ligue na BIOS (o nome varia: Intel VT-x, AMD-V, SVM). Na dúvida, peça ajuda a um técnico.</li>
+</ol>
+<p class="small">Fonte: documentação de instalação do Claude Desktop (claude.com/docs). Conferido em 21/10/2026.</p>
+<h3>Ferramentas de vídeo</h3>
 <p>Abra o <strong>PowerShell</strong> (menu Iniciar › digite "PowerShell") e rode um comando por vez. O <code>winget</code> já vem no Windows 10 e 11 atualizados.</p>
-<pre class="copy"><code>winget install Anthropic.Claude
-winget install Git.Git
+<pre class="copy"><code>winget install Git.Git
 winget install OpenJS.NodeJS.LTS
 winget install Gyan.FFmpeg
 winget install Python.Python.3.12</code></pre>
@@ -72,7 +84,7 @@ node --version
 ffmpeg -version
 python --version</code></pre>
 <ul>
-<li><strong>Claude Desktop</strong>: se o <code>winget install Anthropic.Claude</code> não encontrar o pacote, baixe em <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a> <span class="tag unv">ID do winget não verificado</span>. Evite a versão da Microsoft Store: ela tem um bug conhecido ao instalar extensões.</li>
+<li><strong>Atalho:</strong> depois da Etapa 3, dá para pedir ao Claude Code "verifique se Node 22+, FFmpeg, Python e Git estão instalados e instale o que faltar com winget".</li>
 <li><strong>Node</strong> precisa ser versão 22 ou mais nova para o HyperFrames.</li>
 <li><strong>Fontes da marca</strong>: baixe Archivo e Bodoni Moda em <a href="https://fonts.google.com" target="_blank" rel="noopener">fonts.google.com</a> e instale (botão direito › Instalar para todos os usuários). O ffmpeg e o HyperFrames usam as fontes instaladas.</li>
 </ul>
@@ -85,7 +97,11 @@ python --version</code></pre>
 <pre class="copy"><code>irm https://claude.ai/install.ps1 | iex</code></pre>
 Alternativa: <code>winget install Anthropic.ClaudeCode</code>. O Claude Code também abre dentro do próprio app Desktop, na aba de código, sem terminal.</li>
 <li>Teste: no PowerShell, rode <code>claude</code>, faça login e pergunte "que versão do ffmpeg está instalada?". Ele deve rodar o comando e responder.</li>
+<li>Instale as ferramentas de legenda e recorte: peça ao Claude Code "instale faster-whisper e rembg com pip". O faster-whisper é mais leve que o Whisper original num computador sem placa de vídeo dedicada.</li>
 </ol>
+<div class="warn">
+<p><strong>Cuidado com cobrança por fora.</strong> Se existir no Windows uma variável de ambiente chamada <code>ANTHROPIC_API_KEY</code>, o Claude Code passa a usar essa chave e cobra pela API, em vez de usar a cota do plano Pro. Para conferir, rode no PowerShell <code>echo $env:ANTHROPIC_API_KEY</code>: tem de voltar vazio. Fonte: Central de Ajuda do Claude.</p>
+</div>
 
 <h2>Etapa 4. Pasta de produção</h2>
 <p>Crie <code>C:\Exposul-Social</code> (ou dentro do Google Drive para computador, se quiser tarefas com o PC desligado). Use a pasta modelo que está no repositório em <code>guia-social-media/kit/pasta-modelo/Exposul-Social</code>, ou crie à mão:</p>
@@ -142,7 +158,7 @@ claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code><
 <p>Duas formas. Comece pela primeira.</p>
 <ol>
 <li><strong>Conector</strong> (etapa 6): renderiza na nuvem da HeyGen, sem instalar nada. Bom para vinhetas, títulos animados e encerramento com logo. Está em beta.</li>
-<li><strong>Local</strong>, pelo Claude Code: <code>claude plugin marketplace add heygen-com/hyperframes</code> e siga o README em <a href="https://github.com/heygen-com/hyperframes" target="_blank" rel="noopener">github.com/heygen-com/hyperframes</a>. Grátis e sem limite de renders. O suporte a Windows não está declarado <span class="tag unv">não verificado</span>: se der erro, fique com o conector.</li>
+<li><strong>Local</strong>, pelo Claude Code: <code>claude plugin marketplace add heygen-com/hyperframes</code>, depois <code>claude plugin install hyperframes@hyperframes</code>, e confira com <code>npx hyperframes doctor</code>. Detalhes no README em <a href="https://github.com/heygen-com/hyperframes" target="_blank" rel="noopener">github.com/heygen-com/hyperframes</a>. Grátis e sem limite de renders. O suporte a Windows não está declarado <span class="tag unv">não verificado</span>: se der erro, fique com o conector.</li>
 </ol>
 <p>Peça ao Claude Code para criar 3 modelos e salvar em <code>99-marca\motion\</code>: abertura com gancho (2 s), lista animada de 3 itens, encerramento com logo e CTA (2 s). Os vídeos da semana reaproveitam esses modelos.</p>
 <p>O Remotion faz o mesmo com mais recursos, mas exige licença paga para empresa com mais de 3 pessoas (US$ 25 por assento/mês).</p>
@@ -165,26 +181,40 @@ claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code><
 <li>Crie uma automação por palavra-chave: comentário ou DM com <strong>VITRINE</strong> recebe a mensagem abaixo.</li>
 <li>Repita para LOJA, CABIDE e MANEQUIM, cada uma com o link certo.</li>
 </ol>
-<pre class="copy"><code>Oi! Que bom que você chamou 😊
+<pre class="copy"><code>Oi! Aqui é o atendimento automático da Exposul 😊
 Aqui está o catálogo: [link do catálogo]
-Pra eu te ajudar melhor: sua loja é de qual segmento e em qual cidade?
+Pra uma pessoa da equipe continuar com você: sua loja é de qual segmento e em qual cidade?
 Se preferir, fala direto com a gente no WhatsApp: (41) 99691-0019</code></pre>
+<p>A mensagem diz que é automática de propósito: o cliente sabe que vai falar com uma pessoa em seguida, e isso evita a irritação com robô que a maioria dos brasileiros relata. Regras da Meta e LGPD em <a href="estrategia.html#regras">Estratégia › Regras e cuidados</a>.</p>
 <p>Os nomes de menu da Meta mudam com frequência. Se não achar, os tutoriais de ManyChat em <a href="videos.html#manychat">Vídeos</a> mostram a mesma lógica.</p>
 
-<h2>Etapa 10. Tarefas agendadas no Cowork</h2>
+<h2>Etapa 10. Perfil da Empresa no Google</h2>
+<p>A Exposul já tem 4,8 estrelas com 315 avaliações, mas o perfil tem dados errados. Corrija no <a href="https://business.google.com" target="_blank" rel="noopener">business.google.com</a> (detalhes em <a href="reputacao.html">Reputação</a>):</p>
+<ul>
+<li>Horário de sábado igual ao do site (o Google mostra "fechado").</li>
+<li>Bairro Rebouças e telefone fixo como adicional.</li>
+<li>Descrição citando entrega em todo o Brasil e montagem de loja.</li>
+<li>Copiar o link curto e baixar o QR code de avaliação (<em>Ler avaliações › Receber mais avaliações</em>, só no computador).</li>
+<li>Publicar um post: os últimos são de maio e serão arquivados em novembro.</li>
+</ul>
+
+<h2>Etapa 11. Tarefas agendadas no Cowork</h2>
 <p>No Claude Desktop, menu <em>Agendadas</em> (ou digite <code>/schedule</code> no Cowork). Crie:</p>
 <div class="table">
 <table>
 <thead><tr><th>Tarefa</th><th>Quando</th><th>Prompt</th></tr></thead>
 <tbody>
 <tr><td>Pauta da semana</td><td>Segunda, 7 h</td><td>"Pauta semanal" de <a href="prompts.html#pauta">Prompts</a></td></tr>
+<tr><td>Relatório da semana</td><td>Sexta, 17 h</td><td>"Relatório semanal" de <a href="prompts.html#semanal">Prompts</a></td></tr>
 <tr><td>Relatório do mês</td><td>Dia 1, 8 h</td><td>"Relatório mensal" de <a href="prompts.html#relatorio">Prompts</a></td></tr>
+<tr><td>Reputação do mês</td><td>Dia 1, 9 h</td><td>"Reputação mensal" de <a href="prompts.html#reputacao">Prompts</a></td></tr>
+<tr><td>Concorrentes do mês</td><td>Dia 5, 8 h</td><td>"Concorrentes" de <a href="prompts.html#concorrentes">Prompts</a></td></tr>
 </tbody>
 </table>
 </div>
 <p>Tarefas que usam a pasta local só rodam com o PC ligado e o app aberto. Com a pasta no Google Drive e o conector do Drive, rodam mesmo com o PC desligado.</p>
 
-<h2>Etapa 11. Passagem para o dono (30 minutos)</h2>
+<h2>Etapa 12. Passagem para o dono (30 minutos)</h2>
 <ul>
 <li>Mostre a <a href="rotina.html">rotina semanal</a> e onde fica cada pasta.</li>
 <li>Faça com ele, ao vivo, uma aprovação no app do Buffer.</li>

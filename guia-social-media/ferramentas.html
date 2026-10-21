@@ -18,6 +18,9 @@
     <nav aria-label="Seções do guia">
       <div class="group">Comece aqui</div>
       <a href="index.html">Visão geral</a>
+      <div class="group">Mercado</div>
+      <a href="concorrentes.html">Concorrentes</a>
+      <a href="reputacao.html">Reputação</a>
       <div class="group">Pensar</div>
       <a href="estrategia.html">Estratégia</a>
       <a href="linha-editorial.html">Linha editorial</a>
@@ -31,6 +34,7 @@
       <a href="rotina.html">Rotina semanal</a>
       <div class="group">Aprender</div>
       <a href="videos.html">Vídeos do YouTube</a>
+      <a href="comparativo.html">Comparativo</a>
       <a href="fontes.html">Fontes</a>
     </nav>
   </aside>
@@ -95,20 +99,21 @@
 </table>
 </div>
 <div class="tip">
-<p><strong>Sobre o "Motion Graph" que você lembrou:</strong> não existe produto com esse nome exato. O mais provável é o <strong>HyperFrames</strong>, da HeyGen, que se apresenta no diretório do Claude como ferramenta de <em>motion graphics</em>. Outros candidatos: o Motion (motion.so) e o Remotion.</p>
+<p><strong>Sobre o "Motion Graph" que você lembrou:</strong> o nome mais próximo é o <strong>Claude Motion</strong>, recurso da própria Anthropic que anima como código e exporta MP4. Mas ele está em beta só nos planos Team e Enterprise, então não serve no Pro nem no Max. Para a Exposul, o equivalente acessível é o <strong>HyperFrames</strong>, da HeyGen, que se apresenta no diretório do Claude como ferramenta de motion graphics. O Remotion faz o mesmo com licença paga.</p>
 </div>
 
 <h2>Higgsfield e geração por IA</h2>
 <p>A Higgsfield tem <strong>MCP oficial</strong> em <code>https://mcp.higgsfield.ai/mcp</code>, com login por OAuth. Ainda não está no diretório do Claude: entra como conector personalizado. Dá acesso a vários modelos (Veo 3.1, Sora 2, Kling 3.0, Nano Banana Pro e outros) com um só saldo de créditos. <strong>Tudo pelo MCP consome créditos</strong>; o "ilimitado" dos planos vale só no site.</p>
 <div class="warn">
 <p><strong>Use com moderação.</strong> O ativo da Exposul é ser real: lojas que existem, clientes que existem. O próprio Mosseri escreveu no fim de 2025 que a autenticidade está ficando "infinitamente reproduzível" e que o Instagram vai valorizar mídia real. Use IA para b-roll, transição, fundo de carrossel e animar foto de produto. Nunca para inventar uma loja montada ou um cliente.</p>
+<p><strong>Rótulo de IA é obrigatório em alguns casos.</strong> A Meta exige declarar vídeo ou áudio fotorrealista criado ou alterado por IA, e aplica o rótulo "Informações de IA". A API de publicação tem o campo <code>is_ai_generated</code> para essa declaração. Se o agendador não oferecer o campo, publique esse post pelo app do Instagram com o rótulo ligado. Em imagem gerada, escreva também "imagem ilustrativa (IA)" na peça.</p>
 </div>
 <p>Outras opções com MCP oficial: <strong>fal.ai</strong> (centenas de modelos, paga por uso), <strong>Replicate</strong> e <strong>Runway</strong>. Kling e Google (Veo, Nano Banana) não têm MCP oficial próprio; use via Higgsfield ou fal.ai.</p>
 
 <h2>Design: Canva e outros</h2>
 <ul>
 <li><strong>Canva</strong>: conector oficial no diretório do Claude, com 17 ferramentas: buscar designs, gerar design, preencher modelo, exportar em PNG ou MP4. Ideal para carrosséis e capas a partir de modelos com a marca da Exposul. A ajuda da Canva cita os planos Pro, Teams e Business; a documentação de desenvolvedor diz qualquer plano <span class="tag unv">conflito entre fontes</span>.</li>
-<li><strong>Adobe for creativity</strong>: conector oficial (abril de 2026), exporta para o Adobe Express. Alcance real em Photoshop <span class="tag unv">não verificado</span>.</li>
+<li><strong>Adobe for creativity</strong>: conector oficial (abril de 2026). Funciona sem conta Adobe, com limites; exporta para o Adobe Express e redimensiona vídeo horizontal para Reels. Bom plano B para quem não quer assinar o Canva.</li>
 <li><strong>Tratamento de foto em lote</strong>: o Claude Code redimensiona, corrige, recorta fundo (rembg) e aplica marca d'água com Python, sem custo.</li>
 </ul>
 
@@ -119,7 +124,7 @@
 <thead><tr><th>Ferramenta</th><th>Conexão com o Claude</th><th>Rascunho e aprovação</th><th>Preço aprox.</th></tr></thead>
 <tbody>
 <tr><td><strong>Buffer</strong> (escolha)</td><td>Conector oficial no diretório, OAuth</td><td>Salva como rascunho. Fluxo formal de aprovação só no plano Team.</td><td>Grátis (3 canais, 10 posts); Essentials US$ 5/canal; Team US$ 10/canal</td></tr>
-<tr><td><strong>Postiz</strong></td><td>Conector personalizado com chave na URL; skill <code>gitroomhq/postiz-agent</code></td><td>Rascunho e link de prévia com comentários</td><td>US$ 29 a 99, sem plano grátis; ou auto-hospedado</td></tr>
+<tr><td><strong>Postiz</strong></td><td>Conector personalizado com login (OAuth) em <code>https://mcp.postiz.com/mcp-oauth-dynamic</code>, ou com chave de API; o fabricante diz que também está no diretório do Claude <span class="tag unv">não confirmado pela Anthropic</span>; skill <code>gitroomhq/postiz-agent</code></td><td>Rascunho e link de prévia com comentários</td><td>US$ 29 a 99, sem plano grátis; ou auto-hospedado</td></tr>
 <tr><td><strong>Metricool</strong></td><td>Conector oficial no diretório</td><td>Envia post "para revisão", inclusive no plano grátis</td><td>Grátis com limites; forte em relatórios</td></tr>
 <tr><td>Zernio</td><td>Conector personalizado, OAuth</td><td>Também lê e responde DMs e comentários</td><td>2 contas grátis</td></tr>
 <tr><td>Meta Business Suite</td><td>Sem MCP para posts</td><td>Manual</td><td>Grátis, plano B 100% oficial</td></tr>
@@ -136,8 +141,15 @@
 <h2>DM e atendimento</h2>
 <ul>
 <li><strong>Automação nativa da Meta</strong> (grátis): respostas instantâneas, perguntas frequentes, gatilho por palavra-chave. Basta para "comenta VITRINE".</li>
-<li><strong>ManyChat</strong>: fluxos mais ricos, coleta de dados e passagem para WhatsApp. Plano grátis limitado; Pro a partir de cerca de US$ 29 <span class="tag unv">preço não verificado</span>. Sem MCP.</li>
+<li><strong>ManyChat</strong>: fluxos mais ricos, coleta de dados e passagem para WhatsApp. Plano grátis limitado; Pro por cerca de US$ 39 por mês (US$ 29 no anual), cobrado por contato ativo desde março de 2026 <span class="tag unv">preço de terceiros</span>. Sem MCP: o Claude não opera o ManyChat. A "integração com Claude" do ManyChat é o contrário, o ManyChat chamando o Claude por chave de API paga à parte, e não usa o plano Pro.</li>
 <li><strong>Zernio</strong>: lê e responde DMs e comentários via MCP. Use só para triagem e rascunho de resposta, nunca para responder cliente sem revisão.</li>
+</ul>
+
+<h2>CRM e anúncios</h2>
+<ul>
+<li><strong>Planilha Google</strong> para começar o registro de leads. Se o volume crescer, o <strong>HubSpot CRM Free</strong> tem conector oficial que funciona no plano Pro do Claude, inclusive na versão grátis do HubSpot. O RD Station tem MCP para CRM, mas só nos planos pagos.</li>
+<li><strong>Meta Ads:</strong> a Meta tem MCPs oficiais para anúncios, ferramentas de desenvolvedor e WhatsApp Business (não para post orgânico). O Claude pode montar campanhas e ler resultados, mas toda campanha criada por ele entra <strong>pausada</strong>; quem liga e define a verba é o dono.</li>
+<li><strong>Pixel e Gerenciador de Tags já estão no site</strong> da Exposul (conferido no código da página). Isso permite remarketing para quem visitou o site, sem instalar nada.</li>
 </ul>
 
 <h2>Fora do Claude (plano B)</h2>
@@ -157,8 +169,10 @@
 <ul>
 <li><strong>Publicação errada</strong> (preço, produto, cliente): rascunho sempre, modo Manual, checklist de aprovação.</li>
 <li><strong>Conectores de terceiros</strong> não revisados pela Anthropic têm acesso ao que você liberar. Prefira os do diretório oficial.</li>
-<li><strong>Chave na URL</strong> (Postiz) equivale a uma senha.</li>
-<li><strong>Direito de imagem e música</strong>: autorização por escrito de funcionários e clientes. Conta comercial tem restrição de música; use a biblioteca liberada ou áudio original.</li>
+<li><strong>Chave de API em URL</strong> (Postiz, se usado sem login) equivale a uma senha.</li>
+<li><strong>Variável <code>ANTHROPIC_API_KEY</code></strong> no Windows faz o Claude Code cobrar pela API em vez de usar o plano. Ver <a href="setup.html">Setup</a>.</li>
+<li><strong>Direito de imagem</strong>: autorização por escrito de funcionários e clientes.</li>
+<li><strong>Música</strong>: as Diretrizes de Música da Meta proíbem uso comercial sem licença, e post de empresa é uso comercial. O agendador não acessa a biblioteca de músicas do Instagram (a API não tem esse campo). Use áudio original, narração ou trilha com licença comercial. "Música em alta pelo app" não resolve: continua sendo uso comercial sem licença.</li>
 <li><strong>Custo variável</strong>: créditos de vídeo por IA e cota do Claude em tarefas longas.</li>
 </ul>
 
