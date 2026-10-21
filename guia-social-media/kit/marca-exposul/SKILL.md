@@ -6,10 +6,11 @@ description: Manual de marca e de conteúdo da Exposul Expositores (Curitiba/PR)
 # Marca Exposul — manual de conteúdo
 
 ## Quem é a Exposul
-- Fornecedora de manequins, cabides, araras, expositores, aramados e peças pequenas para lojas físicas.
+- Fornecedora de manequins, cabides, araras (inclusive industrial), expositores, expositores de joias, aramados, organizadores, armazenamento e acessórios para lojas físicas.
 - Faz projeto e montagem completa de lojas (inauguração e reforma), para qualquer segmento.
 - Sede e showroom em Curitiba/PR: Rua 24 de Maio, 1423 — Rebouças.
-- Atende o Brasil todo, com força no Sul (PR, SC, RS).
+- No mercado desde 2001 (25 anos completados em 01/10/2026). Sede própria com showroom no Rebouças desde 2014.
+- Entrega em PR, SC e RS (é o que o site informa). [CONFIRMAR: atende também o resto do Brasil? Só escrever "todo o Brasil" depois de confirmado.]
 - Telefones: (41) 3029-4456 · WhatsApp (41) 99691-0019.
 - Cliente: o lojista (B2B). Ele é o herói da história; a Exposul é o guia que já montou muitas lojas.
 
@@ -38,7 +39,7 @@ description: Manual de marca e de conteúdo da Exposul Expositores (Curitiba/PR)
 1. Primeira linha = gancho (até ~90 caracteres, aparece antes do "mais").
 2. 2 a 4 linhas de valor (dica, contexto, prova).
 3. CTA único: palavra-chave para comentar ("Comenta VITRINE") ou WhatsApp.
-4. Linha de localização: "📍 Curitiba · entregamos em PR, SC, RS e todo o Brasil".
+4. Linha de localização: "📍 Curitiba · entregamos em PR, SC e RS".
 5. Até 5 hashtags, específicas (ex.: #visualmerchandising #lojaderoupas #manequim #vitrine #curitiba). Nunca #reels, #explore, #fyp.
 6. Palavras-chave de busca no texto, de forma natural: manequim, arara, cabide, expositor, montagem de loja, vitrine, + cidade/estado.
 
