@@ -174,7 +174,7 @@ details.ficha > summary::-webkit-details-marker { display: none; }
 details.ficha > summary::after { content: ""; position: absolute; right: 1.1rem; top: 1.15rem; width: .55rem; height: .55rem; border-right: 2px solid var(--fg-dim); border-bottom: 2px solid var(--fg-dim); transform: rotate(45deg); transition: transform .15s; }
 details.ficha[open] > summary::after { transform: rotate(-135deg); top: 1.35rem; }
 details.ficha > summary:hover { color: var(--key); }
-details.ficha > .body { padding: 0 1.1rem 1.1rem; border-top: 1px solid var(--line); }
+details.ficha > .body { padding: 1rem 1.1rem 1.1rem; border-top: 1px solid var(--line); }
 details.ficha .small:first-child { margin-top: .9rem; }
 .ficha dl { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: .45rem 1rem; margin: .9rem 0 0; font-size: .94rem; line-height: 1.6; }
 .ficha dt { color: var(--fg-dim); font-weight: 600; font-size: .8rem; letter-spacing: .02em; padding-top: .1rem; }
