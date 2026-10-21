@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/guia.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="shell">
   <aside class="rail">
     <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
@@ -41,7 +42,10 @@
   <main>
 <p class="eyebrow">Operar · Rotina</p>
 <h1>A semana do dono</h1>
+<p class="meta">4 min de leitura · pesquisa de outubro de 2026</p>
 <p class="lead">Esta página é para o dono da Exposul. Na conta mais realista, ele gasta cerca de <strong>1h30 por semana</strong> com o Instagram e o Google, mais 10 minutos por dia; um funcionário gasta de <strong>3 a 5 horas por semana</strong> gravando, organizando arquivos e atendendo. O resto fica com o Claude. Os tempos são estimativa e caem depois das primeiras semanas.</p>
+<div class="tldr"><ul><li>Dono: cerca de 1h30 por semana mais 10 minutos por dia. Equipe: 3 a 5 horas por semana.</li><li>Segunda pauta, terça e quarta gravação, quinta edição, sexta aprovação, comunidade e avaliações.</li><li>Só gente faz: aprovar, gravar, negociar, responder reclamação, pedir autorização e decidir verba.</li><li>No fim, o que fazer quando algo dá errado.</li></ul></div>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#quem-faz-o-que">Quem faz o quê</a></li><li><a href="#segunda-ler-a-pauta-15-min">Segunda: ler a pauta (15 min)</a></li><li><a href="#terca-e-quarta-gravacao-1-a-2-h-da-equipe">Terça e quarta: gravação (1 a 2 h da equipe)</a></li><li><a href="#quarta-material-na-pasta-10-min">Quarta: material na pasta (10 min)</a></li><li><a href="#quinta-o-claude-edita-20-a-30-min-de-acompanhame">Quinta: o Claude edita (20 a 30 min de acompanhamento)</a></li><li><a href="#sexta-aprovacao-20-min">Sexta: aprovação (20 min)</a></li><li><a href="#sexta-comunidade-e-reputacao-30-a-45-min-da-equi">Sexta: comunidade e reputação (30 a 45 min da equipe)</a></li><li><a href="#todo-dia-atendimento-15-min">Todo dia: atendimento (15 min)</a></li><li><a href="#todo-mes-relatorio-30-min">Todo mês: relatório (30 min)</a></li><li><a href="#quando-algo-da-errado">Quando algo dá errado</a></li></ol></details>
 
 <ol class="flow" aria-label="Fluxo semanal">
 <li>Segunda: o Claude entrega a pauta</li>
@@ -52,7 +56,7 @@
 <li>Semana seguinte: posts saem nos horários</li>
 </ol>
 
-<h2>Quem faz o quê</h2>
+<h2 id="quem-faz-o-que">Quem faz o quê</h2>
 <div class="table">
 <table>
 <thead><tr><th>Quando</th><th>Dono</th><th>Funcionário</th><th>Claude</th></tr></thead>
@@ -77,27 +81,27 @@
 <li>Cuidar do relacionamento com arquitetos e lojistas.</li>
 </ul>
 
-<h2>Segunda: ler a pauta (15 min)</h2>
+<h2 id="segunda-ler-a-pauta-15-min">Segunda: ler a pauta (15 min)</h2>
 <p>A tarefa agendada roda às 7 h e deixa a pauta em <code>00-pauta\semana-…md</code>. Abra o Claude Desktop, leia o resumo e responda no chat o que mudar ("troca o Reel de quinta por um de cabide infantil"). No fim tem a lista do que a equipe precisa gravar: mande para eles no WhatsApp.</p>
 
 <div class="tip">
 <p><strong>O dono não precisa aparecer para contribuir.</strong> Quando tiver uma ideia, uma promoção ou uma história de cliente, ele grava um áudio de WhatsApp e salva em <code>01-brutos\audios-do-dono</code>. Na segunda, o Claude transcreve e transforma em pauta. A voz dele só vai ao ar se ele aprovar.</p>
 </div>
 
-<h2>Terça e quarta: gravação (1 a 2 h da equipe)</h2>
+<h2 id="terca-e-quarta-gravacao-1-a-2-h-da-equipe">Terça e quarta: gravação (1 a 2 h da equipe)</h2>
 <p>Um funcionário grava os takes da lista com o celular, seguindo o <a href="roteiros.html#gravacao">checklist de gravação</a>. Não precisa ser perfeito: o Claude corta, enquadra e legenda. O dono só aparece se quiser, e de preferência em voz ou mãos.</p>
 <p>Toda loja entregue rende material: peça ao montador fotos e um vídeo de "antes", um time-lapse com o celular apoiado durante a montagem e um vídeo de 15 s da loja pronta, com o lojista falando uma frase se ele topar.</p>
 
-<h2>Quarta: material na pasta (10 min)</h2>
+<h2 id="quarta-material-na-pasta-10-min">Quarta: material na pasta (10 min)</h2>
 <p>Passe os arquivos do celular para <code>C:\Exposul-Social\01-brutos\</code>, na subpasta certa. Com o Google Drive no celular, a equipe sobe direto para a pasta compartilhada.</p>
 
-<h2>Quinta: o Claude edita (20 a 30 min de acompanhamento)</h2>
+<h2 id="quinta-o-claude-edita-20-a-30-min-de-acompanhame">Quinta: o Claude edita (20 a 30 min de acompanhamento)</h2>
 <p>Abra o Claude Code na pasta do estúdio e escreva:</p>
 <pre class="copy"><code>Siga o CLAUDE.md. Produza todas as peças da pauta desta semana com o material novo de 01-brutos.
 Uma por vez: me mostre o plano de cada uma antes de editar, e no fim a lista do que ficou em 03-para-aprovar.</code></pre>
 <p>Enquanto ele trabalha, o app pede permissão para rodar comandos. Pode permitir os comandos de edição (ffmpeg, python, node). Diga não para qualquer coisa que publique ou apague.</p>
 
-<h2>Sexta: aprovação (20 min)</h2>
+<h2 id="sexta-aprovacao-20-min">Sexta: aprovação (20 min)</h2>
 <ol class="steps">
 <li>Abra cada pasta em <code>03-para-aprovar\</code>. Assista o vídeo, leia a legenda e a ficha.</li>
 <li>Procure <code>[CONFIRMAR]</code>: é um dado que o Claude não tinha. Responda no chat ou corrija na mão.</li>
@@ -109,7 +113,7 @@ Uma por vez: me mostre o plano de cada uma antes de editar, e no fim a lista do 
 <p><strong>Pergunta que vale fazer em toda aprovação:</strong> "um lojista mandaria isso para o sócio?" Se a resposta for não, o post pode até ganhar curtida, mas não vai trazer orçamento.</p>
 </div>
 
-<h2>Sexta: comunidade e reputação (30 a 45 min da equipe)</h2>
+<h2 id="sexta-comunidade-e-reputacao-30-a-45-min-da-equi">Sexta: comunidade e reputação (30 a 45 min da equipe)</h2>
 <ul>
 <li>Comentar de verdade em 10 a 20 perfis de lojistas, arquitetos e clientes. Comentário útil, nunca "top!".</li>
 <li>Radar de novas lojas: buscar no Instagram posts com "em breve nova loja", "inauguração" e "reforma" nas cidades atendidas, e comentar com algo útil. Nunca mandar DM fria em massa.</li>
@@ -119,7 +123,7 @@ Uma por vez: me mostre o plano de cada uma antes de editar, e no fim a lista do 
 <li>Pedir a quem recebeu loja montada um vídeo de 15 s e a autorização de uso.</li>
 </ul>
 
-<h2>Todo dia: atendimento (15 min)</h2>
+<h2 id="todo-dia-atendimento-15-min">Todo dia: atendimento (15 min)</h2>
 <ul>
 <li>Responder comentários e DMs no mesmo dia, de preferência em até 2 horas no horário comercial.</li>
 <li>Quem comentou palavra-chave já recebeu a DM automática; quem respondeu precisa de uma pessoa.</li>
@@ -128,10 +132,10 @@ Uma por vez: me mostre o plano de cada uma antes de editar, e no fim a lista do 
 <li>Stories do dia: um bastidor rápido (mercadoria chegando, embalagem saindo, montagem). Pode ser direto do celular, sem passar pelo Claude.</li>
 </ul>
 
-<h2>Todo mês: relatório (30 min)</h2>
+<h2 id="todo-mes-relatorio-30-min">Todo mês: relatório (30 min)</h2>
 <p>No dia 1 a tarefa agendada monta o relatório. Leia com uma pergunta na cabeça: <strong>quantos orçamentos vieram do Instagram e de quais posts?</strong> Repita os formatos que geraram conversa. Corte os que só deram curtida.</p>
 
-<h2>Quando algo dá errado</h2>
+<h2 id="quando-algo-da-errado">Quando algo dá errado</h2>
 <div class="table">
 <table>
 <thead><tr><th>Situação</th><th>O que fazer</th></tr></thead>
@@ -149,11 +153,32 @@ Uma por vez: me mostre o plano de cada uma antes de editar, e no fim a lista do 
 </table>
 </div>
 
-<div class="pager"><a href="prompts.html">← Prompts e Skills</a><a href="videos.html">Vídeos do YouTube →</a></div>
+<nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="prompts.html"><small>Anterior</small><span>Prompts e Skills</span></a><a class="next" href="videos.html"><small>Próxima</small><span>Vídeos do YouTube</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#quem-faz-o-que">Quem faz o quê</a></li><li><a href="#segunda-ler-a-pauta-15-min">Segunda: ler a pauta (15 min)</a></li><li><a href="#terca-e-quarta-gravacao-1-a-2-h-da-equipe">Terça e quarta: gravação (1 a 2 h da equipe)</a></li><li><a href="#quarta-material-na-pasta-10-min">Quarta: material na pasta (10 min)</a></li><li><a href="#quinta-o-claude-edita-20-a-30-min-de-acompanhame">Quinta: o Claude edita (20 a 30 min de acompanhamento)</a></li><li><a href="#sexta-aprovacao-20-min">Sexta: aprovação (20 min)</a></li><li><a href="#sexta-comunidade-e-reputacao-30-a-45-min-da-equi">Sexta: comunidade e reputação (30 a 45 min da equipe)</a></li><li><a href="#todo-dia-atendimento-15-min">Todo dia: atendimento (15 min)</a></li><li><a href="#todo-mes-relatorio-30-min">Todo mês: relatório (30 min)</a></li><li><a href="#quando-algo-da-errado">Quando algo dá errado</a></li></ol></aside>
 </div>
 <script>
+(function () {
+  var bar = document.querySelector('.progress span');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? Math.min(100, h.scrollTop / max * 100) : 0) + '%';
+    var cur = -1;
+    heads.forEach(function (el, i) { if (el && el.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.expand-all').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var all = document.querySelectorAll('details.ficha'), open = b.dataset.open !== '1';
+      all.forEach(function (d) { d.open = open; });
+      b.dataset.open = open ? '1' : '0'; b.textContent = open ? 'Fechar todas as fichas' : 'Abrir todas as fichas';
+    });
+  });
+})();
 document.querySelectorAll('pre.copy').forEach(function (pre) {
   var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
   pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/guia.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="shell">
   <aside class="rail">
     <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
@@ -41,13 +42,16 @@
   <main>
 <p class="eyebrow">Montar · Ferramentas</p>
 <h1>A stack, peça por peça</h1>
+<p class="meta">7 min de leitura · pesquisa de outubro de 2026</p>
 <p class="lead">O Claude é o centro: recebe o material, edita, escreve e deixa tudo em rascunho no agendador. Cada ferramenta abaixo entra por um conector (MCP) ou é usada pelo Claude Code direto no computador. Tudo foi conferido em documentação oficial em 21/10/2026.</p>
+<div class="tldr"><ul><li>O centro é o Claude Desktop: Cowork para a rotina, Claude Code para editar vídeo com ffmpeg.</li><li>Motion graphics com HyperFrames; carrosséis com Canva; Higgsfield só para b-roll, com rótulo de IA.</li><li>Agendamento no Buffer, sempre como rascunho; o Postiz é a alternativa para várias redes.</li><li>Música comercial e vídeo de IA fotorrealista sem rótulo estão fora.</li></ul></div>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#recomendacao-em-uma-tabela">Recomendação em uma tabela</a></li><li><a href="#claude-desktop-cowork-e-claude-code">Claude: Desktop, Cowork e Claude Code</a></li><li><a href="#edicao-de-video-e-motion-graphics">Edição de vídeo e motion graphics</a></li><li><a href="#higgsfield-e-geracao-por-ia">Higgsfield e geração por IA</a></li><li><a href="#design-canva-e-outros">Design: Canva e outros</a></li><li><a href="#agendamento-qual-e-o-mcp-que-conecta-todas-as-re">Agendamento: qual é "o MCP que conecta todas as redes"</a></li><li><a href="#dm-e-atendimento">DM e atendimento</a></li><li><a href="#crm-e-anuncios">CRM e anúncios</a></li><li><a href="#fora-do-claude-plano-b">Fora do Claude (plano B)</a></li><li><a href="#riscos-da-stack">Riscos da stack</a></li></ol></details>
 
 <div class="warn">
 <p><strong>Preços e recursos mudam todo mês nesse mercado.</strong> Valores em dólar, pegos nas páginas de preço em outubro de 2026. Confira antes de assinar.</p>
 </div>
 
-<h2>Recomendação em uma tabela</h2>
+<h2 id="recomendacao-em-uma-tabela">Recomendação em uma tabela</h2>
 <div class="table">
 <table>
 <thead><tr><th>Função</th><th>Escolha</th><th>Alternativa</th><th>Custo aprox./mês</th></tr></thead>
@@ -64,7 +68,7 @@
 </table>
 </div>
 
-<h2>Claude: Desktop, Cowork e Claude Code</h2>
+<h2 id="claude-desktop-cowork-e-claude-code">Claude: Desktop, Cowork e Claude Code</h2>
 <h3>O que é cada um</h3>
 <ul>
 <li><strong>Claude Desktop</strong>: o aplicativo para Windows. Dentro dele ficam o chat, o <strong>Cowork</strong> e o <strong>Claude Code</strong>.</li>
@@ -84,7 +88,7 @@
 <h3>Pro ou Max?</h3>
 <p>O Pro dá pelo menos 5 vezes o uso do plano grátis por janela de 5 horas, com um limite semanal por cima. O Max 5x dá 5 vezes o Pro. Tarefas agênticas, como editar vídeo no Claude Code, gastam muito mais cota do que conversa. <strong>Comece no Pro.</strong> Se a sessão semanal de produção bater no limite antes de terminar, suba para o Max 5x. Essa é uma estimativa nossa, sem número oficial por tipo de tarefa.</p>
 
-<h2>Edição de vídeo e motion graphics</h2>
+<h2 id="edicao-de-video-e-motion-graphics">Edição de vídeo e motion graphics</h2>
 <div class="table">
 <table>
 <thead><tr><th>Ferramenta</th><th>O que faz</th><th>Como liga</th><th>Observação</th></tr></thead>
@@ -102,7 +106,7 @@
 <p><strong>Sobre o "Motion Graph" que você lembrou:</strong> o nome mais próximo é o <strong>Claude Motion</strong>, recurso da própria Anthropic que anima como código e exporta MP4. Mas ele está em beta só nos planos Team e Enterprise, então não serve no Pro nem no Max. Para a Exposul, o equivalente acessível é o <strong>HyperFrames</strong>, da HeyGen, que se apresenta no diretório do Claude como ferramenta de motion graphics. O Remotion faz o mesmo com licença paga.</p>
 </div>
 
-<h2>Higgsfield e geração por IA</h2>
+<h2 id="higgsfield-e-geracao-por-ia">Higgsfield e geração por IA</h2>
 <p>A Higgsfield tem <strong>MCP oficial</strong> em <code>https://mcp.higgsfield.ai/mcp</code>, com login por OAuth. Ainda não está no diretório do Claude: entra como conector personalizado. Dá acesso a vários modelos (Veo 3.1, Sora 2, Kling 3.0, Nano Banana Pro e outros) com um só saldo de créditos. <strong>Tudo pelo MCP consome créditos</strong>; o "ilimitado" dos planos vale só no site.</p>
 <div class="warn">
 <p><strong>Use com moderação.</strong> O ativo da Exposul é ser real: lojas que existem, clientes que existem. O próprio Mosseri escreveu no fim de 2025 que a autenticidade está ficando "infinitamente reproduzível" e que o Instagram vai valorizar mídia real. Use IA para b-roll, transição, fundo de carrossel e animar foto de produto. Nunca para inventar uma loja montada ou um cliente.</p>
@@ -110,14 +114,14 @@
 </div>
 <p>Outras opções com MCP oficial: <strong>fal.ai</strong> (centenas de modelos, paga por uso), <strong>Replicate</strong> e <strong>Runway</strong>. Kling e Google (Veo, Nano Banana) não têm MCP oficial próprio; use via Higgsfield ou fal.ai.</p>
 
-<h2>Design: Canva e outros</h2>
+<h2 id="design-canva-e-outros">Design: Canva e outros</h2>
 <ul>
 <li><strong>Canva</strong>: conector oficial no diretório do Claude, com 17 ferramentas: buscar designs, gerar design, preencher modelo, exportar em PNG ou MP4. Ideal para carrosséis e capas a partir de modelos com a marca da Exposul. A ajuda da Canva cita os planos Pro, Teams e Business; a documentação de desenvolvedor diz qualquer plano <span class="tag unv">conflito entre fontes</span>.</li>
 <li><strong>Adobe for creativity</strong>: conector oficial (abril de 2026). Funciona sem conta Adobe, com limites; exporta para o Adobe Express e redimensiona vídeo horizontal para Reels. Bom plano B para quem não quer assinar o Canva.</li>
 <li><strong>Tratamento de foto em lote</strong>: o Claude Code redimensiona, corrige, recorta fundo (rembg) e aplica marca d'água com Python, sem custo.</li>
 </ul>
 
-<h2>Agendamento: qual é "o MCP que conecta todas as redes"</h2>
+<h2 id="agendamento-qual-e-o-mcp-que-conecta-todas-as-re">Agendamento: qual é "o MCP que conecta todas as redes"</h2>
 <p>O que você lembrou é, muito provavelmente, o <strong>Postiz</strong>: open source, 28+ redes, MCP, linha de comando e skill para agentes. O segundo candidato é o <strong>Zernio</strong> (antigo Late). Mas para a Exposul, que só usa Instagram, a escolha principal é outra.</p>
 <div class="table">
 <table>
@@ -138,21 +142,21 @@
 </div>
 <p>Limites da API oficial do Instagram, valendo para qualquer agendador: publica Reels, Trial Reels, Stories e carrossel de até 20 itens, imagem só em JPEG, até 100 posts por 24 h. Não publica filtros nem marcação de produto.</p>
 
-<h2>DM e atendimento</h2>
+<h2 id="dm-e-atendimento">DM e atendimento</h2>
 <ul>
 <li><strong>Automação nativa da Meta</strong> (grátis): respostas instantâneas, perguntas frequentes, gatilho por palavra-chave. Basta para "comenta VITRINE".</li>
 <li><strong>ManyChat</strong>: fluxos mais ricos, coleta de dados e passagem para WhatsApp. Plano grátis limitado; Pro por cerca de US$ 39 por mês (US$ 29 no anual), cobrado por contato ativo desde março de 2026 <span class="tag unv">preço de terceiros</span>. Sem MCP: o Claude não opera o ManyChat. A "integração com Claude" do ManyChat é o contrário, o ManyChat chamando o Claude por chave de API paga à parte, e não usa o plano Pro.</li>
 <li><strong>Zernio</strong>: lê e responde DMs e comentários via MCP. Use só para triagem e rascunho de resposta, nunca para responder cliente sem revisão.</li>
 </ul>
 
-<h2>CRM e anúncios</h2>
+<h2 id="crm-e-anuncios">CRM e anúncios</h2>
 <ul>
 <li><strong>Planilha Google</strong> para começar o registro de leads. Se o volume crescer, o <strong>HubSpot CRM Free</strong> tem conector oficial que funciona no plano Pro do Claude, inclusive na versão grátis do HubSpot. O RD Station tem MCP para CRM, mas só nos planos pagos.</li>
 <li><strong>Meta Ads:</strong> a Meta tem MCPs oficiais para anúncios, ferramentas de desenvolvedor e WhatsApp Business (não para post orgânico). O Claude pode montar campanhas e ler resultados, mas toda campanha criada por ele entra <strong>pausada</strong>; quem liga e define a verba é o dono.</li>
 <li><strong>Pixel e Gerenciador de Tags já estão no site</strong> da Exposul (conferido no código da página). Isso permite remarketing para quem visitou o site, sem instalar nada.</li>
 </ul>
 
-<h2>Fora do Claude (plano B)</h2>
+<h2 id="fora-do-claude-plano-b">Fora do Claude (plano B)</h2>
 <div class="table">
 <table>
 <thead><tr><th>Ferramenta</th><th>Quando faz sentido</th></tr></thead>
@@ -165,7 +169,7 @@
 </table>
 </div>
 
-<h2>Riscos da stack</h2>
+<h2 id="riscos-da-stack">Riscos da stack</h2>
 <ul>
 <li><strong>Publicação errada</strong> (preço, produto, cliente): rascunho sempre, modo Manual, checklist de aprovação.</li>
 <li><strong>Conectores de terceiros</strong> não revisados pela Anthropic têm acesso ao que você liberar. Prefira os do diretório oficial.</li>
@@ -178,11 +182,32 @@
 
 <p class="small">Fontes: support.claude.com (Cowork, conectores, skills, planos), code.claude.com (setup), claude.com/connectors (Canva, HyperFrames, Figma), hyperframes.heygen.com, remotion.pro/license, higgsfield.ai, developers.buffer.com, docs.postiz.com, help.metricool.com, docs.zernio.com, developers.facebook.com (Content Publishing). Lista completa em <a href="fontes.html#ferramentas">Fontes</a>.</p>
 
-<div class="pager"><a href="frequencia.html">← Frequência</a><a href="setup.html">Setup passo a passo →</a></div>
+<nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="frequencia.html"><small>Anterior</small><span>Frequência</span></a><a class="next" href="setup.html"><small>Próxima</small><span>Setup passo a passo</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#recomendacao-em-uma-tabela">Recomendação em uma tabela</a></li><li><a href="#claude-desktop-cowork-e-claude-code">Claude: Desktop, Cowork e Claude Code</a></li><li><a href="#edicao-de-video-e-motion-graphics">Edição de vídeo e motion graphics</a></li><li><a href="#higgsfield-e-geracao-por-ia">Higgsfield e geração por IA</a></li><li><a href="#design-canva-e-outros">Design: Canva e outros</a></li><li><a href="#agendamento-qual-e-o-mcp-que-conecta-todas-as-re">Agendamento: qual é "o MCP que conecta todas as redes"</a></li><li><a href="#dm-e-atendimento">DM e atendimento</a></li><li><a href="#crm-e-anuncios">CRM e anúncios</a></li><li><a href="#fora-do-claude-plano-b">Fora do Claude (plano B)</a></li><li><a href="#riscos-da-stack">Riscos da stack</a></li></ol></aside>
 </div>
 <script>
+(function () {
+  var bar = document.querySelector('.progress span');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? Math.min(100, h.scrollTop / max * 100) : 0) + '%';
+    var cur = -1;
+    heads.forEach(function (el, i) { if (el && el.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.expand-all').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var all = document.querySelectorAll('details.ficha'), open = b.dataset.open !== '1';
+      all.forEach(function (d) { d.open = open; });
+      b.dataset.open = open ? '1' : '0'; b.textContent = open ? 'Fechar todas as fichas' : 'Abrir todas as fichas';
+    });
+  });
+})();
 document.querySelectorAll('pre.copy').forEach(function (pre) {
   var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
   pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);

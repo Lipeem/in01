@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/guia.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="shell">
   <aside class="rail">
     <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
@@ -42,6 +43,7 @@
 <p class="eyebrow">Aprender · Fontes</p>
 <h1>Fontes</h1>
 <p class="lead">Todos os links consultados em 21/10/2026, agrupados por tema. Quando uma afirmação do guia veio só de fonte secundária, ela aparece marcada como <span class="tag unv">não verificado</span> na página onde é usada.</p>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#nicho">Nicho, mercado e calendário do varejo</a></li><li><a href="#concorrentes">Concorrentes</a></li><li><a href="#reputacao">Reputação: Google, Reclame Aqui e regras</a></li><li><a href="#estrategia">Estratégia, frequência e algoritmo</a></li><li><a href="#ferramentas">Ferramentas, Claude e conectores</a></li><li><a href="#notion">Verificações da comparação com a pesquisa do Notion</a></li><li><a href="#videos">Vídeos</a></li></ol></details>
 <div class="note"><p><strong>Como a pesquisa foi feita:</strong> sete frentes, com busca na web e leitura direta de documentação oficial, sites dos produtos, estudos de mercado, páginas públicas do Instagram, do TikTok e do Google Maps. A pesquisa feita no Notion foi lida por inteiro e suas afirmações novas ou conflitantes foram conferidas em fonte oficial. O Reclame Aqui e o Mercado Livre bloquearam a leitura automática. Os vídeos do YouTube tiveram título e canal conferidos; nenhum foi assistido.</p></div>
 <p class="small">Seções: <a href="#nicho">Nicho, mercado e calendário do varejo</a> · <a href="#concorrentes">Concorrentes</a> · <a href="#reputacao">Reputação: Google, Reclame Aqui e regras</a> · <a href="#estrategia">Estratégia, frequência e algoritmo</a> · <a href="#ferramentas">Ferramentas, Claude e conectores</a> · <a href="#notion">Verificações da comparação com a pesquisa do Notion</a> · <a href="#videos">Vídeos</a></p>
 <h2 id="nicho">Nicho, mercado e calendário do varejo</h2>
@@ -329,11 +331,32 @@
 </ul>
 <h2 id="videos">Vídeos</h2><p>Ver a página <a href="videos.html">Vídeos do YouTube</a>.</p>
 
-<div class="pager"><a href="comparativo.html">← Comparativo</a><span></span></div>
+<nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="comparativo.html"><small>Anterior</small><span>Comparativo</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#nicho">Nicho, mercado e calendário do varejo</a></li><li><a href="#concorrentes">Concorrentes</a></li><li><a href="#reputacao">Reputação: Google, Reclame Aqui e regras</a></li><li><a href="#estrategia">Estratégia, frequência e algoritmo</a></li><li><a href="#ferramentas">Ferramentas, Claude e conectores</a></li><li><a href="#notion">Verificações da comparação com a pesquisa do Notion</a></li><li><a href="#videos">Vídeos</a></li></ol></aside>
 </div>
 <script>
+(function () {
+  var bar = document.querySelector('.progress span');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? Math.min(100, h.scrollTop / max * 100) : 0) + '%';
+    var cur = -1;
+    heads.forEach(function (el, i) { if (el && el.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.expand-all').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var all = document.querySelectorAll('details.ficha'), open = b.dataset.open !== '1';
+      all.forEach(function (d) { d.open = open; });
+      b.dataset.open = open ? '1' : '0'; b.textContent = open ? 'Fechar todas as fichas' : 'Abrir todas as fichas';
+    });
+  });
+})();
 document.querySelectorAll('pre.copy').forEach(function (pre) {
   var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
   pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/guia.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="shell">
   <aside class="rail">
     <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
@@ -41,7 +42,10 @@
   <main>
 <p class="eyebrow">Aprender · Vídeos</p>
 <h1>Tutoriais do YouTube, por etapa</h1>
+<p class="meta">2 min de leitura · pesquisa de outubro de 2026</p>
 <p class="lead">Cerca de 120 vídeos com título e canal conferidos no próprio YouTube em 21/10/2026. Os comentários vêm do título e da descrição; os vídeos não foram assistidos. Vários tutoriais de ferramenta trazem link de afiliado.</p>
+<div class="tldr"><ul><li>Cerca de 120 tutoriais com título e canal conferidos, separados por etapa.</li><li>Se for ver só quatro, os quatro estão logo abaixo.</li><li>Onde não há material em português, use a legenda traduzida automática do YouTube.</li></ul></div>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#setup">Claude Desktop, Cowork, conectores e Skills</a></li><li><a href="#video">Edição de vídeo com Claude Code (ffmpeg e Remotion)</a></li><li><a href="#higgsfield">Higgsfield</a></li><li><a href="#agendamento">Agendamento com IA</a></li><li><a href="#canva">Canva + Claude</a></li><li><a href="#estrategia">Estratégia de Instagram, roteiro e funil para WhatsApp</a></li><li><a href="#vm">Visual merchandising e montagem de loja</a></li><li><a href="#manychat">ManyChat e automação de DM</a></li><li><a href="#v2">Adicionados na versão 2</a></li></ol></details>
 <div class="note"><p><strong>Onde não há material em português:</strong> Remotion e Instagram B2B. Nesses casos, ative a legenda automática traduzida do YouTube (Configurações › Legendas › Traduzir automaticamente › Português).</p></div>
 <div class="tip">
 <p><strong>Se for ver só 4:</strong></p>
@@ -210,11 +214,32 @@
 <tr><td><a href="https://www.youtube.com/watch?v=mis7n_NF978" target="_blank" rel="noopener">Como utilizar o círculo cromático no Visual Merchandising</a></td><td>Giseli Chiapetti - Visual Merchandising</td><td>Vitrinismo</td><td>Base para o carrossel de cores na vitrine.</td></tr>
 </tbody></table></div>
 
-<div class="pager"><a href="rotina.html">← Rotina semanal</a><a href="comparativo.html">Comparativo →</a></div>
+<nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="rotina.html"><small>Anterior</small><span>Rotina semanal</span></a><a class="next" href="comparativo.html"><small>Próxima</small><span>Comparativo</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#setup">Claude Desktop, Cowork, conectores e Skills</a></li><li><a href="#video">Edição de vídeo com Claude Code (ffmpeg e Remotion)</a></li><li><a href="#higgsfield">Higgsfield</a></li><li><a href="#agendamento">Agendamento com IA</a></li><li><a href="#canva">Canva + Claude</a></li><li><a href="#estrategia">Estratégia de Instagram, roteiro e funil para WhatsApp</a></li><li><a href="#vm">Visual merchandising e montagem de loja</a></li><li><a href="#manychat">ManyChat e automação de DM</a></li><li><a href="#v2">Adicionados na versão 2</a></li></ol></aside>
 </div>
 <script>
+(function () {
+  var bar = document.querySelector('.progress span');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? Math.min(100, h.scrollTop / max * 100) : 0) + '%';
+    var cur = -1;
+    heads.forEach(function (el, i) { if (el && el.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.expand-all').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var all = document.querySelectorAll('details.ficha'), open = b.dataset.open !== '1';
+      all.forEach(function (d) { d.open = open; });
+      b.dataset.open = open ? '1' : '0'; b.textContent = open ? 'Fechar todas as fichas' : 'Abrir todas as fichas';
+    });
+  });
+})();
 document.querySelectorAll('pre.copy').forEach(function (pre) {
   var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
   pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);

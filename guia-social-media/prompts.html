@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/guia.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="shell">
   <aside class="rail">
     <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
@@ -41,7 +42,10 @@
   <main>
 <p class="eyebrow">Montar · Prompts e Skills</p>
 <h1>Prompts prontos para colar</h1>
+<p class="meta">1 min de leitura · pesquisa de outubro de 2026</p>
 <p class="lead">Os dois primeiros blocos são arquivos fixos (a skill de marca e as instruções do estúdio). Os outros são pedidos do dia a dia. Os arquivos também estão no repositório, em <code>guia-social-media/kit/</code>.</p>
+<div class="tldr"><ul><li>A skill de marca e o CLAUDE.md são os arquivos fixos: o Claude lê os dois antes de qualquer tarefa.</li><li>Os outros 16 blocos são pedidos prontos para copiar: pauta, roteiro, edição, legenda, relatórios, reputação e concorrentes.</li><li>Todo prompt de publicação gera rascunho, nunca post direto.</li></ul></div>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#skill">Skill "marca-exposul" (SKILL.md)</a></li><li><a href="#claude-md">CLAUDE.md do estúdio</a></li><li><a href="#pauta">Pauta semanal (Cowork, tarefa agendada de segunda)</a></li><li><a href="#roteiro">Roteiro de um Reel</a></li><li><a href="#editar">Editar um Reel (Claude Code, na pasta do estúdio)</a></li><li><a href="#carrossel">Carrossel no Canva</a></li><li><a href="#fotos">Tratar fotos de produto em lote (Claude Code)</a></li><li><a href="#legenda">Legenda e SEO</a></li><li><a href="#buffer">Enviar ao Buffer como rascunho</a></li><li><a href="#ia">Imagem e vídeo por IA (Higgsfield)</a></li><li><a href="#lote">Legendas, hashtags e alt text em lote</a></li><li><a href="#dm">Banco de respostas para DMs e comentários</a></li><li><a href="#comentarios">Comentários e DMs (rascunho de respostas)</a></li><li><a href="#semanal">Relatório semanal (Cowork, tarefa agendada de sexta)</a></li><li><a href="#relatorio">Relatório mensal (Cowork, tarefa agendada do dia 1)</a></li><li><a href="#google">Google Perfil da Empresa</a></li><li><a href="#reputacao">Reputação mensal (Cowork, tarefa agendada do dia 1)</a></li><li><a href="#concorrentes">Concorrentes (Cowork, tarefa agendada do dia 5)</a></li></ol></details>
 
 <p class="small">Nesta página: <a href="#skill">Skill de marca</a> · <a href="#claude-md">CLAUDE.md</a> · <a href="#pauta">Pauta semanal</a> · <a href="#roteiro">Roteiro</a> · <a href="#editar">Editar um Reel</a> · <a href="#carrossel">Carrossel no Canva</a> · <a href="#fotos">Fotos em lote</a> · <a href="#legenda">Legenda</a> · <a href="#buffer">Enviar ao Buffer</a> · <a href="#ia">Imagem e vídeo por IA</a> · <a href="#comentarios">Comentários e DMs</a> · <a href="#lote">Legendas em lote</a> · <a href="#dm">Banco de respostas</a> · <a href="#semanal">Relatório semanal</a> · <a href="#relatorio">Relatório mensal</a> · <a href="#google">Google Perfil</a> · <a href="#reputacao">Reputação mensal</a> · <a href="#concorrentes">Concorrentes</a></p>
 
@@ -350,11 +354,32 @@ sem citar nem copiar concorrente; (3) qualquer ameaça (preço, prazo, oferta) q
 Não invente número. Nunca sugerir post que fale mal de concorrente.
 [COLE OS DADOS AQUI]</code></pre>
 
-<div class="pager"><a href="setup.html">← Setup passo a passo</a><a href="rotina.html">Rotina semanal →</a></div>
+<nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="setup.html"><small>Anterior</small><span>Setup passo a passo</span></a><a class="next" href="rotina.html"><small>Próxima</small><span>Rotina semanal</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#skill">Skill "marca-exposul" (SKILL.md)</a></li><li><a href="#claude-md">CLAUDE.md do estúdio</a></li><li><a href="#pauta">Pauta semanal (Cowork, tarefa agendada de segunda)</a></li><li><a href="#roteiro">Roteiro de um Reel</a></li><li><a href="#editar">Editar um Reel (Claude Code, na pasta do estúdio)</a></li><li><a href="#carrossel">Carrossel no Canva</a></li><li><a href="#fotos">Tratar fotos de produto em lote (Claude Code)</a></li><li><a href="#legenda">Legenda e SEO</a></li><li><a href="#buffer">Enviar ao Buffer como rascunho</a></li><li><a href="#ia">Imagem e vídeo por IA (Higgsfield)</a></li><li><a href="#lote">Legendas, hashtags e alt text em lote</a></li><li><a href="#dm">Banco de respostas para DMs e comentários</a></li><li><a href="#comentarios">Comentários e DMs (rascunho de respostas)</a></li><li><a href="#semanal">Relatório semanal (Cowork, tarefa agendada de sexta)</a></li><li><a href="#relatorio">Relatório mensal (Cowork, tarefa agendada do dia 1)</a></li><li><a href="#google">Google Perfil da Empresa</a></li><li><a href="#reputacao">Reputação mensal (Cowork, tarefa agendada do dia 1)</a></li><li><a href="#concorrentes">Concorrentes (Cowork, tarefa agendada do dia 5)</a></li></ol></aside>
 </div>
 <script>
+(function () {
+  var bar = document.querySelector('.progress span');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? Math.min(100, h.scrollTop / max * 100) : 0) + '%';
+    var cur = -1;
+    heads.forEach(function (el, i) { if (el && el.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.expand-all').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var all = document.querySelectorAll('details.ficha'), open = b.dataset.open !== '1';
+      all.forEach(function (d) { d.open = open; });
+      b.dataset.open = open ? '1' : '0'; b.textContent = open ? 'Fechar todas as fichas' : 'Abrir todas as fichas';
+    });
+  });
+})();
 document.querySelectorAll('pre.copy').forEach(function (pre) {
   var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
   pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);

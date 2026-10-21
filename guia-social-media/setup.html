@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/guia.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="shell">
   <aside class="rail">
     <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
@@ -41,13 +42,16 @@
   <main>
 <p class="eyebrow">Montar · Setup</p>
 <h1>Montando o estúdio no Windows</h1>
+<p class="meta">7 min de leitura · pesquisa de outubro de 2026</p>
 <p class="lead">Este é o roteiro para quem vai montar (você), feito uma vez no computador da Exposul. Reserve uma tarde. No fim, o dono só precisa abrir o Claude, jogar material na pasta e aprovar no celular.</p>
+<div class="tldr"><ul><li>Para quem monta, numa tarde: contas, programas, pasta de produção, skill de marca, conectores e testes.</li><li>Instale o Claude pelo .msix do site: pelo winget pode vir a versão sem Cowork.</li><li>Confira se não existe a variável ANTHROPIC_API_KEY no Windows, senão o Claude Code cobra por fora.</li><li>Faça o teste de ponta a ponta antes de passar para o dono.</li></ul></div>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#etapa-1-contas">Etapa 1. Contas</a></li><li><a href="#etapa-2-programas-no-windows">Etapa 2. Programas no Windows</a></li><li><a href="#etapa-3-claude-desktop-e-claude-code">Etapa 3. Claude Desktop e Claude Code</a></li><li><a href="#etapa-4-pasta-de-producao">Etapa 4. Pasta de produção</a></li><li><a href="#etapa-5-skill-marca-exposul">Etapa 5. Skill "marca-exposul"</a></li><li><a href="#etapa-6-conectores">Etapa 6. Conectores</a></li><li><a href="#etapa-7-motion-graphics-hyperframes">Etapa 7. Motion graphics (HyperFrames)</a></li><li><a href="#etapa-8-primeiro-teste-de-ponta-a-ponta">Etapa 8. Primeiro teste de ponta a ponta</a></li><li><a href="#etapa-9-automacao-de-dm">Etapa 9. Automação de DM</a></li><li><a href="#etapa-10-perfil-da-empresa-no-google">Etapa 10. Perfil da Empresa no Google</a></li><li><a href="#etapa-11-tarefas-agendadas-no-cowork">Etapa 11. Tarefas agendadas no Cowork</a></li><li><a href="#etapa-12-passagem-para-o-dono-30-minutos">Etapa 12. Passagem para o dono (30 minutos)</a></li></ol></details>
 
 <div class="note">
 <p><strong>O que você vai precisar em mãos:</strong> login do Instagram da Exposul (conta profissional já vinculada à Página do Facebook), e-mail da empresa, cartão para as assinaturas, acesso de administrador ao Windows e cerca de 4 horas.</p>
 </div>
 
-<h2>Etapa 1. Contas</h2>
+<h2 id="etapa-1-contas">Etapa 1. Contas</h2>
 <div class="table">
 <table>
 <thead><tr><th>Conta</th><th>Plano para começar</th><th>Obrigatória?</th></tr></thead>
@@ -63,7 +67,7 @@
 </div>
 <p>No Buffer, conecte o Instagram em <em>Channels › Connect › Instagram</em>, escolhendo a conta profissional vinculada ao Facebook. Instale o app do Buffer no celular do dono: é por ele que ele vai aprovar.</p>
 
-<h2>Etapa 2. Programas no Windows</h2>
+<h2 id="etapa-2-programas-no-windows">Etapa 2. Programas no Windows</h2>
 <h3>Claude Desktop: baixe pelo site, não pelo winget</h3>
 <p>Baixe o instalador em <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a>. No Windows, <strong>o Cowork só funciona no pacote .msix</strong>. Quem instala pelo instalador .exe antigo recebe o Claude Desktop sem Cowork. O pacote do winget oferece os dois formatos, por isso não use o winget para o Claude.</p>
 <p>O Cowork também precisa de <strong>virtualização ligada</strong> no computador e do recurso do Windows <strong>Plataforma de Máquina Virtual</strong>. Se o Cowork não aparecer depois de instalar:</p>
@@ -89,7 +93,7 @@ python --version</code></pre>
 <li><strong>Fontes da marca</strong>: baixe Archivo e Bodoni Moda em <a href="https://fonts.google.com" target="_blank" rel="noopener">fonts.google.com</a> e instale (botão direito › Instalar para todos os usuários). O ffmpeg e o HyperFrames usam as fontes instaladas.</li>
 </ul>
 
-<h2>Etapa 3. Claude Desktop e Claude Code</h2>
+<h2 id="etapa-3-claude-desktop-e-claude-code">Etapa 3. Claude Desktop e Claude Code</h2>
 <ol class="steps">
 <li>Abra o Claude Desktop e entre com a conta Pro.</li>
 <li>Em <em>Configurações › Capacidades</em>, ligue <strong>execução de código</strong>. Sem isso as Skills não funcionam.</li>
@@ -103,7 +107,7 @@ Alternativa: <code>winget install Anthropic.ClaudeCode</code>. O Claude Code tam
 <p><strong>Cuidado com cobrança por fora.</strong> Se existir no Windows uma variável de ambiente chamada <code>ANTHROPIC_API_KEY</code>, o Claude Code passa a usar essa chave e cobra pela API, em vez de usar a cota do plano Pro. Para conferir, rode no PowerShell <code>echo $env:ANTHROPIC_API_KEY</code>: tem de voltar vazio. Fonte: Central de Ajuda do Claude.</p>
 </div>
 
-<h2>Etapa 4. Pasta de produção</h2>
+<h2 id="etapa-4-pasta-de-producao">Etapa 4. Pasta de produção</h2>
 <p>Crie <code>C:\Exposul-Social</code> (ou dentro do Google Drive para computador, se quiser tarefas com o PC desligado). Use a pasta modelo que está no repositório em <code>guia-social-media/kit/pasta-modelo/Exposul-Social</code>, ou crie à mão:</p>
 <pre><code>Exposul-Social\
   CLAUDE.md               instruções fixas para o Claude Code
@@ -123,7 +127,7 @@ Alternativa: <code>winget install Anthropic.ClaudeCode</code>. O Claude Code tam
 <li>Despeje o acervo em <code>01-brutos\</code>. Organize as lojas montadas numa pasta por loja, com nome e cidade: <code>lojas\moda-ana-joinville\</code>.</li>
 </ol>
 
-<h2>Etapa 5. Skill "marca-exposul"</h2>
+<h2 id="etapa-5-skill-marca-exposul">Etapa 5. Skill "marca-exposul"</h2>
 <ol class="steps">
 <li>Pegue a pasta <code>guia-social-media/kit/marca-exposul</code> do repositório (ou copie o texto em <a href="prompts.html#skill">Prompts e Skills</a> para um arquivo <code>SKILL.md</code> dentro de uma pasta <code>marca-exposul</code>).</li>
 <li>Compacte a pasta em ZIP (botão direito › Compactar).</li>
@@ -132,7 +136,7 @@ Alternativa: <code>winget install Anthropic.ClaudeCode</code>. O Claude Code tam
 <li>Teste no chat: "Escreva uma legenda para um Reel de antes e depois de uma loja de calçados em Chapecó." A resposta deve seguir o formato da skill, com CTA e até 5 hashtags.</li>
 </ol>
 
-<h2>Etapa 6. Conectores</h2>
+<h2 id="etapa-6-conectores">Etapa 6. Conectores</h2>
 <p>No Claude Desktop, vá em <em>Personalizar › Conectores</em>.</p>
 <div class="table">
 <table>
@@ -156,7 +160,7 @@ claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code><
 <p><strong>No Cowork, deixe o modo de aprovação em Manual.</strong> Assim nenhum post vai para o Buffer sem alguém clicar em permitir.</p>
 </div>
 
-<h2>Etapa 7. Motion graphics (HyperFrames)</h2>
+<h2 id="etapa-7-motion-graphics-hyperframes">Etapa 7. Motion graphics (HyperFrames)</h2>
 <p>Duas formas. Comece pela primeira.</p>
 <ol>
 <li><strong>Conector</strong> (etapa 6): renderiza na nuvem da HeyGen, sem instalar nada. Bom para vinhetas, títulos animados e encerramento com logo. Está em beta.</li>
@@ -165,7 +169,7 @@ claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code><
 <p>Peça ao Claude Code para criar 3 modelos e salvar em <code>99-marca\motion\</code>: abertura com gancho (2 s), lista animada de 3 itens, encerramento com logo e CTA (2 s). Os vídeos da semana reaproveitam esses modelos.</p>
 <p>O Remotion faz o mesmo com mais recursos, mas exige licença paga para empresa com mais de 3 pessoas (US$ 25 por assento/mês).</p>
 
-<h2>Etapa 8. Primeiro teste de ponta a ponta</h2>
+<h2 id="etapa-8-primeiro-teste-de-ponta-a-ponta">Etapa 8. Primeiro teste de ponta a ponta</h2>
 <ol class="steps">
 <li>Coloque um vídeo de montagem de loja em <code>01-brutos\lojas\teste\</code>.</li>
 <li>No Claude Code, dentro de <code>C:\Exposul-Social</code>, use o prompt "Editar um Reel" de <a href="prompts.html#editar">Prompts</a>.</li>
@@ -177,7 +181,7 @@ claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code><
 <p><strong>Se o vídeo não subir pelo conector</strong> (a documentação do Buffer não deixa claro como o MCP recebe arquivo local), use o plano B: o Claude deixa tudo pronto em <code>04-aprovados\</code> e o dono sobe no app do Buffer ou do Instagram, copiando a legenda do <code>legenda.txt</code>. Leva cerca de 2 minutos por post. Outra saída é testar o Postiz, cujo MCP tem ferramentas próprias de mídia.</p>
 </div>
 
-<h2>Etapa 9. Automação de DM</h2>
+<h2 id="etapa-9-automacao-de-dm">Etapa 9. Automação de DM</h2>
 <ol class="steps">
 <li>No computador, abra o <a href="https://business.facebook.com" target="_blank" rel="noopener">Meta Business Suite</a> › Caixa de entrada › Automações.</li>
 <li>Crie uma automação por palavra-chave: comentário ou DM com <strong>VITRINE</strong> recebe a mensagem abaixo.</li>
@@ -190,7 +194,7 @@ Se preferir, fala direto com a gente no WhatsApp: (41) 99691-0019</code></pre>
 <p>A mensagem diz que é automática de propósito: o cliente sabe que vai falar com uma pessoa em seguida, e isso evita a irritação com robô que a maioria dos brasileiros relata. Regras da Meta e LGPD em <a href="estrategia.html#regras">Estratégia › Regras e cuidados</a>.</p>
 <p>Os nomes de menu da Meta mudam com frequência. Se não achar, os tutoriais de ManyChat em <a href="videos.html#manychat">Vídeos</a> mostram a mesma lógica.</p>
 
-<h2>Etapa 10. Perfil da Empresa no Google</h2>
+<h2 id="etapa-10-perfil-da-empresa-no-google">Etapa 10. Perfil da Empresa no Google</h2>
 <p>A Exposul já tem 4,8 estrelas com 315 avaliações, mas o perfil tem dados errados. Corrija no <a href="https://business.google.com" target="_blank" rel="noopener">business.google.com</a> (detalhes em <a href="reputacao.html">Reputação</a>):</p>
 <ul>
 <li>Horário de sábado igual ao do site (o Google mostra "fechado").</li>
@@ -200,7 +204,7 @@ Se preferir, fala direto com a gente no WhatsApp: (41) 99691-0019</code></pre>
 <li>Publicar um post: os últimos são de maio e serão arquivados em novembro.</li>
 </ul>
 
-<h2>Etapa 11. Tarefas agendadas no Cowork</h2>
+<h2 id="etapa-11-tarefas-agendadas-no-cowork">Etapa 11. Tarefas agendadas no Cowork</h2>
 <p>No Claude Desktop, menu <em>Agendadas</em> (ou digite <code>/schedule</code> no Cowork). Crie:</p>
 <div class="table">
 <table>
@@ -216,7 +220,7 @@ Se preferir, fala direto com a gente no WhatsApp: (41) 99691-0019</code></pre>
 </div>
 <p>Tarefas que usam a pasta local só rodam com o PC ligado e o app aberto. Com a pasta no Google Drive e o conector do Drive, rodam mesmo com o PC desligado.</p>
 
-<h2>Etapa 12. Passagem para o dono (30 minutos)</h2>
+<h2 id="etapa-12-passagem-para-o-dono-30-minutos">Etapa 12. Passagem para o dono (30 minutos)</h2>
 <ul>
 <li>Mostre a <a href="rotina.html">rotina semanal</a> e onde fica cada pasta.</li>
 <li>Faça com ele, ao vivo, uma aprovação no app do Buffer.</li>
@@ -224,11 +228,32 @@ Se preferir, fala direto com a gente no WhatsApp: (41) 99691-0019</code></pre>
 <li>Combine quem responde DM e comentário, e em quanto tempo.</li>
 </ul>
 
-<div class="pager"><a href="ferramentas.html">← Ferramentas</a><a href="prompts.html">Prompts e Skills →</a></div>
+<nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="ferramentas.html"><small>Anterior</small><span>Ferramentas</span></a><a class="next" href="prompts.html"><small>Próxima</small><span>Prompts e Skills</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#etapa-1-contas">Etapa 1. Contas</a></li><li><a href="#etapa-2-programas-no-windows">Etapa 2. Programas no Windows</a></li><li><a href="#etapa-3-claude-desktop-e-claude-code">Etapa 3. Claude Desktop e Claude Code</a></li><li><a href="#etapa-4-pasta-de-producao">Etapa 4. Pasta de produção</a></li><li><a href="#etapa-5-skill-marca-exposul">Etapa 5. Skill "marca-exposul"</a></li><li><a href="#etapa-6-conectores">Etapa 6. Conectores</a></li><li><a href="#etapa-7-motion-graphics-hyperframes">Etapa 7. Motion graphics (HyperFrames)</a></li><li><a href="#etapa-8-primeiro-teste-de-ponta-a-ponta">Etapa 8. Primeiro teste de ponta a ponta</a></li><li><a href="#etapa-9-automacao-de-dm">Etapa 9. Automação de DM</a></li><li><a href="#etapa-10-perfil-da-empresa-no-google">Etapa 10. Perfil da Empresa no Google</a></li><li><a href="#etapa-11-tarefas-agendadas-no-cowork">Etapa 11. Tarefas agendadas no Cowork</a></li><li><a href="#etapa-12-passagem-para-o-dono-30-minutos">Etapa 12. Passagem para o dono (30 minutos)</a></li></ol></aside>
 </div>
 <script>
+(function () {
+  var bar = document.querySelector('.progress span');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? Math.min(100, h.scrollTop / max * 100) : 0) + '%';
+    var cur = -1;
+    heads.forEach(function (el, i) { if (el && el.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.expand-all').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var all = document.querySelectorAll('details.ficha'), open = b.dataset.open !== '1';
+      all.forEach(function (d) { d.open = open; });
+      b.dataset.open = open ? '1' : '0'; b.textContent = open ? 'Fechar todas as fichas' : 'Abrir todas as fichas';
+    });
+  });
+})();
 document.querySelectorAll('pre.copy').forEach(function (pre) {
   var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
   pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);

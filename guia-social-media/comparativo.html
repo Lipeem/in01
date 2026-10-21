@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/guia.css">
 </head>
 <body>
+<div class="progress" aria-hidden="true"><span></span></div>
 <div class="shell">
   <aside class="rail">
     <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
@@ -41,9 +42,11 @@
   <main>
 <p class="eyebrow">Aprender · Comparativo</p>
 <h1>Três pesquisas, uma versão final</h1>
+<p class="meta">3 min de leitura · pesquisa de outubro de 2026</p>
 <p class="lead">O mesmo pedido foi feito a três IAs. Esta página compara o que foi possível ler, mostra quem acertou e quem errou em cada ponto (com verificação em fonte oficial) e lista o que entrou nesta versão. Os erros da primeira versão deste guia também estão aqui.</p>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#o-que-foi-comparado">O que foi comparado</a></li><li><a href="#placar-por-tema">Placar por tema</a></li><li><a href="#onde-o-notion-errou-verificado">Onde o Notion errou (verificado)</a></li><li><a href="#onde-a-versao-1-errou">Onde a versão 1 errou</a></li><li><a href="#o-que-ficou-de-fora-de-proposito">O que ficou de fora de propósito</a></li><li><a href="#a-pesquisa-do-google-quando-der-para-abrir">A pesquisa do Google, quando der para abrir</a></li><li><a href="#pesquisas-novas-desta-versao">Pesquisas novas desta versão</a></li></ol></details>
 
-<h2>O que foi comparado</h2>
+<h2 id="o-que-foi-comparado">O que foi comparado</h2>
 <div class="table">
 <table>
 <thead><tr><th>Pesquisa</th><th>Formato</th><th>Situação</th></tr></thead>
@@ -55,7 +58,7 @@
 </table>
 </div>
 
-<h2>Placar por tema</h2>
+<h2 id="placar-por-tema">Placar por tema</h2>
 <div class="table">
 <table>
 <thead><tr><th>Tema</th><th>Versão 1</th><th>Notion</th><th>O que ficou na versão 2</th></tr></thead>
@@ -85,7 +88,7 @@
 </table>
 </div>
 
-<h2>Onde o Notion errou (verificado)</h2>
+<h2 id="onde-o-notion-errou-verificado">Onde o Notion errou (verificado)</h2>
 <ul>
 <li><strong>Música:</strong> as Diretrizes de Música da Meta proíbem uso comercial de música sem licença. Publicar pelo app não muda isso.</li>
 <li><strong>Carrossel "até 10 slides":</strong> a API aceita até 20 itens.</li>
@@ -97,7 +100,7 @@
 <li><strong>Reel de 25 anos</strong> planejado para dezembro, sem saber que o post já saiu em 01/10.</li>
 </ul>
 
-<h2>Onde a versão 1 errou</h2>
+<h2 id="onde-a-versao-1-errou">Onde a versão 1 errou</h2>
 <ul>
 <li><strong>Instalação pelo winget:</strong> o pacote oferece instalador .msix e .exe; com o .exe, o dono ficaria sem Cowork. Corrigido.</li>
 <li><strong>Aviso da Microsoft Store</strong> confuso, porque o pacote certo também é .msix. Removido.</li>
@@ -110,7 +113,7 @@
 <li><strong>Faltavam</strong> rótulo de IA, LGPD, regras de DM, Pixel já instalado no site e o "30 minutos de gravação", que era otimista. Tudo acrescentado.</li>
 </ul>
 
-<h2>O que ficou de fora de propósito</h2>
+<h2 id="o-que-ficou-de-fora-de-proposito">O que ficou de fora de propósito</h2>
 <ul>
 <li>Postiz como agendador principal: mais caro para um único canal.</li>
 <li>Ideias com "vitrine conceito feita por IA": vão contra o argumento central de que a força da Exposul são lojas reais.</li>
@@ -118,7 +121,7 @@
 <li>Números de seguidores de concorrentes sem conferência: foram substituídos pelos levantados nesta versão.</li>
 </ul>
 
-<h2>A pesquisa do Google, quando der para abrir</h2>
+<h2 id="a-pesquisa-do-google-quando-der-para-abrir">A pesquisa do Google, quando der para abrir</h2>
 <p>Para comparar, é preciso que o dono da conta compartilhe os arquivos com acesso por link ou com a conta conectada. Pontos a avaliar com cuidado:</p>
 <ul>
 <li><strong>Simulador de kits por m²:</strong> pode ser ótimo como isca de lead, mas só se as quantidades vierem da experiência real da Exposul. A pesquisa não encontrou regra pública de araras por m², então um número genérico seria inventado.</li>
@@ -127,17 +130,38 @@
 <li><strong>Planilha de gatilhos de DM:</strong> conferir se respeita as regras da Meta (uma resposta por comentário em até 7 dias, janela de 24 h).</li>
 </ul>
 
-<h2>Pesquisas novas desta versão</h2>
+<h2 id="pesquisas-novas-desta-versao">Pesquisas novas desta versão</h2>
 <ul>
 <li><strong><a href="concorrentes.html">Concorrentes</a>:</strong> 26 empresas em Curitiba, no Sul e no Brasil, com Instagram, Google, TikTok e Reclame Aqui.</li>
 <li><strong><a href="reputacao.html">Reputação</a>:</strong> perfil da Exposul no Google, dados divergentes, Reclame Aqui da Exposul e do setor, regras do Google e do CONAR, e a rotina de avaliações.</li>
 </ul>
 
-<div class="pager"><a href="videos.html">← Vídeos do YouTube</a><a href="fontes.html">Fontes →</a></div>
+<nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="videos.html"><small>Anterior</small><span>Vídeos do YouTube</span></a><a class="next" href="fontes.html"><small>Próxima</small><span>Fontes</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#o-que-foi-comparado">O que foi comparado</a></li><li><a href="#placar-por-tema">Placar por tema</a></li><li><a href="#onde-o-notion-errou-verificado">Onde o Notion errou (verificado)</a></li><li><a href="#onde-a-versao-1-errou">Onde a versão 1 errou</a></li><li><a href="#o-que-ficou-de-fora-de-proposito">O que ficou de fora de propósito</a></li><li><a href="#a-pesquisa-do-google-quando-der-para-abrir">A pesquisa do Google, quando der para abrir</a></li><li><a href="#pesquisas-novas-desta-versao">Pesquisas novas desta versão</a></li></ol></aside>
 </div>
 <script>
+(function () {
+  var bar = document.querySelector('.progress span');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var heads = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? Math.min(100, h.scrollTop / max * 100) : 0) + '%';
+    var cur = -1;
+    heads.forEach(function (el, i) { if (el && el.getBoundingClientRect().top < 140) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.expand-all').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var all = document.querySelectorAll('details.ficha'), open = b.dataset.open !== '1';
+      all.forEach(function (d) { d.open = open; });
+      b.dataset.open = open ? '1' : '0'; b.textContent = open ? 'Fechar todas as fichas' : 'Abrir todas as fichas';
+    });
+  });
+})();
 document.querySelectorAll('pre.copy').forEach(function (pre) {
   var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
   pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
