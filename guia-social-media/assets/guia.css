@@ -230,3 +230,4 @@ h4.resp-h { display: flex; align-items: baseline; gap: .6rem; font: 600 .98rem/1
 h4.resp-h span { flex: none; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--key-soft); color: var(--key); font: 600 .8rem/1.6rem var(--sans); text-align: center; }
 pre.resp { white-space: pre-wrap; font: .95rem/1.65 var(--sans); background: var(--surface); padding: 1rem 1.1rem 1rem; padding-right: 5.5rem; margin-top: .5rem; }
 pre.resp code { font: inherit; white-space: inherit; }
+@media (max-width: 600px) { pre.resp { padding-right: 1.1rem; padding-top: 2.8rem; } }
