@@ -57,7 +57,8 @@
 <thead><tr><th>Conta</th><th>Plano para começar</th><th>Obrigatória?</th></tr></thead>
 <tbody>
 <tr><td>Claude (claude.com)</td><td>Pro. Subir para Max 5x se a cota acabar no meio da semana.</td><td>Sim</td></tr>
-<tr><td>Buffer (buffer.com)</td><td>Essentials, 1 canal (Instagram). O plano grátis serve para o teste.</td><td>Sim</td></tr>
+<tr><td>Buffer (buffer.com) ou Meta Business Suite</td><td>Buffer grátis basta para agendar pelo app; o Meta Business Suite é grátis e oficial</td><td>Um dos dois</td></tr>
+<tr><td>Upload-Post (upload-post.com)</td><td>Só para o caminho automático, depois que a rotina estiver estável</td><td>Não</td></tr>
 <tr><td>Canva (canva.com)</td><td>Pro, para o conector e o kit de marca</td><td>Sim</td></tr>
 <tr><td>Google Drive</td><td>O que a empresa já tiver</td><td>Recomendada (tarefas com PC desligado)</td></tr>
 <tr><td>Higgsfield (higgsfield.ai)</td><td>Starter, só se for usar vídeo por IA</td><td>Não</td></tr>
@@ -65,7 +66,7 @@
 </tbody>
 </table>
 </div>
-<p>No Buffer, conecte o Instagram em <em>Channels › Connect › Instagram</em>, escolhendo a conta profissional vinculada ao Facebook. Instale o app do Buffer no celular do dono: é por ele que ele vai aprovar.</p>
+<p>No Buffer, conecte o Instagram em <em>Channels › Connect › Instagram</em>, escolhendo a conta profissional vinculada ao Facebook. Instale o app no celular de quem vai publicar: é por ele que os posts aprovados entram na agenda.</p>
 
 <h2 id="etapa-2-programas-no-windows">Etapa 2. Programas no Windows</h2>
 <h3>Claude Desktop: baixe pelo site, não pelo winget</h3>
@@ -142,7 +143,7 @@ Alternativa: <code>winget install Anthropic.ClaudeCode</code>. O Claude Code tam
 <table>
 <thead><tr><th>Conector</th><th>Como adicionar</th><th>Permissão das ferramentas de escrita</th></tr></thead>
 <tbody>
-<tr><td>Buffer</td><td>Diretório › busque "Buffer" › Conectar › login</td><td><strong>Sempre perguntar</strong></td></tr>
+<tr><td>Buffer (opcional)</td><td>Diretório › busque "Buffer" › Conectar › login</td><td><strong>Sempre perguntar</strong></td></tr>
 <tr><td>Canva</td><td>Diretório › "Canva" › Conectar</td><td>Sempre perguntar</td></tr>
 <tr><td>Google Drive</td><td>Diretório › "Google Drive"</td><td>Sempre perguntar</td></tr>
 <tr><td>HyperFrames</td><td>Diretório › "HyperFrames"</td><td>Pode permitir</td></tr>
@@ -157,7 +158,7 @@ claude mcp add --transport http buffer https://mcp.buffer.com/mcp
 claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code></pre>
 <p>Depois, dentro do <code>claude</code>, digite <code>/mcp</code> e faça o login de cada um.</p>
 <div class="warn">
-<p><strong>No Cowork, deixe o modo de aprovação em Manual.</strong> Assim nenhum post vai para o Buffer sem alguém clicar em permitir.</p>
+<p><strong>No Cowork, deixe o modo de aprovação em Manual.</strong> Assim nenhuma ferramenta que publica ou gasta crédito roda sem alguém clicar em permitir.</p>
 </div>
 
 <h2 id="etapa-7-motion-graphics-hyperframes">Etapa 7. Motion graphics (HyperFrames)</h2>
@@ -174,11 +175,11 @@ claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code><
 <li>Coloque um vídeo de montagem de loja em <code>01-brutos\lojas\teste\</code>.</li>
 <li>No Claude Code, dentro de <code>C:\Exposul-Social</code>, use o prompt "Editar um Reel" de <a href="prompts.html#editar">Prompts</a>.</li>
 <li>Confira a pasta em <code>03-para-aprovar\</code>: vídeo 9:16 com legenda embutida, capa, legenda.txt, alt.txt e ficha.md.</li>
-<li>Mova para <code>04-aprovados\</code> e peça: "Envie a peça aprovada para o Buffer como rascunho."</li>
-<li>No app do Buffer, confira se chegou como <strong>Reel</strong>, com capa e legenda. Repita com um carrossel de 5 fotos.</li>
+<li>Mova para <code>04-aprovados\</code>. No celular, abra o app do Buffer (ou o Meta Business Suite), suba o vídeo, cole o <code>legenda.txt</code> e agende como <strong>Reel</strong>. Repita com um carrossel de 5 fotos.</li>
+<li>Opcional, para o caminho automático: crie conta na Upload-Post, gere a chave de API e peça ao Claude Code para agendar a peça aprovada pela API, com upload do arquivo. Confira no Instagram se saiu como Reel, com capa e legenda.</li>
 </ol>
-<div class="warn">
-<p><strong>Se o vídeo não subir pelo conector</strong> (a documentação do Buffer não deixa claro como o MCP recebe arquivo local), use o plano B: o Claude deixa tudo pronto em <code>04-aprovados\</code> e o dono sobe no app do Buffer ou do Instagram, copiando a legenda do <code>legenda.txt</code>. Leva cerca de 2 minutos por post. Outra saída é testar o Postiz, cujo MCP tem ferramentas próprias de mídia.</p>
+<div class="note">
+<p><strong>Por que não direto pelo Buffer:</strong> a API do Buffer só aceita mídia em link público e não recebe arquivo do computador. Por isso o caminho padrão é subir pelo app, e o automático usa a Upload-Post. Detalhes em <a href="ferramentas.html">Ferramentas</a>.</p>
 </div>
 
 <h2 id="etapa-9-automacao-de-dm">Etapa 9. Automação de DM</h2>
@@ -223,7 +224,7 @@ Se preferir, fala direto com a gente no WhatsApp: (41) 99691-0019</code></pre>
 <h2 id="etapa-12-passagem-para-o-dono-30-minutos">Etapa 12. Passagem para o dono (30 minutos)</h2>
 <ul>
 <li>Mostre a <a href="rotina.html">rotina semanal</a> e onde fica cada pasta.</li>
-<li>Faça com ele, ao vivo, uma aprovação no app do Buffer.</li>
+<li>Faça com ele, ao vivo, uma aprovação na pasta e um agendamento pelo app.</li>
 <li>Mostre o checklist de gravação para a equipe (em <a href="roteiros.html#gravacao">Roteiros</a>).</li>
 <li>Combine quem responde DM e comentário, e em quanto tempo.</li>
 </ul>

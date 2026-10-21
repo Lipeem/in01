@@ -42,10 +42,10 @@
   <main>
 <p class="eyebrow">Montar · Ferramentas</p>
 <h1>A stack, peça por peça</h1>
-<p class="meta">7 min de leitura · pesquisa de outubro de 2026</p>
+<p class="meta">8 min de leitura · pesquisa de outubro de 2026</p>
 <p class="lead">O Claude é o centro: recebe o material, edita, escreve e deixa tudo em rascunho no agendador. Cada ferramenta abaixo entra por um conector (MCP) ou é usada pelo Claude Code direto no computador. Tudo foi conferido em documentação oficial em 21/10/2026.</p>
-<div class="tldr"><ul><li>O centro é o Claude Desktop: Cowork para a rotina, Claude Code para editar vídeo com ffmpeg.</li><li>Motion graphics com HyperFrames; carrosséis com Canva; Higgsfield só para b-roll, com rótulo de IA.</li><li>Agendamento no Buffer, sempre como rascunho; o Postiz é a alternativa para várias redes.</li><li>Música comercial e vídeo de IA fotorrealista sem rótulo estão fora.</li></ul></div>
-<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#recomendacao-em-uma-tabela">Recomendação em uma tabela</a></li><li><a href="#claude-desktop-cowork-e-claude-code">Claude: Desktop, Cowork e Claude Code</a></li><li><a href="#edicao-de-video-e-motion-graphics">Edição de vídeo e motion graphics</a></li><li><a href="#higgsfield-e-geracao-por-ia">Higgsfield e geração por IA</a></li><li><a href="#design-canva-e-outros">Design: Canva e outros</a></li><li><a href="#agendamento-qual-e-o-mcp-que-conecta-todas-as-re">Agendamento: qual é "o MCP que conecta todas as redes"</a></li><li><a href="#dm-e-atendimento">DM e atendimento</a></li><li><a href="#crm-e-anuncios">CRM e anúncios</a></li><li><a href="#fora-do-claude-plano-b">Fora do Claude (plano B)</a></li><li><a href="#riscos-da-stack">Riscos da stack</a></li></ol></details>
+<div class="tldr"><ul><li>O centro é o Claude Desktop: Cowork para a rotina, Claude Code para editar vídeo com ffmpeg.</li><li>Motion graphics com HyperFrames; carrosséis com Canva; Higgsfield só para b-roll, com rótulo de IA.</li><li>Publicação: no começo, uma pessoa sobe pelo app (o Buffer não recebe arquivo do computador); depois, automática pela Upload-Post.</li><li>Música comercial e vídeo de IA fotorrealista sem rótulo estão fora.</li></ul></div>
+<details class="toc-m"><summary>Nesta página</summary><ol><li><a href="#recomendacao-em-uma-tabela">Recomendação em uma tabela</a></li><li><a href="#claude-desktop-cowork-e-claude-code">Claude: Desktop, Cowork e Claude Code</a></li><li><a href="#edicao-de-video-e-motion-graphics">Edição de vídeo e motion graphics</a></li><li><a href="#higgsfield-e-geracao-por-ia">Higgsfield e geração por IA</a></li><li><a href="#design-canva-e-outros">Design: Canva e outros</a></li><li><a href="#publicacao-qual-e-o-mcp-que-conecta-todas-as-red">Publicação: qual é "o MCP que conecta todas as redes"</a></li><li><a href="#dm-e-atendimento">DM e atendimento</a></li><li><a href="#crm-e-anuncios">CRM e anúncios</a></li><li><a href="#fora-do-claude-plano-b">Fora do Claude (plano B)</a></li><li><a href="#riscos-da-stack">Riscos da stack</a></li></ol></details>
 
 <div class="warn">
 <p><strong>Preços e recursos mudam todo mês nesse mercado.</strong> Valores em dólar, pegos nas páginas de preço em outubro de 2026. Confira antes de assinar.</p>
@@ -62,7 +62,7 @@
 <tr><td>Carrossel, capa, Stories</td><td><strong>Canva</strong> (conector oficial)</td><td>Adobe for creativity</td><td>Canva Pro</td></tr>
 <tr><td>Vídeo e imagem gerados por IA</td><td><strong>Higgsfield</strong> (MCP oficial)</td><td>fal.ai, Runway</td><td>Créditos, a partir de ~US$ 19</td></tr>
 <tr><td>Narração</td><td><strong>ElevenLabs</strong> (conector oficial)</td><td>Voz de alguém da equipe</td><td>Plano ElevenLabs</td></tr>
-<tr><td>Agendamento com aprovação</td><td><strong>Buffer</strong> (conector oficial)</td><td>Postiz, Metricool</td><td>US$ 5 a 10 por canal</td></tr>
+<tr><td>Publicação</td><td><strong>Para começar:</strong> o Claude prepara, uma pessoa sobe pelo app (Buffer ou Meta Business Suite)</td><td><strong>Automático:</strong> Upload-Post pelo Claude Code</td><td>Grátis · Upload-Post a partir de US$ 24</td></tr>
 <tr><td>DM e primeiro atendimento</td><td><strong>Automação nativa da Meta</strong></td><td>ManyChat, Zernio</td><td>Grátis</td></tr>
 </tbody>
 </table>
@@ -121,25 +121,37 @@
 <li><strong>Tratamento de foto em lote</strong>: o Claude Code redimensiona, corrige, recorta fundo (rembg) e aplica marca d'água com Python, sem custo.</li>
 </ul>
 
-<h2 id="agendamento-qual-e-o-mcp-que-conecta-todas-as-re">Agendamento: qual é "o MCP que conecta todas as redes"</h2>
-<p>O que você lembrou é, muito provavelmente, o <strong>Postiz</strong>: open source, 28+ redes, MCP, linha de comando e skill para agentes. O segundo candidato é o <strong>Zernio</strong> (antigo Late). Mas para a Exposul, que só usa Instagram, a escolha principal é outra.</p>
+<h2 id="publicacao-qual-e-o-mcp-que-conecta-todas-as-red">Publicação: qual é "o MCP que conecta todas as redes"</h2>
+<p>O que você lembrou é, muito provavelmente, o <strong>Postiz</strong>: open source, 28+ redes, MCP, linha de comando e skill para agentes. Mas há um detalhe que decide a escolha: <strong>o vídeo editado está no computador</strong>, e a API da Meta só publica mídia que esteja num endereço público da internet.</p>
+<div class="warn">
+<p><strong>O Buffer não recebe arquivo do computador.</strong> A documentação diz que a API "não aceita upload de arquivo": a mídia precisa estar hospedada num link público e direto, e links de compartilhamento do Google Drive ou do Dropbox não funcionam. Na prática, o Claude não consegue mandar o Reel editado direto para o Buffer.</p>
+</div>
+
+<h3>Caminho 1, para começar: o Claude prepara, uma pessoa publica</h3>
+<p>O Claude deixa em <code>04-aprovados\</code> o vídeo ou as imagens, a capa, a legenda pronta e o horário sugerido. O dono ou um funcionário abre o app do <strong>Buffer</strong> ou o <strong>Meta Business Suite</strong> no celular, sobe o arquivo, cola a legenda e agenda. São cerca de 2 minutos por post, uns 8 minutos por semana.</p>
+<ul>
+<li>Custo zero (Buffer grátis ou Meta Business Suite).</li>
+<li>Nada vai ao ar sem uma pessoa.</li>
+<li>Rótulo de IA, colaboradores e capa ficam à mão no próprio app.</li>
+</ul>
+
+<h3>Caminho 2, quando a rotina estiver estável: Upload-Post pelo Claude Code</h3>
+<p>A <strong>Upload-Post</strong> aceita o arquivo direto do computador. O Claude Code envia pela API, o que o conector remoto não faz. Ela agenda Reels, carrosséis, Stories e Trial Reels, e nos planos pagos também posta no Google Perfil da Empresa. O MCP dela ainda lê comentários e DMs. O Claude só agenda o que estiver em <code>04-aprovados\</code>, então a aprovação continua sendo do dono. Plano grátis com 10 envios por mês; Basic a partir de US$ 24 por mês. <span class="tag unv">Testar no setup antes de depender</span></p>
+
 <div class="table">
 <table>
-<thead><tr><th>Ferramenta</th><th>Conexão com o Claude</th><th>Rascunho e aprovação</th><th>Preço aprox.</th></tr></thead>
+<thead><tr><th>Ferramenta</th><th>Recebe arquivo do PC?</th><th>Google Perfil da Empresa</th><th>Comentários e DMs</th><th>Preço aprox.</th></tr></thead>
 <tbody>
-<tr><td><strong>Buffer</strong> (escolha)</td><td>Conector oficial no diretório, OAuth</td><td>Salva como rascunho. Fluxo formal de aprovação só no plano Team.</td><td>Grátis (3 canais, 10 posts); Essentials US$ 5/canal; Team US$ 10/canal</td></tr>
-<tr><td><strong>Postiz</strong></td><td>Conector personalizado com login (OAuth) em <code>https://mcp.postiz.com/mcp-oauth-dynamic</code>, ou com chave de API; o fabricante diz que também está no diretório do Claude <span class="tag unv">não confirmado pela Anthropic</span>; skill <code>gitroomhq/postiz-agent</code></td><td>Rascunho e link de prévia com comentários</td><td>US$ 29 a 99, sem plano grátis; ou auto-hospedado</td></tr>
-<tr><td><strong>Metricool</strong></td><td>Conector oficial no diretório</td><td>Envia post "para revisão", inclusive no plano grátis</td><td>Grátis com limites; forte em relatórios</td></tr>
-<tr><td>Zernio</td><td>Conector personalizado, OAuth</td><td>Também lê e responde DMs e comentários</td><td>2 contas grátis</td></tr>
-<tr><td>Meta Business Suite</td><td>Sem MCP para posts</td><td>Manual</td><td>Grátis, plano B 100% oficial</td></tr>
+<tr><td><strong>Upload-Post</strong></td><td>Sim, pela API (Claude Code)</td><td>Sim, nos planos pagos</td><td>Lê e responde</td><td>Grátis (10 envios/mês); Basic US$ 24</td></tr>
+<tr><td><strong>Postiz</strong></td><td>Por ferramentas de mídia próprias <span class="tag unv">testar</span></td><td>Sim</td><td>O MCP não lê comentários</td><td>US$ 29 a 99; auto-hospedado grátis</td></tr>
+<tr><td>Blotato</td><td>Sim, por upload temporário</td><td>Não</td><td>Automação de DM</td><td>US$ 29</td></tr>
+<tr><td>Buffer</td><td><strong>Não</strong>, só link público</td><td>Sim</td><td>Não</td><td>Grátis; US$ 5 por canal</td></tr>
+<tr><td>Metricool</td><td>Não verificado</td><td>Sim</td><td>Não pelo MCP</td><td>Grátis com limites</td></tr>
+<tr><td>Meta Business Suite</td><td>Manual, pelo app</td><td>—</td><td>Caixa de entrada própria</td><td>Grátis</td></tr>
 </tbody>
 </table>
 </div>
-<p><strong>Por que Buffer:</strong> é conector oficial revisado, entra com login (sem chave colada na URL), é barato para um canal só e o dono aprova pelo próprio app do celular. Como o dono é quem aprova, o rascunho basta e o plano Team não é necessário.</p>
-<p><strong>Por que o Postiz é a alternativa:</strong> se a Exposul for para TikTok, YouTube Shorts, LinkedIn e Google Perfil da Empresa, um só MCP cobre tudo e o link de prévia facilita aprovação por terceiros.</p>
-<div class="warn">
-<p><strong>Teste antes de confiar.</strong> A documentação do MCP do Buffer não detalha como o Claude envia um arquivo de vídeo local nem se Reel, Story e carrossel saem com o tipo certo <span class="tag unv">não verificado</span>. A API da Meta exige mídia em URL pública. O setup inclui um teste com um Reel e um carrossel. Se falhar, o plano B é o Claude deixar vídeo e legenda na pasta "aprovados" e o dono subir pelo app do Buffer, o que leva cerca de 2 minutos por post.</p>
-</div>
+<p>O conector do Buffer continua útil para o Claude ler a fila, criar rascunhos de texto e publicar quando a mídia já estiver num link público. Não use dois agendadores ligados ao mesmo Instagram, e nunca duas automações de DM no mesmo post: a primeira consome a única resposta permitida por comentário.</p>
 <p>Limites da API oficial do Instagram, valendo para qualquer agendador: publica Reels, Trial Reels, Stories e carrossel de até 20 itens, imagem só em JPEG, até 100 posts por 24 h. Não publica filtros nem marcação de produto.</p>
 
 <h2 id="dm-e-atendimento">DM e atendimento</h2>
@@ -161,6 +173,7 @@
 <table>
 <thead><tr><th>Ferramenta</th><th>Quando faz sentido</th></tr></thead>
 <tbody>
+<tr><td>Gemini para organizar o acervo</td><td>Boa ideia vinda do playbook do Google: os modelos atuais do Gemini analisam vídeos longos (até 1 hora em alta resolução, segundo a documentação do Google de outubro de 2026). Dá para subir os vídeos brutos e pedir um índice com o que aparece em cada trecho, para o Claude Code cortar depois.</td></tr>
 <tr><td>Google Gemini (Gems, Veo 3.1, Nano Banana Pro, Flow)</td><td>Gerar vídeo e imagem com a assinatura Google AI Pro (~US$ 20), se não quiser créditos da Higgsfield. Gems funcionam como uma "skill" de marca.</td></tr>
 <tr><td>CapCut</td><td>Ajuste fino manual de um Reel importante.</td></tr>
 <tr><td>Opus Clip</td><td>Cortar um vídeo longo (palestra, live, visita guiada) em vários Reels.</td></tr>
@@ -185,7 +198,7 @@
 <nav class="pager" aria-label="Navegação entre páginas"><a class="prev" href="frequencia.html"><small>Anterior</small><span>Frequência</span></a><a class="next" href="setup.html"><small>Próxima</small><span>Setup passo a passo</span></a></nav>
 <footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
   </main>
-  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#recomendacao-em-uma-tabela">Recomendação em uma tabela</a></li><li><a href="#claude-desktop-cowork-e-claude-code">Claude: Desktop, Cowork e Claude Code</a></li><li><a href="#edicao-de-video-e-motion-graphics">Edição de vídeo e motion graphics</a></li><li><a href="#higgsfield-e-geracao-por-ia">Higgsfield e geração por IA</a></li><li><a href="#design-canva-e-outros">Design: Canva e outros</a></li><li><a href="#agendamento-qual-e-o-mcp-que-conecta-todas-as-re">Agendamento: qual é "o MCP que conecta todas as redes"</a></li><li><a href="#dm-e-atendimento">DM e atendimento</a></li><li><a href="#crm-e-anuncios">CRM e anúncios</a></li><li><a href="#fora-do-claude-plano-b">Fora do Claude (plano B)</a></li><li><a href="#riscos-da-stack">Riscos da stack</a></li></ol></aside>
+  <aside class="toc" aria-label="Nesta página"><b>Nesta página</b><ol><li><a href="#recomendacao-em-uma-tabela">Recomendação em uma tabela</a></li><li><a href="#claude-desktop-cowork-e-claude-code">Claude: Desktop, Cowork e Claude Code</a></li><li><a href="#edicao-de-video-e-motion-graphics">Edição de vídeo e motion graphics</a></li><li><a href="#higgsfield-e-geracao-por-ia">Higgsfield e geração por IA</a></li><li><a href="#design-canva-e-outros">Design: Canva e outros</a></li><li><a href="#publicacao-qual-e-o-mcp-que-conecta-todas-as-red">Publicação: qual é "o MCP que conecta todas as redes"</a></li><li><a href="#dm-e-atendimento">DM e atendimento</a></li><li><a href="#crm-e-anuncios">CRM e anúncios</a></li><li><a href="#fora-do-claude-plano-b">Fora do Claude (plano B)</a></li><li><a href="#riscos-da-stack">Riscos da stack</a></li></ol></aside>
 </div>
 <script>
 (function () {

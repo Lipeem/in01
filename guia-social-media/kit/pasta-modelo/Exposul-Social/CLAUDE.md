@@ -41,10 +41,12 @@ Sempre carregue a skill **marca-exposul** antes de escrever qualquer texto.
 5. Salvar em `03-para-aprovar/` e escrever `ficha.md` com: formato, pilar, gancho,
    CTA/palavra-chave, data e horário sugeridos, `rotulo_ia: sim/não`, origem de cada
    trecho de áudio, e qualquer `[CONFIRMAR: ...]`.
-6. Só enviar ao Buffer **como rascunho** e **só** o que estiver em `04-aprovados/`.
+6. Publicação: só o que estiver em `04-aprovados/`. Padrão: montar a lista de publicação
+   (arquivo, legenda, horário, rótulo de IA) para uma pessoa subir pelo app. Agendamento
+   automático (Upload-Post pela API, com upload do arquivo) só se o dono pedir.
 
 ## Proibido
-- Publicar ou agendar direto. Sempre rascunho.
+- Publicar ou agendar qualquer coisa fora de `04-aprovados/`.
 - Apagar arquivos de `01-brutos/`.
 - Usar número (preço, prazo, desconto) fora de `99-marca/dados-confirmados.md`.
 - Usar imagem gerada por IA como se fosse loja ou cliente real.
