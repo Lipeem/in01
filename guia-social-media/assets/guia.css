@@ -145,3 +145,8 @@ footer.foot { margin-top: 2rem; font-size: .8rem; color: var(--fg-dim); }
   .ficha dd { margin-bottom: .45rem; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* Fluxo horizontal (funil, pipeline) */
+ol.flow { list-style: none; padding: 0; margin: 1.5rem 0; display: flex; flex-wrap: wrap; gap: .5rem; counter-reset: f; }
+ol.flow li { counter-increment: f; flex: 1 1 9rem; margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: .7rem .8rem; font-size: .88rem; line-height: 1.4; position: relative; }
+ol.flow li::before { content: counter(f); display: block; font: 600 .7rem/1 var(--sans); letter-spacing: .1em; color: var(--key); margin-bottom: .35rem; }

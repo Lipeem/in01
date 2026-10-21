@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rotina semanal</title>
+<meta name="description" content="Como o dono da Exposul opera o Instagram com o Claude toda semana: pauta, gravação, edição, aprovação e atendimento">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&display=swap">
+<link rel="stylesheet" href="assets/guia.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
+    <nav aria-label="Seções do guia">
+      <div class="group">Comece aqui</div>
+      <a href="index.html">Visão geral</a>
+      <div class="group">Pensar</div>
+      <a href="estrategia.html">Estratégia</a>
+      <a href="linha-editorial.html">Linha editorial</a>
+      <a href="roteiros.html">Roteiros e ideias</a>
+      <a href="frequencia.html">Frequência</a>
+      <div class="group">Montar</div>
+      <a href="ferramentas.html">Ferramentas</a>
+      <a href="setup.html">Setup passo a passo</a>
+      <a href="prompts.html">Prompts e Skills</a>
+      <div class="group">Operar</div>
+      <a href="rotina.html" aria-current="page">Rotina semanal</a>
+      <div class="group">Aprender</div>
+      <a href="videos.html">Vídeos do YouTube</a>
+      <a href="fontes.html">Fontes</a>
+    </nav>
+  </aside>
+  <main>
+<p class="eyebrow">Operar · Rotina</p>
+<h1>A semana do dono</h1>
+<p class="lead">Esta página é para o dono da Exposul. A ideia é que ele gaste perto de <strong>2 horas por semana</strong> com o Instagram, mais 15 minutos por dia de atendimento. O resto fica com o Claude e a equipe. Os tempos são estimativa nossa e caem depois das primeiras semanas.</p>
+
+<ol class="flow" aria-label="Fluxo semanal">
+<li>Segunda: o Claude entrega a pauta</li>
+<li>Terça e quarta: a equipe grava 30 min</li>
+<li>Quarta: material na pasta 01-brutos</li>
+<li>Quinta: o Claude edita tudo</li>
+<li>Sexta: o dono aprova no celular</li>
+<li>Semana seguinte: posts saem nos horários</li>
+</ol>
+
+<h2>Segunda: ler a pauta (15 min)</h2>
+<p>A tarefa agendada roda às 7 h e deixa a pauta em <code>00-pauta\semana-…md</code>. Abra o Claude Desktop, leia o resumo e responda no chat o que mudar ("troca o Reel de quinta por um de cabide infantil"). No fim tem a lista do que a equipe precisa gravar: mande para eles no WhatsApp.</p>
+
+<h2>Terça e quarta: gravação (30 min da equipe)</h2>
+<p>Um funcionário grava os takes da lista com o celular, seguindo o <a href="roteiros.html#gravacao">checklist de gravação</a>. Não precisa ser perfeito: o Claude corta, enquadra e legenda. O dono só aparece se quiser, e de preferência em voz ou mãos.</p>
+<p>Toda loja entregue rende material: peça ao montador fotos e um vídeo de "antes", um time-lapse com o celular apoiado durante a montagem e um vídeo de 15 s da loja pronta, com o lojista falando uma frase se ele topar.</p>
+
+<h2>Quarta: material na pasta (10 min)</h2>
+<p>Passe os arquivos do celular para <code>C:\Exposul-Social\01-brutos\</code>, na subpasta certa. Com o Google Drive no celular, a equipe sobe direto para a pasta compartilhada.</p>
+
+<h2>Quinta: o Claude edita (30 min de acompanhamento)</h2>
+<p>Abra o Claude Code na pasta do estúdio e escreva:</p>
+<pre class="copy"><code>Siga o CLAUDE.md. Produza todas as peças da pauta desta semana com o material novo de 01-brutos.
+Uma por vez: me mostre o plano de cada uma antes de editar, e no fim a lista do que ficou em 03-para-aprovar.</code></pre>
+<p>Enquanto ele trabalha, o app pede permissão para rodar comandos. Pode permitir os comandos de edição (ffmpeg, python, node). Diga não para qualquer coisa que publique ou apague.</p>
+
+<h2>Sexta: aprovação (20 min)</h2>
+<ol class="steps">
+<li>Abra cada pasta em <code>03-para-aprovar\</code>. Assista o vídeo, leia a legenda e a ficha.</li>
+<li>Procure <code>[CONFIRMAR]</code>: é um dado que o Claude não tinha. Responda no chat ou corrija na mão.</li>
+<li>Gostou? Mova a pasta para <code>04-aprovados\</code>. Não gostou? Escreva no chat o que mudar.</li>
+<li>Peça "Envie as aprovadas para o Buffer como rascunho".</li>
+<li>No app do Buffer, no celular, confira cada rascunho e toque em agendar.</li>
+</ol>
+<div class="tip">
+<p><strong>Pergunta que vale fazer em toda aprovação:</strong> "um lojista mandaria isso para o sócio?" Se a resposta for não, o post pode até ganhar curtida, mas não vai trazer orçamento.</p>
+</div>
+
+<h2>Todo dia: atendimento (15 min)</h2>
+<ul>
+<li>Responder comentários e DMs no mesmo dia, de preferência em até 2 horas no horário comercial.</li>
+<li>Quem comentou palavra-chave já recebeu a DM automática; quem respondeu precisa de uma pessoa.</li>
+<li>Levar para o WhatsApp e anotar na planilha de leads: nome, cidade, segmento, <strong>de qual post veio</strong>.</li>
+<li>Stories do dia: um bastidor rápido (mercadoria chegando, embalagem saindo, montagem). Pode ser direto do celular, sem passar pelo Claude.</li>
+</ul>
+
+<h2>Todo mês: relatório (30 min)</h2>
+<p>No dia 1 a tarefa agendada monta o relatório. Leia com uma pergunta na cabeça: <strong>quantos orçamentos vieram do Instagram e de quais posts?</strong> Repita os formatos que geraram conversa. Corte os que só deram curtida.</p>
+
+<h2>Quando algo dá errado</h2>
+<div class="table">
+<table>
+<thead><tr><th>Situação</th><th>O que fazer</th></tr></thead>
+<tbody>
+<tr><td>O Claude parou dizendo que a cota acabou</td><td>Espere a janela de 5 horas renovar ou continue no dia seguinte. Se acontecer toda semana, suba o plano para Max 5x.</td></tr>
+<tr><td>Vídeo saiu cortando o produto</td><td>Responda "refaça com fundo desfocado em vez de corte" ou indique o segundo exato.</td></tr>
+<tr><td>Legenda com nome de produto errado</td><td>Corrija e peça "adicione este termo ao glossário da skill".</td></tr>
+<tr><td>Rascunho não aparece no Buffer</td><td>Plano B: suba pelo app do Buffer usando o arquivo de <code>04-aprovados\</code> e copie o <code>legenda.txt</code>.</td></tr>
+<tr><td>Post publicado com erro</td><td>Edite a legenda pelo app do Instagram. Se o erro estiver no vídeo, arquive o post e republique corrigido.</td></tr>
+<tr><td>Semana sem material novo</td><td>Peça ao Claude: "monte a semana só com acervo, reeditando com ganchos novos o que tem mais de 3 meses".</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="pager"><a href="prompts.html">← Prompts e Skills</a><a href="videos.html">Vídeos do YouTube →</a></div>
+<footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
+  </main>
+</div>
+<script>
+document.querySelectorAll('pre.copy').forEach(function (pre) {
+  var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
+  pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
+  var b = document.createElement('button'); b.type = 'button'; b.className = 'copy-btn'; b.textContent = 'Copiar';
+  b.addEventListener('click', function () {
+    var t = pre.innerText;
+    var done = function () { b.textContent = 'Copiado'; setTimeout(function () { b.textContent = 'Copiar'; }, 1600); };
+    var sel = function () { var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selecionado: Ctrl+C'; };
+    try { navigator.clipboard.writeText(t).then(done, sel); } catch (e) { sel(); }
+  });
+  wrap.appendChild(b);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Setup passo a passo</title>
+<meta name="description" content="Tutorial para montar o estúdio de conteúdo com Claude no Windows da Exposul: contas, programas, pastas, conectores, skill e testes">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&display=swap">
+<link rel="stylesheet" href="assets/guia.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="index.html">Exposul<small>Guia de social media com IA</small></a>
+    <nav aria-label="Seções do guia">
+      <div class="group">Comece aqui</div>
+      <a href="index.html">Visão geral</a>
+      <div class="group">Pensar</div>
+      <a href="estrategia.html">Estratégia</a>
+      <a href="linha-editorial.html">Linha editorial</a>
+      <a href="roteiros.html">Roteiros e ideias</a>
+      <a href="frequencia.html">Frequência</a>
+      <div class="group">Montar</div>
+      <a href="ferramentas.html">Ferramentas</a>
+      <a href="setup.html" aria-current="page">Setup passo a passo</a>
+      <a href="prompts.html">Prompts e Skills</a>
+      <div class="group">Operar</div>
+      <a href="rotina.html">Rotina semanal</a>
+      <div class="group">Aprender</div>
+      <a href="videos.html">Vídeos do YouTube</a>
+      <a href="fontes.html">Fontes</a>
+    </nav>
+  </aside>
+  <main>
+<p class="eyebrow">Montar · Setup</p>
+<h1>Montando o estúdio no Windows</h1>
+<p class="lead">Este é o roteiro para quem vai montar (você), feito uma vez no computador da Exposul. Reserve uma tarde. No fim, o dono só precisa abrir o Claude, jogar material na pasta e aprovar no celular.</p>
+
+<div class="note">
+<p><strong>O que você vai precisar em mãos:</strong> login do Instagram da Exposul (conta profissional já vinculada à Página do Facebook), e-mail da empresa, cartão para as assinaturas, acesso de administrador ao Windows e cerca de 4 horas.</p>
+</div>
+
+<h2>Etapa 1. Contas</h2>
+<div class="table">
+<table>
+<thead><tr><th>Conta</th><th>Plano para começar</th><th>Obrigatória?</th></tr></thead>
+<tbody>
+<tr><td>Claude (claude.com)</td><td>Pro. Subir para Max 5x se a cota acabar no meio da semana.</td><td>Sim</td></tr>
+<tr><td>Buffer (buffer.com)</td><td>Essentials, 1 canal (Instagram). O plano grátis serve para o teste.</td><td>Sim</td></tr>
+<tr><td>Canva (canva.com)</td><td>Pro, para o conector e o kit de marca</td><td>Sim</td></tr>
+<tr><td>Google Drive</td><td>O que a empresa já tiver</td><td>Recomendada (tarefas com PC desligado)</td></tr>
+<tr><td>Higgsfield (higgsfield.ai)</td><td>Starter, só se for usar vídeo por IA</td><td>Não</td></tr>
+<tr><td>ElevenLabs</td><td>Só se quiser narração sintética</td><td>Não</td></tr>
+</tbody>
+</table>
+</div>
+<p>No Buffer, conecte o Instagram em <em>Channels › Connect › Instagram</em>, escolhendo a conta profissional vinculada ao Facebook. Instale o app do Buffer no celular do dono: é por ele que ele vai aprovar.</p>
+
+<h2>Etapa 2. Programas no Windows</h2>
+<p>Abra o <strong>PowerShell</strong> (menu Iniciar › digite "PowerShell") e rode um comando por vez. O <code>winget</code> já vem no Windows 10 e 11 atualizados.</p>
+<pre class="copy"><code>winget install Anthropic.Claude
+winget install Git.Git
+winget install OpenJS.NodeJS.LTS
+winget install Gyan.FFmpeg
+winget install Python.Python.3.12</code></pre>
+<p>Feche e abra o PowerShell de novo e confira se tudo instalou:</p>
+<pre class="copy"><code>git --version
+node --version
+ffmpeg -version
+python --version</code></pre>
+<ul>
+<li><strong>Claude Desktop</strong>: se o <code>winget install Anthropic.Claude</code> não encontrar o pacote, baixe em <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a> <span class="tag unv">ID do winget não verificado</span>. Evite a versão da Microsoft Store: ela tem um bug conhecido ao instalar extensões.</li>
+<li><strong>Node</strong> precisa ser versão 22 ou mais nova para o HyperFrames.</li>
+<li><strong>Fontes da marca</strong>: baixe Archivo e Bodoni Moda em <a href="https://fonts.google.com" target="_blank" rel="noopener">fonts.google.com</a> e instale (botão direito › Instalar para todos os usuários). O ffmpeg e o HyperFrames usam as fontes instaladas.</li>
+</ul>
+
+<h2>Etapa 3. Claude Desktop e Claude Code</h2>
+<ol class="steps">
+<li>Abra o Claude Desktop e entre com a conta Pro.</li>
+<li>Em <em>Configurações › Capacidades</em>, ligue <strong>execução de código</strong>. Sem isso as Skills não funcionam.</li>
+<li>Instale o Claude Code. No PowerShell:
+<pre class="copy"><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+Alternativa: <code>winget install Anthropic.ClaudeCode</code>. O Claude Code também abre dentro do próprio app Desktop, na aba de código, sem terminal.</li>
+<li>Teste: no PowerShell, rode <code>claude</code>, faça login e pergunte "que versão do ffmpeg está instalada?". Ele deve rodar o comando e responder.</li>
+</ol>
+
+<h2>Etapa 4. Pasta de produção</h2>
+<p>Crie <code>C:\Exposul-Social</code> (ou dentro do Google Drive para computador, se quiser tarefas com o PC desligado). Use a pasta modelo que está no repositório em <code>guia-social-media/kit/pasta-modelo/Exposul-Social</code>, ou crie à mão:</p>
+<pre><code>Exposul-Social\
+  CLAUDE.md               instruções fixas para o Claude Code
+  00-pauta\               calendário da semana e roteiros
+  01-brutos\              material original (nunca editar aqui)
+    videos\  fotos\  depoimentos\  lojas\&lt;nome-da-loja&gt;\
+  02-em-edicao\           rascunhos de trabalho do Claude
+  03-para-aprovar\        cada peça pronta numa subpasta
+  04-aprovados\           o dono move para cá o que aprovou
+  05-publicados\          arquivo do que já foi agendado
+  99-marca\               logo, fontes, trilhas, dados-confirmados.md, autorizacoes.md</code></pre>
+<ol class="steps">
+<li>Copie o <code>CLAUDE.md</code> do kit para a raiz da pasta. O texto completo está em <a href="prompts.html#claude-md">Prompts e Skills</a>.</li>
+<li>Em <code>99-marca\</code>, coloque o logo em PNG com fundo transparente, a paleta e o arquivo <code>dados-confirmados.md</code>. Preencha com o dono: só o que estiver nesse arquivo pode virar post (preço, prazo, parcelamento).</li>
+<li>Despeje o acervo em <code>01-brutos\</code>. Organize as lojas montadas numa pasta por loja, com nome e cidade: <code>lojas\moda-ana-joinville\</code>.</li>
+</ol>
+
+<h2>Etapa 5. Skill "marca-exposul"</h2>
+<ol class="steps">
+<li>Pegue a pasta <code>guia-social-media/kit/marca-exposul</code> do repositório (ou copie o texto em <a href="prompts.html#skill">Prompts e Skills</a> para um arquivo <code>SKILL.md</code> dentro de uma pasta <code>marca-exposul</code>).</li>
+<li>Compacte a pasta em ZIP (botão direito › Compactar).</li>
+<li>No Claude Desktop: <em>Personalizar › Skills › + › Enviar</em> e escolha o ZIP.</li>
+<li>Para o Claude Code, copie também a pasta para <code>C:\Exposul-Social\.claude\skills\marca-exposul\</code>. Versões recentes do Claude Code também sincronizam as skills da conta.</li>
+<li>Teste no chat: "Escreva uma legenda para um Reel de antes e depois de uma loja de calçados em Chapecó." A resposta deve seguir o formato da skill, com CTA e até 5 hashtags.</li>
+</ol>
+
+<h2>Etapa 6. Conectores</h2>
+<p>No Claude Desktop, vá em <em>Personalizar › Conectores</em>.</p>
+<div class="table">
+<table>
+<thead><tr><th>Conector</th><th>Como adicionar</th><th>Permissão das ferramentas de escrita</th></tr></thead>
+<tbody>
+<tr><td>Buffer</td><td>Diretório › busque "Buffer" › Conectar › login</td><td><strong>Sempre perguntar</strong></td></tr>
+<tr><td>Canva</td><td>Diretório › "Canva" › Conectar</td><td>Sempre perguntar</td></tr>
+<tr><td>Google Drive</td><td>Diretório › "Google Drive"</td><td>Sempre perguntar</td></tr>
+<tr><td>HyperFrames</td><td>Diretório › "HyperFrames"</td><td>Pode permitir</td></tr>
+<tr><td>Higgsfield</td><td>+ Adicionar › Conector personalizado › nome "Higgsfield", URL <code>https://mcp.higgsfield.ai/mcp</code> › login</td><td>Sempre perguntar (gasta crédito)</td></tr>
+<tr><td>ElevenLabs</td><td>Diretório › "ElevenLabs"</td><td>Sempre perguntar</td></tr>
+</tbody>
+</table>
+</div>
+<p>Para o Claude Code usar os mesmos serviços, rode na pasta de produção:</p>
+<pre class="copy"><code>cd C:\Exposul-Social
+claude mcp add --transport http buffer https://mcp.buffer.com/mcp
+claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp</code></pre>
+<p>Depois, dentro do <code>claude</code>, digite <code>/mcp</code> e faça o login de cada um.</p>
+<div class="warn">
+<p><strong>No Cowork, deixe o modo de aprovação em Manual.</strong> Assim nenhum post vai para o Buffer sem alguém clicar em permitir.</p>
+</div>
+
+<h2>Etapa 7. Motion graphics (HyperFrames)</h2>
+<p>Duas formas. Comece pela primeira.</p>
+<ol>
+<li><strong>Conector</strong> (etapa 6): renderiza na nuvem da HeyGen, sem instalar nada. Bom para vinhetas, títulos animados e encerramento com logo. Está em beta.</li>
+<li><strong>Local</strong>, pelo Claude Code: <code>claude plugin marketplace add heygen-com/hyperframes</code> e siga o README em <a href="https://github.com/heygen-com/hyperframes" target="_blank" rel="noopener">github.com/heygen-com/hyperframes</a>. Grátis e sem limite de renders. O suporte a Windows não está declarado <span class="tag unv">não verificado</span>: se der erro, fique com o conector.</li>
+</ol>
+<p>Peça ao Claude Code para criar 3 modelos e salvar em <code>99-marca\motion\</code>: abertura com gancho (2 s), lista animada de 3 itens, encerramento com logo e CTA (2 s). Os vídeos da semana reaproveitam esses modelos.</p>
+<p>O Remotion faz o mesmo com mais recursos, mas exige licença paga para empresa com mais de 3 pessoas (US$ 25 por assento/mês).</p>
+
+<h2>Etapa 8. Primeiro teste de ponta a ponta</h2>
+<ol class="steps">
+<li>Coloque um vídeo de montagem de loja em <code>01-brutos\lojas\teste\</code>.</li>
+<li>No Claude Code, dentro de <code>C:\Exposul-Social</code>, use o prompt "Editar um Reel" de <a href="prompts.html#editar">Prompts</a>.</li>
+<li>Confira a pasta em <code>03-para-aprovar\</code>: vídeo 9:16 com legenda embutida, capa, legenda.txt, alt.txt e ficha.md.</li>
+<li>Mova para <code>04-aprovados\</code> e peça: "Envie a peça aprovada para o Buffer como rascunho."</li>
+<li>No app do Buffer, confira se chegou como <strong>Reel</strong>, com capa e legenda. Repita com um carrossel de 5 fotos.</li>
+</ol>
+<div class="warn">
+<p><strong>Se o vídeo não subir pelo conector</strong> (a documentação do Buffer não deixa claro como o MCP recebe arquivo local), use o plano B: o Claude deixa tudo pronto em <code>04-aprovados\</code> e o dono sobe no app do Buffer ou do Instagram, copiando a legenda do <code>legenda.txt</code>. Leva cerca de 2 minutos por post. Outra saída é testar o Postiz, cujo MCP tem ferramentas próprias de mídia.</p>
+</div>
+
+<h2>Etapa 9. Automação de DM</h2>
+<ol class="steps">
+<li>No computador, abra o <a href="https://business.facebook.com" target="_blank" rel="noopener">Meta Business Suite</a> › Caixa de entrada › Automações.</li>
+<li>Crie uma automação por palavra-chave: comentário ou DM com <strong>VITRINE</strong> recebe a mensagem abaixo.</li>
+<li>Repita para LOJA, CABIDE e MANEQUIM, cada uma com o link certo.</li>
+</ol>
+<pre class="copy"><code>Oi! Que bom que você chamou 😊
+Aqui está o catálogo: [link do catálogo]
+Pra eu te ajudar melhor: sua loja é de qual segmento e em qual cidade?
+Se preferir, fala direto com a gente no WhatsApp: (41) 99691-0019</code></pre>
+<p>Os nomes de menu da Meta mudam com frequência. Se não achar, os tutoriais de ManyChat em <a href="videos.html#manychat">Vídeos</a> mostram a mesma lógica.</p>
+
+<h2>Etapa 10. Tarefas agendadas no Cowork</h2>
+<p>No Claude Desktop, menu <em>Agendadas</em> (ou digite <code>/schedule</code> no Cowork). Crie:</p>
+<div class="table">
+<table>
+<thead><tr><th>Tarefa</th><th>Quando</th><th>Prompt</th></tr></thead>
+<tbody>
+<tr><td>Pauta da semana</td><td>Segunda, 7 h</td><td>"Pauta semanal" de <a href="prompts.html#pauta">Prompts</a></td></tr>
+<tr><td>Relatório do mês</td><td>Dia 1, 8 h</td><td>"Relatório mensal" de <a href="prompts.html#relatorio">Prompts</a></td></tr>
+</tbody>
+</table>
+</div>
+<p>Tarefas que usam a pasta local só rodam com o PC ligado e o app aberto. Com a pasta no Google Drive e o conector do Drive, rodam mesmo com o PC desligado.</p>
+
+<h2>Etapa 11. Passagem para o dono (30 minutos)</h2>
+<ul>
+<li>Mostre a <a href="rotina.html">rotina semanal</a> e onde fica cada pasta.</li>
+<li>Faça com ele, ao vivo, uma aprovação no app do Buffer.</li>
+<li>Mostre o checklist de gravação para a equipe (em <a href="roteiros.html#gravacao">Roteiros</a>).</li>
+<li>Combine quem responde DM e comentário, e em quanto tempo.</li>
+</ul>
+
+<div class="pager"><a href="ferramentas.html">← Ferramentas</a><a href="prompts.html">Prompts e Skills →</a></div>
+<footer class="foot">Pesquisa feita em outubro de 2026. Ferramentas de IA mudam rápido: confira preços e recursos antes de assinar. Itens marcados <span class="tag unv">não verificado</span> não puderam ser confirmados em fonte.</footer>
+  </main>
+</div>
+<script>
+document.querySelectorAll('pre.copy').forEach(function (pre) {
+  var wrap = document.createElement('div'); wrap.className = 'copy-wrap';
+  pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
+  var b = document.createElement('button'); b.type = 'button'; b.className = 'copy-btn'; b.textContent = 'Copiar';
+  b.addEventListener('click', function () {
+    var t = pre.innerText;
+    var done = function () { b.textContent = 'Copiado'; setTimeout(function () { b.textContent = 'Copiar'; }, 1600); };
+    var sel = function () { var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selecionado: Ctrl+C'; };
+    try { navigator.clipboard.writeText(t).then(done, sel); } catch (e) { sel(); }
+  });
+  wrap.appendChild(b);
+});
+</script>
+</body>
+</html>
